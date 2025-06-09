@@ -1,0 +1,4 @@
+type: module
+nickname: dartway_core_serverpod
+
+client_package_path: ../dartway_core_serverpod_client
