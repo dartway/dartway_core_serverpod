@@ -22,7 +22,7 @@ class DwCrudEndpoint extends Endpoint {
   final _deepEquality = const DeepCollectionEquality();
   // final MapEquality _mapEquality = const MapEquality();
 
-  Future<DwApiResponse<int>> getOneCustom(
+  Future<DwApiResponse<DwModelWrapper>> getOne(
     Session session, {
     required String className,
     required DwBackendFilter filter,

@@ -13,9 +13,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:dartway_core_serverpod_client/src/extra_classes/dw_api_response.dart'
     as _i3;
-import 'package:dartway_core_serverpod_client/src/extra_classes/dw_backend_filter.dart'
-    as _i4;
 import 'package:dartway_core_serverpod_client/src/extra_classes/dw_model_wrapper.dart'
+    as _i4;
+import 'package:dartway_core_serverpod_client/src/extra_classes/dw_backend_filter.dart'
     as _i5;
 import 'package:dartway_core_serverpod_client/src/protocol/media/dw_media.dart'
     as _i6;
@@ -27,26 +27,26 @@ class EndpointDwCrud extends _i1.EndpointRef {
   @override
   String get name => 'dartway_core_serverpod.dwCrud';
 
-  _i2.Future<_i3.DwApiResponse<int>> getOneCustom({
+  _i2.Future<_i3.DwApiResponse<_i4.DwModelWrapper>> getOne({
     required String className,
-    required _i4.DwBackendFilter filter,
+    required _i5.DwBackendFilter filter,
   }) =>
-      caller.callServerEndpoint<_i3.DwApiResponse<int>>(
+      caller.callServerEndpoint<_i3.DwApiResponse<_i4.DwModelWrapper>>(
         'dartway_core_serverpod.dwCrud',
-        'getOneCustom',
+        'getOne',
         {
           'className': className,
           'filter': filter,
         },
       );
 
-  _i2.Future<_i3.DwApiResponse<List<_i5.DwModelWrapper>>> getAll({
+  _i2.Future<_i3.DwApiResponse<List<_i4.DwModelWrapper>>> getAll({
     required String className,
-    _i4.DwBackendFilter? filter,
+    _i5.DwBackendFilter? filter,
     int? limit,
     int? offset,
   }) =>
-      caller.callServerEndpoint<_i3.DwApiResponse<List<_i5.DwModelWrapper>>>(
+      caller.callServerEndpoint<_i3.DwApiResponse<List<_i4.DwModelWrapper>>>(
         'dartway_core_serverpod.dwCrud',
         'getAll',
         {
@@ -57,17 +57,17 @@ class EndpointDwCrud extends _i1.EndpointRef {
         },
       );
 
-  _i2.Future<_i3.DwApiResponse<List<_i5.DwModelWrapper>>> saveModels(
-          {required List<_i5.DwModelWrapper> wrappedModels}) =>
-      caller.callServerEndpoint<_i3.DwApiResponse<List<_i5.DwModelWrapper>>>(
+  _i2.Future<_i3.DwApiResponse<List<_i4.DwModelWrapper>>> saveModels(
+          {required List<_i4.DwModelWrapper> wrappedModels}) =>
+      caller.callServerEndpoint<_i3.DwApiResponse<List<_i4.DwModelWrapper>>>(
         'dartway_core_serverpod.dwCrud',
         'saveModels',
         {'wrappedModels': wrappedModels},
       );
 
-  _i2.Future<_i3.DwApiResponse<_i5.DwModelWrapper>> saveModel(
-          {required _i5.DwModelWrapper wrappedModel}) =>
-      caller.callServerEndpoint<_i3.DwApiResponse<_i5.DwModelWrapper>>(
+  _i2.Future<_i3.DwApiResponse<_i4.DwModelWrapper>> saveModel(
+          {required _i4.DwModelWrapper wrappedModel}) =>
+      caller.callServerEndpoint<_i3.DwApiResponse<_i4.DwModelWrapper>>(
         'dartway_core_serverpod.dwCrud',
         'saveModel',
         {'wrappedModel': wrappedModel},

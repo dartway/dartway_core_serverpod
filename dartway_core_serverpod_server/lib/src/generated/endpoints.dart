@@ -45,8 +45,8 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'dwCrud',
       endpoint: endpoints['dwCrud']!,
       methodConnectors: {
-        'getOneCustom': _i1.MethodConnector(
-          name: 'getOneCustom',
+        'getOne': _i1.MethodConnector(
+          name: 'getOne',
           params: {
             'className': _i1.ParameterDescription(
               name: 'className',
@@ -63,7 +63,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getOneCustom(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getOne(
             session,
             className: params['className'],
             filter: params['filter'],

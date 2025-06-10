@@ -4,7 +4,7 @@ import 'package:serverpod/serverpod.dart';
 import 'dw_get_all_config.dart';
 import 'dw_post_config.dart';
 
-abstract class DwCrudConfig<T extends TableRow> {
+class DwCrudConfig<T extends TableRow> {
   static final Map<String, DwCrudConfig> _serverConfiguration = {};
 
   static initConfiguration(List<DwCrudConfig> configuration) {

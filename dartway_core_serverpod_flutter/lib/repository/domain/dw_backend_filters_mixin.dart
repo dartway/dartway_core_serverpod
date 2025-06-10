@@ -1,6 +1,6 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 
-mixin BackendFilterMethodsMixin<T> on Enum {
+mixin DwBackendFiltersMixin<T> on Enum {
   DwBackendFilter<T> equals(T? value, {bool negate = false}) =>
       DwBackendFilter<T>.value(
         type: DwBackendFilterType.equals,

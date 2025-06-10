@@ -6,7 +6,7 @@ part of 'dw_socket_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dwSocketStateHash() => r'a876e17830d0c16c7a570acf5d4079770df1aad5';
+String _$dwSocketStateHash() => r'73308e1db8dca4212b768bf9ab15103e08fcc716';
 
 /// See also [DwSocketState].
 @ProviderFor(DwSocketState)

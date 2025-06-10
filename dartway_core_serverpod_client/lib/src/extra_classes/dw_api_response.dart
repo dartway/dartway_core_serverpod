@@ -1,25 +1,11 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 
-import 'dw_model_wrapper.dart';
-
-// if (T.toString().startsWith('ApiResponse')) {
-//       return _i4.ApiResponse.manualDeserialization<T>(data);
-//     }
-// if (t == _i1.getType<List<int>>()) {
-//   return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
-// }
-
 // Code to be pasted into Protocol after serverpod generate
-// if (t == List<int>) {
-//       return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
-//     }
-
 // if (data is Map<String, dynamic>) {
-//       final manualDeserialization =
-//           _i16.ApiResponse.manualDeserialization<T>(data);
-//       if (manualDeserialization != null) return manualDeserialization;
-//     }
-
+//   final manualDeserialization =
+//       _i10.DwApiResponse.manualDeserialization<T>(data);
+//   if (manualDeserialization != null) return manualDeserialization;
+// }
 class DwApiResponse<T> implements SerializableModel {
   const DwApiResponse({
     required this.isOk,
@@ -52,7 +38,6 @@ class DwApiResponse<T> implements SerializableModel {
   static K? manualDeserialization<K>(
     Map<String, dynamic> jsonSerialization,
   ) {
-    // if (K.toString() == 'ApiResponse<List<int>>') {
     if (K == DwApiResponse<List<int>>) {
       return DwApiResponse<List<int>>.fromJson(jsonSerialization) as K;
     } else if (K == DwApiResponse<int>) {
@@ -61,6 +46,8 @@ class DwApiResponse<T> implements SerializableModel {
       return DwApiResponse<String>.fromJson(jsonSerialization) as K;
     } else if (K == DwApiResponse<bool>) {
       return DwApiResponse<bool>.fromJson(jsonSerialization) as K;
+    } else if (K == DwApiResponse<DwModelWrapper>) {
+      return DwApiResponse<DwModelWrapper>.fromJson(jsonSerialization) as K;
     } else if (K == DwApiResponse<List<DwModelWrapper>>) {
       return DwApiResponse<List<DwModelWrapper>>.fromJson(jsonSerialization)
           as K;
@@ -96,10 +83,6 @@ class DwApiResponse<T> implements SerializableModel {
                   DwCoreServerpodClient.protocol.deserialize<DwModelWrapper>(e))
               .toList() as dynamic,
     );
-    // } catch (e) {
-    //   print(e);
-    //   return ApiResponse(isOk: false, value: null);
-    // }
   }
 
   @override

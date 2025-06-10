@@ -1,11 +1,11 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_core_serverpod_flutter/static/dw_core.dart';
+import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../dw_repository.dart';
 
-extension RefUpdateActionsExtension on Ref {
+extension WidgetRefUpdateActionsExtension on WidgetRef {
   Future<DwModelWrapper?> saveModel<T extends SerializableModel>(
     T model,
   ) async {

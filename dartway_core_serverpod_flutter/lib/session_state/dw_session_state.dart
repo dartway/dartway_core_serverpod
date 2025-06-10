@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dartway_core_serverpod_flutter/static/dw_core.dart';
+import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:serverpod_auth_client/module.dart' as auth;

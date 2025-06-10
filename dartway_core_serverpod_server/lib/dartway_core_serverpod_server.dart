@@ -2,6 +2,7 @@ export 'src/business/crud_config/dw_crud_config.dart';
 export 'src/business/crud_config/dw_get_all_config.dart';
 export 'src/business/crud_config/dw_get_one_config.dart';
 export 'src/business/crud_config/dw_post_config.dart';
+export 'src/business/dw_session_extension.dart';
 export 'src/extra_classes/dw_api_response.dart';
 export 'src/extra_classes/dw_backend_filter.dart';
 export 'src/extra_classes/dw_model_wrapper.dart';

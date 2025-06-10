@@ -1,5 +1,5 @@
 dwCrud:
-  - getOneCustom:
+  - getOne:
   - getAll:
   - saveModels:
   - saveModel:

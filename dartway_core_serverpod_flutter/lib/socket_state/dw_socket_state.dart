@@ -1,11 +1,11 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_core_serverpod_flutter/data/extensions/ref_update_actions_extension.dart';
-import 'package:dartway_core_serverpod_flutter/static/dw_core.dart';
+import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
+import 'package:dartway_core_serverpod_flutter/repository/access_extensions/ref_update_actions_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../dw_session_state/dw_session_state.dart';
+import '../session_state/dw_session_state.dart';
 
 part 'dw_socket_state.freezed.dart';
 part 'dw_socket_state.g.dart';
@@ -73,9 +73,9 @@ class DwSocketState extends _$DwSocketState {
     debugPrint("Received ${update.className} with id ${update.modelId}");
     // TODO: setup app notifications processing
     // if (update.model is DwAppNotification) {
-    //   ref.notifyUser(update.model as NitAppNotification);
+    //   ref.notifyUser(update.model as DwAppNotification);
     //   // for (var enclosedObject
-    //   //     in (update.model as NitAppNotification).updatedEntities ?? []) {
+    //   //     in (update.model as DwAppNotification).updatedEntities ?? []) {
     //   //   ref.updateFromStream(enclosedObject);
     //   // }
     // }

@@ -1,6 +1,7 @@
 name: dartway_core_serverpod_flutter
 description: "A new Flutter package project."
 version: 0.0.1
+publish_to: none
 homepage:
 
 environment:
@@ -12,6 +13,8 @@ dependencies:
     sdk: flutter
 
   # serverpod_client: 2.1.5
+  # dartway_core_serverpod_client:
+  #   path: ../dartway_core_serverpod_client
   dartway_core_serverpod_client:
     git:
       url: git@github.com:novikov-it/dartway_core_serverpod.git
@@ -20,6 +23,7 @@ dependencies:
   serverpod_auth_client: 2.1.5
   serverpod_auth_shared_flutter: 2.1.5
 
+  collection: ^1.19.1
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.4
   freezed_annotation: ^2.4.1

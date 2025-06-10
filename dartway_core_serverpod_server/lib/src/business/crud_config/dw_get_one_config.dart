@@ -44,15 +44,15 @@ class DwGetOneConfig<T extends TableRow> {
         );
   }
 
-  Future<DwApiResponse<int>> call(
+  Future<DwApiResponse<DwModelWrapper>> call(
     Session session,
     Table table,
     DwBackendFilter filter,
   ) async {
     final t = await _getObject(session, table, filter).then(
-      (result) async => DwApiResponse<int>(
+      (result) async => DwApiResponse<DwModelWrapper>(
         isOk: true,
-        value: result?.id,
+        value: DwModelWrapper.wrap(result),
         // error: result == null ? 'Объект не найден' : null,
         updatedEntities: result != null
             ? [

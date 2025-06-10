@@ -70,7 +70,7 @@ class DwModelWrapper implements SerializableModel, ProtocolSerialization {
     };
   }
 
-  /// Необходим для работы методов copyWith в ChatInitialData и NitAppNotification
+  /// Необходим для работы методов copyWith в ChatInitialData и DwAppNotification
   DwModelWrapper copyWith({
     SerializableModel? model,
   }) {
