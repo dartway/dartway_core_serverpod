@@ -1,2 +1,10 @@
-module:
-  - hello:
+dwCrud:
+  - getOneCustom:
+  - getAll:
+  - saveModels:
+  - saveModel:
+  - delete:
+dwRealTime:
+dwUpload:
+  - getUploadDescription:
+  - verifyUpload:
