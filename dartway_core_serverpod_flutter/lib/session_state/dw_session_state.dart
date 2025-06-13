@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,8 +12,10 @@ part 'dw_session_state.g.dart';
 
 @freezed
 class DwSessionStateModel with _$DwSessionStateModel {
-  const factory DwSessionStateModel({required int? signedInUserId}) =
-      _DwSessionStateModel;
+  const factory DwSessionStateModel({
+    required int? signedInUserId,
+    required DwBackendFilter? userProfileBackendFilter,
+  }) = _DwSessionStateModel;
 }
 
 @Riverpod(keepAlive: true)
@@ -21,7 +24,10 @@ class DwSessionState extends _$DwSessionState {
 
   @override
   DwSessionStateModel build() {
-    return DwSessionStateModel(signedInUserId: null);
+    return DwSessionStateModel(
+      signedInUserId: null,
+      userProfileBackendFilter: null,
+    );
   }
 
   Future<bool> signOut() async {
@@ -35,6 +41,12 @@ class DwSessionState extends _$DwSessionState {
         signedInUserId: await _processUserInfoId(
           DwCore.serverpodSessionManager.signedInUser?.id,
         ),
+        userProfileBackendFilter:
+            DwCore.serverpodSessionManager.signedInUser?.id == null
+                ? null
+                : DwCore.prepareUserProfileFilter(
+                  DwCore.serverpodSessionManager.signedInUser!.id!,
+                ),
       );
     }
   }
@@ -51,7 +63,13 @@ class DwSessionState extends _$DwSessionState {
     state = state.copyWith(
       signedInUserId: await _processUserInfoId(
         DwCore.serverpodSessionManager.signedInUser?.id,
-      ), // ,
+      ),
+      userProfileBackendFilter:
+          DwCore.serverpodSessionManager.signedInUser?.id == null
+              ? null
+              : DwCore.prepareUserProfileFilter(
+                DwCore.serverpodSessionManager.signedInUser!.id!,
+              ),
     );
 
     DwCore.serverpodSessionManager.addListener(_refresh);

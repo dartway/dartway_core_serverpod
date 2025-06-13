@@ -2,11 +2,11 @@
 // export 'state/nit_repository_state.dart';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
-import 'package:dartway_core_serverpod_flutter/repository/states/entity_list_state.dart';
+import 'package:dartway_core_serverpod_flutter/repository/states/dw_entity_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'states/single_entity_state.dart';
+import 'states/dw_single_entity_state.dart';
 
 class DwRepository {
   static const int mockModelId = 0;
@@ -66,13 +66,26 @@ class DwRepository {
     }
   }
 
-  static updateListeningStates({required DwModelWrapper wrappedModel}) {
-    debugPrint(
-      'Updating Listening State. Active listeners: ${_updateListeners.keys}. Updated id - ${wrappedModel.modelId} for class ${wrappedModel.className}',
-    );
-    for (var listener
-        in _updateListeners[wrappedModel.nitMappingClassname] ?? []) {
-      listener(wrappedModel);
+  static updateListeningStates({
+    required List<DwModelWrapper> wrappedModelUpdates,
+  }) {
+    final updateMap = <String, List<DwModelWrapper>>{};
+
+    for (var wrappedModel in wrappedModelUpdates) {
+      if (updateMap[wrappedModel.nitMappingClassname] == null) {
+        updateMap[wrappedModel.nitMappingClassname] = [wrappedModel];
+      } else {
+        updateMap[wrappedModel.nitMappingClassname]!.add(wrappedModel);
+      }
+    }
+
+    for (var className in updateMap.keys) {
+      debugPrint(
+        'Updating Listening States for $className with ${updateMap[className]!.length} objects. Active listeners: ${_updateListeners.keys}.',
+      );
+      for (var listener in _updateListeners[className] ?? []) {
+        listener(updateMap[className]);
+      }
     }
   }
 

@@ -10,7 +10,8 @@ import 'package:serverpod_auth_client/serverpod_auth_client.dart' as auth;
 enum UserIdMode { userProfileId, userInfoId }
 
 extension DwCoreSetupExtension on WidgetRef {
-  Future<bool> initDartwayServerpodApp({
+  Future<bool>
+  initDartwayServerpodApp<UserProfileClass extends SerializableModel>({
     required ServerpodClientShared client,
     required Function() initRepositoryFunction,
     UserIdMode userIdMode = UserIdMode.userInfoId,
@@ -64,19 +65,38 @@ extension DwCoreSetupExtension on WidgetRef {
       authModuleCaller: authCaller as auth.Caller,
       signedInUserIdPreloadProcessing: (serverpodUserInfoId) async {
         if (serverpodUserInfoId != null) {
-          final profile = await DwCore.endpointCaller.dwCrud
-              .getOne(
-                className: 'UserProfile',
-                filter: DwBackendFilter<int>.value(
-                  type: DwBackendFilterType.equals,
-                  fieldName: 'userId',
-                  fieldValue: serverpodUserInfoId,
-                ),
-              )
-              .then((response) => processApiResponse<DwModelWrapper>(response));
+          // final profile = await DwCore.endpointCaller.dwCrud
+          //     .getOne(
+          //       className: 'UserProfile',
+          //       filter: DwBackendFilter<int>.value(
+          //         type: DwBackendFilterType.equals,
+          //         fieldName: 'userId',
+          //         fieldValue: serverpodUserInfoId,
+          //       ),
+          //     )
+          //     .then((response) => processApiResponse<DwModelWrapper>(response));
+
+          final userProfile = await readModelCustom<UserProfileClass>(
+            backendFilter: DwCore.prepareUserProfileFilter(serverpodUserInfoId),
+          );
+
+          // final t = read(
+          //   DwRepository.singleEntityProvider<UserProfileClass>()(
+          //         DwSingleEntityStateConfig(
+          //           backendFilter: DwBackendFilter<int>.value(
+          //             type: DwBackendFilterType.equals,
+          //             fieldName: 'id',
+          //             fieldValue: serverpodUserInfoId,
+          //           ),
+          //         ),
+          //       )
+          //       .notifier,
+          // );
+
+          // final p2 = await readModel<UserProfileClass>((p as dynamic).id);
 
           return userIdMode == UserIdMode.userProfileId
-              ? profile!.modelId
+              ? (userProfile as dynamic).id
               : serverpodUserInfoId;
         }
         return null;

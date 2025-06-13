@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DwSessionStateModel {
   int? get signedInUserId => throw _privateConstructorUsedError;
+  DwBackendFilter<dynamic>? get userProfileBackendFilter =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of DwSessionStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -33,7 +35,10 @@ abstract class $DwSessionStateModelCopyWith<$Res> {
     $Res Function(DwSessionStateModel) then,
   ) = _$DwSessionStateModelCopyWithImpl<$Res, DwSessionStateModel>;
   @useResult
-  $Res call({int? signedInUserId});
+  $Res call({
+    int? signedInUserId,
+    DwBackendFilter<dynamic>? userProfileBackendFilter,
+  });
 }
 
 /// @nodoc
@@ -50,7 +55,10 @@ class _$DwSessionStateModelCopyWithImpl<$Res, $Val extends DwSessionStateModel>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? signedInUserId = freezed}) {
+  $Res call({
+    Object? signedInUserId = freezed,
+    Object? userProfileBackendFilter = freezed,
+  }) {
     return _then(
       _value.copyWith(
             signedInUserId:
@@ -58,6 +66,11 @@ class _$DwSessionStateModelCopyWithImpl<$Res, $Val extends DwSessionStateModel>
                     ? _value.signedInUserId
                     : signedInUserId // ignore: cast_nullable_to_non_nullable
                         as int?,
+            userProfileBackendFilter:
+                freezed == userProfileBackendFilter
+                    ? _value.userProfileBackendFilter
+                    : userProfileBackendFilter // ignore: cast_nullable_to_non_nullable
+                        as DwBackendFilter<dynamic>?,
           )
           as $Val,
     );
@@ -73,7 +86,10 @@ abstract class _$$DwSessionStateModelImplCopyWith<$Res>
   ) = __$$DwSessionStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? signedInUserId});
+  $Res call({
+    int? signedInUserId,
+    DwBackendFilter<dynamic>? userProfileBackendFilter,
+  });
 }
 
 /// @nodoc
@@ -89,7 +105,10 @@ class __$$DwSessionStateModelImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? signedInUserId = freezed}) {
+  $Res call({
+    Object? signedInUserId = freezed,
+    Object? userProfileBackendFilter = freezed,
+  }) {
     return _then(
       _$DwSessionStateModelImpl(
         signedInUserId:
@@ -97,6 +116,11 @@ class __$$DwSessionStateModelImplCopyWithImpl<$Res>
                 ? _value.signedInUserId
                 : signedInUserId // ignore: cast_nullable_to_non_nullable
                     as int?,
+        userProfileBackendFilter:
+            freezed == userProfileBackendFilter
+                ? _value.userProfileBackendFilter
+                : userProfileBackendFilter // ignore: cast_nullable_to_non_nullable
+                    as DwBackendFilter<dynamic>?,
       ),
     );
   }
@@ -105,14 +129,19 @@ class __$$DwSessionStateModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DwSessionStateModelImpl implements _DwSessionStateModel {
-  const _$DwSessionStateModelImpl({required this.signedInUserId});
+  const _$DwSessionStateModelImpl({
+    required this.signedInUserId,
+    required this.userProfileBackendFilter,
+  });
 
   @override
   final int? signedInUserId;
+  @override
+  final DwBackendFilter<dynamic>? userProfileBackendFilter;
 
   @override
   String toString() {
-    return 'DwSessionStateModel(signedInUserId: $signedInUserId)';
+    return 'DwSessionStateModel(signedInUserId: $signedInUserId, userProfileBackendFilter: $userProfileBackendFilter)';
   }
 
   @override
@@ -121,11 +150,17 @@ class _$DwSessionStateModelImpl implements _DwSessionStateModel {
         (other.runtimeType == runtimeType &&
             other is _$DwSessionStateModelImpl &&
             (identical(other.signedInUserId, signedInUserId) ||
-                other.signedInUserId == signedInUserId));
+                other.signedInUserId == signedInUserId) &&
+            (identical(
+                  other.userProfileBackendFilter,
+                  userProfileBackendFilter,
+                ) ||
+                other.userProfileBackendFilter == userProfileBackendFilter));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, signedInUserId);
+  int get hashCode =>
+      Object.hash(runtimeType, signedInUserId, userProfileBackendFilter);
 
   /// Create a copy of DwSessionStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -140,11 +175,15 @@ class _$DwSessionStateModelImpl implements _DwSessionStateModel {
 }
 
 abstract class _DwSessionStateModel implements DwSessionStateModel {
-  const factory _DwSessionStateModel({required final int? signedInUserId}) =
-      _$DwSessionStateModelImpl;
+  const factory _DwSessionStateModel({
+    required final int? signedInUserId,
+    required final DwBackendFilter<dynamic>? userProfileBackendFilter,
+  }) = _$DwSessionStateModelImpl;
 
   @override
   int? get signedInUserId;
+  @override
+  DwBackendFilter<dynamic>? get userProfileBackendFilter;
 
   /// Create a copy of DwSessionStateModel
   /// with the given fields replaced by the non-null parameter values.
