@@ -17,7 +17,7 @@ dependencies:
   #   path: ../dartway_core_serverpod_client
   dartway_core_serverpod_client:
     git:
-      url: git@github.com:novikov-it/dartway_core_serverpod.git
+      url: git@github.com:dartway/dartway_core_serverpod.git
       path: dartway_core_serverpod_client
 
   serverpod_auth_client: 2.1.5
