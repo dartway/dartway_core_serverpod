@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DwSingleEntityState<Entity extends SerializableModel>
-    extends FamilyAsyncNotifier<Entity?, DwSingleEntityStateConfig> {
+    extends FamilyAsyncNotifier<Entity?, DwSingleEntityStateConfig<Entity>> {
   @override
-  Future<Entity?> build(DwSingleEntityStateConfig config) async {
+  Future<Entity?> build(DwSingleEntityStateConfig<Entity> config) async {
     ref.onDispose(
       () => DwRepository.removeUpdatesListener<Entity>(
         // config.customUpdatesListener ??
@@ -18,19 +18,27 @@ class DwSingleEntityState<Entity extends SerializableModel>
       "Getting single ${DwRepository.typeName<Entity>()} with id $arg",
     );
 
-    final res = await DwCore.endpointCaller.dwCrud
-        .getOne(
-          className: DwRepository.typeName<Entity>(),
-          filter: arg.backendFilter,
-        )
-        .then((response) => ref.processApiResponse<DwModelWrapper>(response));
+    final res =
+        config.initialModel != null
+            ? null
+            : await DwCore.endpointCaller.dwCrud
+                .getOne(
+                  className: DwRepository.typeName<Entity>(),
+                  filter: arg.backendFilter,
+                )
+                .then(
+                  (response) =>
+                      ref.processApiResponse<DwModelWrapper>(response),
+                );
 
     DwRepository.addUpdatesListener<Entity>(
       // config.customUpdatesListener ??
       _updatesListener,
     );
 
-    return res == null ? null : res.model as Entity;
+    return config.initialModel != null
+        ? config.initialModel as Entity
+        : (res == null ? null : res.model as Entity);
   }
 
   void _updatesListener(List<DwModelWrapper> wrappedModelUpdates) async {

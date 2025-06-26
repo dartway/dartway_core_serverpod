@@ -4,8 +4,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'dw_single_entity_state_config.freezed.dart';
 
 @freezed
-class DwSingleEntityStateConfig with _$DwSingleEntityStateConfig {
+class DwSingleEntityStateConfig<Entity extends SerializableModel>
+    with _$DwSingleEntityStateConfig {
   const factory DwSingleEntityStateConfig({
     required DwBackendFilter backendFilter,
+    Entity? initialModel,
   }) = _DwSingleEntityStateConfig;
 }

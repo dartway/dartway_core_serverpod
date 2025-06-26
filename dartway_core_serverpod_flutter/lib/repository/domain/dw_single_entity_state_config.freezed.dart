@@ -16,33 +16,43 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$DwSingleEntityStateConfig {
+mixin _$DwSingleEntityStateConfig<Entity extends SerializableModel> {
   DwBackendFilter<dynamic> get backendFilter =>
       throw _privateConstructorUsedError;
+  Entity? get initialModel => throw _privateConstructorUsedError;
 
   /// Create a copy of DwSingleEntityStateConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $DwSingleEntityStateConfigCopyWith<DwSingleEntityStateConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DwSingleEntityStateConfigCopyWith<Entity, DwSingleEntityStateConfig<Entity>>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DwSingleEntityStateConfigCopyWith<$Res> {
+abstract class $DwSingleEntityStateConfigCopyWith<
+  Entity extends SerializableModel,
+  $Res
+> {
   factory $DwSingleEntityStateConfigCopyWith(
-    DwSingleEntityStateConfig value,
-    $Res Function(DwSingleEntityStateConfig) then,
-  ) = _$DwSingleEntityStateConfigCopyWithImpl<$Res, DwSingleEntityStateConfig>;
+    DwSingleEntityStateConfig<Entity> value,
+    $Res Function(DwSingleEntityStateConfig<Entity>) then,
+  ) =
+      _$DwSingleEntityStateConfigCopyWithImpl<
+        Entity,
+        $Res,
+        DwSingleEntityStateConfig<Entity>
+      >;
   @useResult
-  $Res call({DwBackendFilter<dynamic> backendFilter});
+  $Res call({DwBackendFilter<dynamic> backendFilter, Entity? initialModel});
 }
 
 /// @nodoc
 class _$DwSingleEntityStateConfigCopyWithImpl<
+  Entity extends SerializableModel,
   $Res,
-  $Val extends DwSingleEntityStateConfig
+  $Val extends DwSingleEntityStateConfig<Entity>
 >
-    implements $DwSingleEntityStateConfigCopyWith<$Res> {
+    implements $DwSingleEntityStateConfigCopyWith<Entity, $Res> {
   _$DwSingleEntityStateConfigCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -54,7 +64,7 @@ class _$DwSingleEntityStateConfigCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? backendFilter = null}) {
+  $Res call({Object? backendFilter = null, Object? initialModel = freezed}) {
     return _then(
       _value.copyWith(
             backendFilter:
@@ -62,6 +72,11 @@ class _$DwSingleEntityStateConfigCopyWithImpl<
                     ? _value.backendFilter
                     : backendFilter // ignore: cast_nullable_to_non_nullable
                         as DwBackendFilter<dynamic>,
+            initialModel:
+                freezed == initialModel
+                    ? _value.initialModel
+                    : initialModel // ignore: cast_nullable_to_non_nullable
+                        as Entity?,
           )
           as $Val,
     );
@@ -69,42 +84,54 @@ class _$DwSingleEntityStateConfigCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$DwSingleEntityStateConfigImplCopyWith<$Res>
-    implements $DwSingleEntityStateConfigCopyWith<$Res> {
+abstract class _$$DwSingleEntityStateConfigImplCopyWith<
+  Entity extends SerializableModel,
+  $Res
+>
+    implements $DwSingleEntityStateConfigCopyWith<Entity, $Res> {
   factory _$$DwSingleEntityStateConfigImplCopyWith(
-    _$DwSingleEntityStateConfigImpl value,
-    $Res Function(_$DwSingleEntityStateConfigImpl) then,
-  ) = __$$DwSingleEntityStateConfigImplCopyWithImpl<$Res>;
+    _$DwSingleEntityStateConfigImpl<Entity> value,
+    $Res Function(_$DwSingleEntityStateConfigImpl<Entity>) then,
+  ) = __$$DwSingleEntityStateConfigImplCopyWithImpl<Entity, $Res>;
   @override
   @useResult
-  $Res call({DwBackendFilter<dynamic> backendFilter});
+  $Res call({DwBackendFilter<dynamic> backendFilter, Entity? initialModel});
 }
 
 /// @nodoc
-class __$$DwSingleEntityStateConfigImplCopyWithImpl<$Res>
+class __$$DwSingleEntityStateConfigImplCopyWithImpl<
+  Entity extends SerializableModel,
+  $Res
+>
     extends
         _$DwSingleEntityStateConfigCopyWithImpl<
+          Entity,
           $Res,
-          _$DwSingleEntityStateConfigImpl
+          _$DwSingleEntityStateConfigImpl<Entity>
         >
-    implements _$$DwSingleEntityStateConfigImplCopyWith<$Res> {
+    implements _$$DwSingleEntityStateConfigImplCopyWith<Entity, $Res> {
   __$$DwSingleEntityStateConfigImplCopyWithImpl(
-    _$DwSingleEntityStateConfigImpl _value,
-    $Res Function(_$DwSingleEntityStateConfigImpl) _then,
+    _$DwSingleEntityStateConfigImpl<Entity> _value,
+    $Res Function(_$DwSingleEntityStateConfigImpl<Entity>) _then,
   ) : super(_value, _then);
 
   /// Create a copy of DwSingleEntityStateConfig
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? backendFilter = null}) {
+  $Res call({Object? backendFilter = null, Object? initialModel = freezed}) {
     return _then(
-      _$DwSingleEntityStateConfigImpl(
+      _$DwSingleEntityStateConfigImpl<Entity>(
         backendFilter:
             null == backendFilter
                 ? _value.backendFilter
                 : backendFilter // ignore: cast_nullable_to_non_nullable
                     as DwBackendFilter<dynamic>,
+        initialModel:
+            freezed == initialModel
+                ? _value.initialModel
+                : initialModel // ignore: cast_nullable_to_non_nullable
+                    as Entity?,
       ),
     );
   }
@@ -112,52 +139,77 @@ class __$$DwSingleEntityStateConfigImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DwSingleEntityStateConfigImpl implements _DwSingleEntityStateConfig {
-  const _$DwSingleEntityStateConfigImpl({required this.backendFilter});
+class _$DwSingleEntityStateConfigImpl<Entity extends SerializableModel>
+    implements _DwSingleEntityStateConfig<Entity> {
+  const _$DwSingleEntityStateConfigImpl({
+    required this.backendFilter,
+    this.initialModel,
+  });
 
   @override
   final DwBackendFilter<dynamic> backendFilter;
+  @override
+  final Entity? initialModel;
 
   @override
   String toString() {
-    return 'DwSingleEntityStateConfig(backendFilter: $backendFilter)';
+    return 'DwSingleEntityStateConfig<$Entity>(backendFilter: $backendFilter, initialModel: $initialModel)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DwSingleEntityStateConfigImpl &&
+            other is _$DwSingleEntityStateConfigImpl<Entity> &&
             (identical(other.backendFilter, backendFilter) ||
-                other.backendFilter == backendFilter));
+                other.backendFilter == backendFilter) &&
+            const DeepCollectionEquality().equals(
+              other.initialModel,
+              initialModel,
+            ));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, backendFilter);
+  int get hashCode => Object.hash(
+    runtimeType,
+    backendFilter,
+    const DeepCollectionEquality().hash(initialModel),
+  );
 
   /// Create a copy of DwSingleEntityStateConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DwSingleEntityStateConfigImplCopyWith<_$DwSingleEntityStateConfigImpl>
+  _$$DwSingleEntityStateConfigImplCopyWith<
+    Entity,
+    _$DwSingleEntityStateConfigImpl<Entity>
+  >
   get copyWith => __$$DwSingleEntityStateConfigImplCopyWithImpl<
-    _$DwSingleEntityStateConfigImpl
+    Entity,
+    _$DwSingleEntityStateConfigImpl<Entity>
   >(this, _$identity);
 }
 
-abstract class _DwSingleEntityStateConfig implements DwSingleEntityStateConfig {
+abstract class _DwSingleEntityStateConfig<Entity extends SerializableModel>
+    implements DwSingleEntityStateConfig<Entity> {
   const factory _DwSingleEntityStateConfig({
     required final DwBackendFilter<dynamic> backendFilter,
-  }) = _$DwSingleEntityStateConfigImpl;
+    final Entity? initialModel,
+  }) = _$DwSingleEntityStateConfigImpl<Entity>;
 
   @override
   DwBackendFilter<dynamic> get backendFilter;
+  @override
+  Entity? get initialModel;
 
   /// Create a copy of DwSingleEntityStateConfig
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DwSingleEntityStateConfigImplCopyWith<_$DwSingleEntityStateConfigImpl>
+  _$$DwSingleEntityStateConfigImplCopyWith<
+    Entity,
+    _$DwSingleEntityStateConfigImpl<Entity>
+  >
   get copyWith => throw _privateConstructorUsedError;
 }

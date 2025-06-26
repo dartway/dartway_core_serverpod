@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../dw_repository.dart';
 
 extension WidgetRefUpdateActionsExtension on WidgetRef {
-  Future<DwModelWrapper?> saveModel<T extends SerializableModel>(
-    T model,
-  ) async {
-    return saveModels([model]).then((ids) => ids?.first);
+  Future<T?> saveModel<T extends SerializableModel>(T model) async {
+    return saveModels([
+      model,
+    ]).then((ids) => ids == null ? null : ids.first as T);
   }
 
-  Future<List<DwModelWrapper>?> saveModels(
+  Future<List<SerializableModel>?> saveModels(
     List<SerializableModel> models,
   ) async {
     return await DwCore.endpointCaller.dwCrud
@@ -20,8 +20,26 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
           wrappedModels:
               models.map((model) => DwModelWrapper.wrap(model: model)).toList(),
         )
-        .then((response) => processApiResponse<List<DwModelWrapper>>(response));
+        .then((response) => processApiResponse<List<DwModelWrapper>>(response))
+        .then((res) => res?.map((e) => e.model).toList());
   }
+
+  // Future<DwModelWrapper?> saveModel<T extends SerializableModel>(
+  //   T model,
+  // ) async {
+  //   return saveModels([model]).then((ids) => ids?.first);
+  // }
+
+  // Future<List<DwModelWrapper>?> saveModels(
+  //   List<SerializableModel> models,
+  // ) async {
+  //   return await DwCore.endpointCaller.dwCrud
+  //       .saveModels(
+  //         wrappedModels:
+  //             models.map((model) => DwModelWrapper.wrap(model: model)).toList(),
+  //       )
+  //       .then((response) => processApiResponse<List<DwModelWrapper>>(response));
+  // }
 
   Future<bool> deleteModel<T extends SerializableModel>(T model) async {
     // TODO: подумать, как сделать это получше, может апи поменять или засылать objectWrapper.deleted просто

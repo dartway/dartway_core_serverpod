@@ -2,29 +2,44 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 extension WidgetRefWatchAndReadExtension on WidgetRef {
-  static _defaultConfig(int id) => DwSingleEntityStateConfig(
+  static _defaultConfig<T extends SerializableModel>(
+    int id, {
+    T? initialModel,
+  }) => DwSingleEntityStateConfig<T>(
     backendFilter: DwBackendFilter<int>.value(
       type: DwBackendFilterType.equals,
       fieldName: 'id',
       fieldValue: id,
     ),
+    initialModel: initialModel,
   );
 
   Future<T> watchModel<T extends SerializableModel>(int id) async {
     return await watch(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig(id)).future,
+      DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)).future,
     ).then((res) => res!);
   }
 
   Future<T> readModel<T extends SerializableModel>(int id) async {
     return await read(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig(id)).future,
+      DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)).future,
     ).then((res) => res!);
   }
 
-  AsyncValue<T> watchModelAsync<T extends SerializableModel>(int id) {
+  AsyncValue<T> watchModelAsync<T extends SerializableModel>(
+    int id, {
+    T? initialModel,
+  }) {
+    // if (initialModel != null) {
+    //   read(
+    //     DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)).notifier,
+    //   ).state = AsyncData(initialModel);
+    // }
+
     return watch(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig(id)),
+      DwRepository.singleEntityProvider<T>()(
+        _defaultConfig<T>(id, initialModel: initialModel),
+      ),
     ).whenData((res) => res!);
   }
 
@@ -36,7 +51,7 @@ extension WidgetRefWatchAndReadExtension on WidgetRef {
     required DwBackendFilter backendFilter,
   }) async => read(
     DwRepository.singleEntityProvider<T>()(
-          DwSingleEntityStateConfig(backendFilter: backendFilter),
+          DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
         )
         .future,
   );
@@ -49,7 +64,7 @@ extension WidgetRefWatchAndReadExtension on WidgetRef {
     required DwBackendFilter backendFilter,
   }) async => watch(
     DwRepository.singleEntityProvider<T>()(
-          DwSingleEntityStateConfig(backendFilter: backendFilter),
+          DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
         )
         .future,
   );
@@ -64,7 +79,7 @@ extension WidgetRefWatchAndReadExtension on WidgetRef {
     required DwBackendFilter backendFilter,
   }) => watch(
     DwRepository.singleEntityProvider<T>()(
-      DwSingleEntityStateConfig(backendFilter: backendFilter),
+      DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
     ),
   );
 
