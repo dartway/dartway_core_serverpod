@@ -9,11 +9,12 @@ mixin DwBackendFiltersMixin<T> on Enum {
         negate: negate,
       );
 
+  static const comparisonFiltersTypeErrorText =
+      'Unsupported value type, comparison filters are supported for int, double and DateTime value types only (currently)';
+
   DwBackendFilter<T> greaterThan(T value, {bool negate = false}) =>
-      (T != int && T != double)
-          ? throw UnsupportedError(
-            'Unsupported value type, comparison filters are supported for int or double values only (currently)',
-          )
+      (T != int && T != double && T != DateTime)
+          ? throw UnsupportedError(comparisonFiltersTypeErrorText)
           : DwBackendFilter<T>.value(
             type: DwBackendFilterType.greaterThan,
             fieldName: name,
@@ -22,10 +23,8 @@ mixin DwBackendFiltersMixin<T> on Enum {
           );
 
   DwBackendFilter<T> greaterThanOrEquals(T value, {bool negate = false}) =>
-      (T != int && T != double)
-          ? throw UnsupportedError(
-            'Unsupported value type, comparison filters are supported for int or double values only (currently)',
-          )
+      (T != int && T != double && T != DateTime)
+          ? throw UnsupportedError(comparisonFiltersTypeErrorText)
           : DwBackendFilter<T>.value(
             type: DwBackendFilterType.greaterThanOrEquals,
             fieldName: name,
@@ -34,10 +33,8 @@ mixin DwBackendFiltersMixin<T> on Enum {
           );
 
   DwBackendFilter<T> lessThan(T value, {bool negate = false}) =>
-      (T != int && T != double)
-          ? throw UnsupportedError(
-            'Unsupported value type, comparison filters are supported for int or double values only (currently)',
-          )
+      (T != int && T != double && T != DateTime)
+          ? throw UnsupportedError(comparisonFiltersTypeErrorText)
           : DwBackendFilter<T>.value(
             type: DwBackendFilterType.lessThan,
             fieldName: name,
@@ -46,10 +43,8 @@ mixin DwBackendFiltersMixin<T> on Enum {
           );
 
   DwBackendFilter<T> lessThanOrEquals(T value, {bool negate = false}) =>
-      (T != int && T != double)
-          ? throw UnsupportedError(
-            'Unsupported value type, comparison filters are supported for int or double values only (currently)',
-          )
+      (T != int && T != double && T != DateTime)
+          ? throw UnsupportedError(comparisonFiltersTypeErrorText)
           : DwBackendFilter<T>.value(
             type: DwBackendFilterType.lessThanOrEquals,
             fieldName: name,

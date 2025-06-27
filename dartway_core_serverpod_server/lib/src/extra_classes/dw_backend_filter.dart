@@ -227,6 +227,20 @@ class DwBackendFilter implements SerializableModel {
           negate ? column > fieldValue : column <= fieldValue,
         _ => throw Exception('Unsupported filter type'),
       };
+    } else if (column is ColumnDateTime && fieldValue is DateTime?) {
+      return switch (type) {
+        DwBackendFilterType.equals =>
+          (negate ? column.notEquals : column.equals).call(fieldValue),
+        DwBackendFilterType.greaterThan =>
+          negate ? column <= fieldValue : column > fieldValue,
+        DwBackendFilterType.greaterThanOrEquals =>
+          negate ? column < fieldValue : column >= fieldValue,
+        DwBackendFilterType.lessThan =>
+          negate ? column >= fieldValue : column < fieldValue,
+        DwBackendFilterType.lessThanOrEquals =>
+          negate ? column > fieldValue : column <= fieldValue,
+        _ => throw Exception('Unsupported filter type'),
+      };
     } else if (column is ColumnString && fieldValue is String?) {
       // if (type == DwBackendFilterType.inSet) {
       //   if (fieldValue == null || fieldValue!.isEmpty) {
