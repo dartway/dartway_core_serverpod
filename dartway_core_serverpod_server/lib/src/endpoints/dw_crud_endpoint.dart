@@ -3,24 +3,7 @@ import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart
 import 'package:serverpod/serverpod.dart';
 
 class DwCrudEndpoint extends Endpoint {
-  // Future<DwApiResponse<int>> getOneById(
-  //   Session session, {
-  //   required String className,
-  //   required int id,
-  // }) async {
-  //   final caller = CrudConfig.getCaller(className);
-
-  //   if (caller?.getOneById == null) {
-  //     return DwApiResponse.notConfigured(source: 'получение $className по id');
-  //   }
-  //   return await caller!.getOneById!.call(
-  //     session,
-  //     id,
-  //   );
-  // }
-
   final _deepEquality = const DeepCollectionEquality();
-  // final MapEquality _mapEquality = const MapEquality();
 
   Future<DwApiResponse<DwModelWrapper>> getOne(
     Session session, {
@@ -38,14 +21,6 @@ class DwCrudEndpoint extends Endpoint {
           caller!.getOneCustomConfigs!.isEmpty) {
         return DwApiResponse.notConfigured(source: 'получение $className');
       }
-
-      // for (var t in caller.getOneCustomConfigs ?? []) {
-      //   final k = t.filterPrototype.attributeMap;
-      //   print(k);
-      // }
-
-      // final d = filter.attributeMap;
-      // print(d);
 
       final config = caller.getOneCustomConfigs!.firstWhereOrNull(
         (e) => _deepEquality.equals(
@@ -70,31 +45,6 @@ class DwCrudEndpoint extends Endpoint {
       );
     }
   }
-
-  // Future<DwApiResponse<List<int>>> getAll(
-  //   Session session, {
-  //   required String className,
-  //   DwBackendFilter? filter,
-  //   int? limit,
-  //   int? offset,
-  // }) async {
-  //   final caller = DwCrudConfig.getCaller(className);
-
-  //   print(
-  //     "Received getAll request for $className ${filter != null ? 'with filter: ${filter.attributeMap}' : ''}",
-  //   );
-
-  //   if (caller?.getAll == null) {
-  //     return DwApiResponse.notConfigured(source: 'получение списка $className');
-  //   }
-
-  //   return await caller!.getAll!.getIds(
-  //     session,
-  //     whereClause: filter?.prepareWhere(caller.table),
-  //     limit: limit,
-  //     offset: offset,
-  //   );
-  // }
 
   Future<DwApiResponse<List<DwModelWrapper>>> getAll(
     Session session, {

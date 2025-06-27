@@ -4,11 +4,13 @@ import 'package:serverpod/serverpod.dart';
 class DwGetOneConfig<T extends TableRow> {
   const DwGetOneConfig({
     required this.filterPrototype,
+    this.include,
     this.createIfMissing,
     this.additionalEntitiesFetchFunction,
   });
 
   final DwBackendFilter filterPrototype;
+  final Include? include;
   final Future<T?> Function(
     Session session,
     DwBackendFilter filter,
@@ -22,22 +24,10 @@ class DwGetOneConfig<T extends TableRow> {
     Table table,
     DwBackendFilter filter,
   ) async {
-    // T? t = await session.db.findFirstRow(where: whereClause);
-
-    // if (t == null && createIfMissing != null) {
-    //   t ??= await createIfMissing?.call(
-    //     session,
-    //     attributeNames
-    //         .map((e) => filters.firstWhere((f) => f.fieldName == e).equalsTo)
-    //         .toList(),
-    //   );
-
-    //   if (t != null) {
-    //     t = await session.db.insertRow<T>(t);
-    //   }
-    // }
-
-    return await session.db.findFirstRow(where: filter.prepareWhere(table)) ??
+    return await session.db.findFirstRow(
+          where: filter.prepareWhere(table),
+          include: include,
+        ) ??
         await createIfMissing?.call(
           session,
           filter,
