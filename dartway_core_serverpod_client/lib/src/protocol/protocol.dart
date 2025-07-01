@@ -45,13 +45,11 @@ class Protocol extends _i1.SerializationManager {
     Type? t,
   ]) {
     t ??= T;
-
     if (data is Map<String, dynamic>) {
       final manualDeserialization =
           _i10.DwApiResponse.manualDeserialization<T>(data);
       if (manualDeserialization != null) return manualDeserialization;
     }
-
     if (t == _i2.DwAppNotification) {
       return _i2.DwAppNotification.fromJson(data) as T;
     }

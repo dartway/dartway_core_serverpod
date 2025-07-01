@@ -1,10 +1,9 @@
-import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DwEntityListState<Entity extends SerializableModel>
-    extends FamilyAsyncNotifier<List<Entity>, DwEntityListStateConfig>
+    extends FamilyAsyncNotifier<List<Entity>, DwEntityListStateConfig<Entity>>
 // implements EntityManagerInterface<Entity>
 {
   late int _nextPage;
@@ -30,11 +29,13 @@ class DwEntityListState<Entity extends SerializableModel>
     return _processData(data).toList();
   }
 
-  void loadNextPage() async {
-    await future.then((currentState) async {
+  Future<bool> loadNextPage() async {
+    return await future.then((currentState) async {
       final data = await _loadData();
 
       state = AsyncValue.data(<Entity>[...currentState, ..._processData(data)]);
+
+      return data.length == arg.pageSize;
     });
   }
 

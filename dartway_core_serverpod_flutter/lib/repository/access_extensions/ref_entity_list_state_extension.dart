@@ -11,7 +11,7 @@ extension RefEntityListStateExtensions on Ref {
   }) async {
     final items = await watch(
       DwRepository.entityListStateProvider<T>()(
-            DwEntityListStateConfig(backendFilter: backendFilter),
+            DwEntityListStateConfig<T>(backendFilter: backendFilter),
           )
           .future,
     );
@@ -26,7 +26,7 @@ extension RefEntityListStateExtensions on Ref {
     bool Function(T model)? frontendFilter,
   }) => watch(
     DwRepository.entityListStateProvider<T>()(
-      DwEntityListStateConfig(backendFilter: backendFilter),
+      DwEntityListStateConfig<T>(backendFilter: backendFilter),
     ),
   ).whenData(
     (data) =>

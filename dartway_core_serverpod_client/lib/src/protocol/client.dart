@@ -40,6 +40,19 @@ class EndpointDwCrud extends _i1.EndpointRef {
         },
       );
 
+  _i2.Future<_i3.DwApiResponse<int>> getCount({
+    required String className,
+    _i5.DwBackendFilter? filter,
+  }) =>
+      caller.callServerEndpoint<_i3.DwApiResponse<int>>(
+        'dartway_core_serverpod.dwCrud',
+        'getCount',
+        {
+          'className': className,
+          'filter': filter,
+        },
+      );
+
   _i2.Future<_i3.DwApiResponse<List<_i4.DwModelWrapper>>> getAll({
     required String className,
     _i5.DwBackendFilter? filter,

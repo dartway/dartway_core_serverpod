@@ -13,6 +13,20 @@ class DwGetAllConfig<T extends TableRow> {
   final Future<List<TableRow>> Function(Session session, List<T> models)?
       additionalEntitiesFetchFunction;
 
+  Future<DwApiResponse<int>> getCount(
+    Session session, {
+    Expression? whereClause,
+  }) async {
+    final result = await session.db.count<T>(
+      where: whereClause,
+    );
+
+    return DwApiResponse<int>(
+      isOk: true,
+      value: result,
+    );
+  }
+
   Future<DwApiResponse<List<DwModelWrapper>>> getEntityList(
     Session session, {
     Expression? whereClause,

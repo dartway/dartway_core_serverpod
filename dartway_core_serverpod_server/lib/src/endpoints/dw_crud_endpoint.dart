@@ -46,6 +46,29 @@ class DwCrudEndpoint extends Endpoint {
     }
   }
 
+  Future<DwApiResponse<int>> getCount(
+    Session session, {
+    required String className,
+    DwBackendFilter? filter,
+  }) async {
+    final caller = DwCrudConfig.getCaller(className);
+
+    print(
+      "CRUD: getCount for $className with filter: $filter",
+    );
+
+    if (caller?.getAll == null) {
+      return DwApiResponse.notConfigured(source: 'getCount for $className');
+    }
+
+    return await caller!.getAll!.getCount(
+      session,
+      whereClause: filter?.prepareWhere(
+        caller.table,
+      ),
+    );
+  }
+
   Future<DwApiResponse<List<DwModelWrapper>>> getAll(
     Session session, {
     required String className,

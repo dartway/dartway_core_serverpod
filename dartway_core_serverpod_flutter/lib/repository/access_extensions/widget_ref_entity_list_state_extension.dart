@@ -1,4 +1,3 @@
-import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,7 +11,7 @@ extension WidgetRefEntityListStateExtensions on WidgetRef {
   }) async {
     final items = await watch(
       DwRepository.entityListStateProvider<T>()(
-            DwEntityListStateConfig(backendFilter: backendFilter),
+            DwEntityListStateConfig<T>(backendFilter: backendFilter),
           )
           .future,
     );
@@ -27,7 +26,7 @@ extension WidgetRefEntityListStateExtensions on WidgetRef {
     bool Function(T model)? frontendFilter,
   }) => watch(
     DwRepository.entityListStateProvider<T>()(
-      DwEntityListStateConfig(backendFilter: backendFilter),
+      DwEntityListStateConfig<T>(backendFilter: backendFilter),
     ),
   ).whenData(
     (data) =>

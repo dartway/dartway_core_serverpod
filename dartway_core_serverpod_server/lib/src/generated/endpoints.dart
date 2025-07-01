@@ -69,6 +69,30 @@ class Endpoints extends _i1.EndpointDispatch {
             filter: params['filter'],
           ),
         ),
+        'getCount': _i1.MethodConnector(
+          name: 'getCount',
+          params: {
+            'className': _i1.ParameterDescription(
+              name: 'className',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'filter': _i1.ParameterDescription(
+              name: 'filter',
+              type: _i1.getType<_i5.DwBackendFilter?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getCount(
+            session,
+            className: params['className'],
+            filter: params['filter'],
+          ),
+        ),
         'getAll': _i1.MethodConnector(
           name: 'getAll',
           params: {
