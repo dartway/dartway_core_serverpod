@@ -14,8 +14,12 @@ class DwSingleEntityState<Entity extends SerializableModel>
       ),
     );
 
+    final globalTimestamp = ref.watch(
+      DwRepository.globalRefreshTriggerProvider,
+    );
+
     debugPrint(
-      "Getting single ${DwRepository.typeName<Entity>()} with id $arg",
+      "Getting single ${DwRepository.typeName<Entity>()} with id $arg with timestamp $globalTimestamp",
     );
 
     final res =

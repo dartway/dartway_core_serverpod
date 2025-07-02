@@ -18,7 +18,13 @@ class DwEntityListState<Entity extends SerializableModel>
 
     _nextPage = 0;
 
-    debugPrint("Building state for ${DwRepository.typeName<Entity>()}");
+    final globalTimestamp = ref.watch(
+      DwRepository.globalRefreshTriggerProvider,
+    );
+
+    debugPrint(
+      "Building state for ${DwRepository.typeName<Entity>()} with timestamp $globalTimestamp",
+    );
 
     final data = await _loadData();
 

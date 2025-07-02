@@ -1,0 +1,6 @@
+class: DwDataStash
+table: dw_data_stash
+fields:
+  identifier: String
+  createdAt: DateTime
+  data: Map<String, String>

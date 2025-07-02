@@ -10,6 +10,9 @@ import 'states/dw_single_entity_state.dart';
 
 class DwRepository {
   static const int mockModelId = 0;
+  static final globalRefreshTriggerProvider = StateProvider<DateTime>(
+    (ref) => DateTime.now(),
+  );
 
   static final Map<Type, String> _typeNamesMapping = {};
 
