@@ -68,6 +68,9 @@ abstract class DwAppNotification implements _i1.SerializableModel {
 
   bool isRead;
 
+  /// Returns a shallow copy of this [DwAppNotification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   DwAppNotification copyWith({
     int? id,
     int? toUserId,
@@ -121,6 +124,9 @@ class _DwAppNotificationImpl extends DwAppNotification {
           isRead: isRead,
         );
 
+  /// Returns a shallow copy of this [DwAppNotification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   DwAppNotification copyWith({
     Object? id = _Undefined,

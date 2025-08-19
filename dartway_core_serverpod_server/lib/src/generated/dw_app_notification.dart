@@ -8,13 +8,11 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 
-// ignore_for_file: invalid_use_of_visible_for_testing_member
-
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class DwAppNotification
-    implements _i1.TableRow, _i1.ProtocolSerialization {
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   DwAppNotification._({
     this.id,
     required this.toUserId,
@@ -74,8 +72,11 @@ abstract class DwAppNotification
   bool isRead;
 
   @override
-  _i1.Table get table => t;
+  _i1.Table<int?> get table => t;
 
+  /// Returns a shallow copy of this [DwAppNotification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   DwAppNotification copyWith({
     int? id,
     int? toUserId,
@@ -167,6 +168,9 @@ class _DwAppNotificationImpl extends DwAppNotification {
           isRead: isRead,
         );
 
+  /// Returns a shallow copy of this [DwAppNotification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   DwAppNotification copyWith({
     Object? id = _Undefined,
@@ -191,7 +195,7 @@ class _DwAppNotificationImpl extends DwAppNotification {
   }
 }
 
-class DwAppNotificationTable extends _i1.Table {
+class DwAppNotificationTable extends _i1.Table<int?> {
   DwAppNotificationTable({super.tableRelation})
       : super(tableName: 'dw_app_notification') {
     toUserId = _i1.ColumnInt(
@@ -260,7 +264,7 @@ class DwAppNotificationInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table get table => DwAppNotification.t;
+  _i1.Table<int?> get table => DwAppNotification.t;
 }
 
 class DwAppNotificationIncludeList extends _i1.IncludeList {
@@ -280,12 +284,34 @@ class DwAppNotificationIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table get table => DwAppNotification.t;
+  _i1.Table<int?> get table => DwAppNotification.t;
 }
 
 class DwAppNotificationRepository {
   const DwAppNotificationRepository._();
 
+  /// Returns a list of [DwAppNotification]s matching the given query parameters.
+  ///
+  /// Use [where] to specify which items to include in the return value.
+  /// If none is specified, all items will be returned.
+  ///
+  /// To specify the order of the items use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
+  /// The maximum number of items can be set by [limit]. If no limit is set,
+  /// all items matching the query will be returned.
+  ///
+  /// [offset] defines how many items to skip, after which [limit] (or all)
+  /// items are read from the database.
+  ///
+  /// ```dart
+  /// var persons = await Persons.db.find(
+  ///   session,
+  ///   where: (t) => t.lastName.equals('Jones'),
+  ///   orderBy: (t) => t.firstName,
+  ///   limit: 100,
+  /// );
+  /// ```
   Future<List<DwAppNotification>> find(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<DwAppNotificationTable>? where,
@@ -303,10 +329,27 @@ class DwAppNotificationRepository {
       orderDescending: orderDescending,
       limit: limit,
       offset: offset,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Returns the first matching [DwAppNotification] matching the given query parameters.
+  ///
+  /// Use [where] to specify which items to include in the return value.
+  /// If none is specified, all items will be returned.
+  ///
+  /// To specify the order use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
+  /// [offset] defines how many items to skip, after which the next one will be picked.
+  ///
+  /// ```dart
+  /// var youngestPerson = await Persons.db.findFirstRow(
+  ///   session,
+  ///   where: (t) => t.lastName.equals('Jones'),
+  ///   orderBy: (t) => t.age,
+  /// );
+  /// ```
   Future<DwAppNotification?> findFirstRow(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<DwAppNotificationTable>? where,
@@ -322,10 +365,11 @@ class DwAppNotificationRepository {
       orderByList: orderByList?.call(DwAppNotification.t),
       orderDescending: orderDescending,
       offset: offset,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Finds a single [DwAppNotification] by its [id] or null if no such row exists.
   Future<DwAppNotification?> findById(
     _i1.Session session,
     int id, {
@@ -333,10 +377,16 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.findById<DwAppNotification>(
       id,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Inserts all [DwAppNotification]s in the list and returns the inserted rows.
+  ///
+  /// The returned [DwAppNotification]s will have their `id` fields set.
+  ///
+  /// This is an atomic operation, meaning that if one of the rows fails to
+  /// insert, none of the rows will be inserted.
   Future<List<DwAppNotification>> insert(
     _i1.Session session,
     List<DwAppNotification> rows, {
@@ -344,10 +394,13 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.insert<DwAppNotification>(
       rows,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Inserts a single [DwAppNotification] and returns the inserted row.
+  ///
+  /// The returned [DwAppNotification] will have its `id` field set.
   Future<DwAppNotification> insertRow(
     _i1.Session session,
     DwAppNotification row, {
@@ -355,10 +408,15 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.insertRow<DwAppNotification>(
       row,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Updates all [DwAppNotification]s in the list and returns the updated rows. If
+  /// [columns] is provided, only those columns will be updated. Defaults to
+  /// all columns.
+  /// This is an atomic operation, meaning that if one of the rows fails to
+  /// update, none of the rows will be updated.
   Future<List<DwAppNotification>> update(
     _i1.Session session,
     List<DwAppNotification> rows, {
@@ -368,10 +426,13 @@ class DwAppNotificationRepository {
     return session.db.update<DwAppNotification>(
       rows,
       columns: columns?.call(DwAppNotification.t),
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Updates a single [DwAppNotification]. The row needs to have its id set.
+  /// Optionally, a list of [columns] can be provided to only update those
+  /// columns. Defaults to all columns.
   Future<DwAppNotification> updateRow(
     _i1.Session session,
     DwAppNotification row, {
@@ -381,10 +442,13 @@ class DwAppNotificationRepository {
     return session.db.updateRow<DwAppNotification>(
       row,
       columns: columns?.call(DwAppNotification.t),
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Deletes all [DwAppNotification]s in the list and returns the deleted rows.
+  /// This is an atomic operation, meaning that if one of the rows fail to
+  /// be deleted, none of the rows will be deleted.
   Future<List<DwAppNotification>> delete(
     _i1.Session session,
     List<DwAppNotification> rows, {
@@ -392,10 +456,11 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.delete<DwAppNotification>(
       rows,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Deletes a single [DwAppNotification].
   Future<DwAppNotification> deleteRow(
     _i1.Session session,
     DwAppNotification row, {
@@ -403,10 +468,11 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.deleteRow<DwAppNotification>(
       row,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Deletes all rows matching the [where] expression.
   Future<List<DwAppNotification>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<DwAppNotificationTable> where,
@@ -414,10 +480,12 @@ class DwAppNotificationRepository {
   }) async {
     return session.db.deleteWhere<DwAppNotification>(
       where: where(DwAppNotification.t),
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 
+  /// Counts the number of rows matching the [where] expression. If omitted,
+  /// will return the count of all rows in the table.
   Future<int> count(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<DwAppNotificationTable>? where,
@@ -427,7 +495,7 @@ class DwAppNotificationRepository {
     return session.db.count<DwAppNotification>(
       where: where?.call(DwAppNotification.t),
       limit: limit,
-      transaction: transaction ?? session.transaction,
+      transaction: transaction,
     );
   }
 }

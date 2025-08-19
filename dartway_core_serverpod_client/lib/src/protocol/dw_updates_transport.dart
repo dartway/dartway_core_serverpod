@@ -28,6 +28,9 @@ abstract class DwUpdatesTransport implements _i1.SerializableModel {
 
   List<_i2.DwModelWrapper> wrappedModelUpdates;
 
+  /// Returns a shallow copy of this [DwUpdatesTransport]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   DwUpdatesTransport copyWith({List<_i2.DwModelWrapper>? wrappedModelUpdates});
   @override
   Map<String, dynamic> toJson() {
@@ -48,6 +51,9 @@ class _DwUpdatesTransportImpl extends DwUpdatesTransport {
       {required List<_i2.DwModelWrapper> wrappedModelUpdates})
       : super._(wrappedModelUpdates: wrappedModelUpdates);
 
+  /// Returns a shallow copy of this [DwUpdatesTransport]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   DwUpdatesTransport copyWith({List<_i2.DwModelWrapper>? wrappedModelUpdates}) {
     return DwUpdatesTransport(

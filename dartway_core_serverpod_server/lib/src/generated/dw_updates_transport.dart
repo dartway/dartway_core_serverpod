@@ -29,6 +29,9 @@ abstract class DwUpdatesTransport
 
   List<_i2.DwModelWrapper> wrappedModelUpdates;
 
+  /// Returns a shallow copy of this [DwUpdatesTransport]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   DwUpdatesTransport copyWith({List<_i2.DwModelWrapper>? wrappedModelUpdates});
   @override
   Map<String, dynamic> toJson() {
@@ -41,8 +44,12 @@ abstract class DwUpdatesTransport
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      'wrappedModelUpdates':
-          wrappedModelUpdates.toJson(valueToJson: (v) => v.toJsonForProtocol())
+      'wrappedModelUpdates': wrappedModelUpdates.toJson(
+          valueToJson: (v) =>
+// ignore: unnecessary_type_check
+              v is _i1.ProtocolSerialization
+                  ? (v as _i1.ProtocolSerialization).toJsonForProtocol()
+                  : v.toJson())
     };
   }
 
@@ -57,6 +64,9 @@ class _DwUpdatesTransportImpl extends DwUpdatesTransport {
       {required List<_i2.DwModelWrapper> wrappedModelUpdates})
       : super._(wrappedModelUpdates: wrappedModelUpdates);
 
+  /// Returns a shallow copy of this [DwUpdatesTransport]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   DwUpdatesTransport copyWith({List<_i2.DwModelWrapper>? wrappedModelUpdates}) {
     return DwUpdatesTransport(

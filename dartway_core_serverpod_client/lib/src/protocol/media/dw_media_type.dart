@@ -19,11 +19,11 @@ enum DwMediaType implements _i1.SerializableModel {
   static DwMediaType fromJson(int index) {
     switch (index) {
       case 0:
-        return video;
+        return DwMediaType.video;
       case 1:
-        return image;
+        return DwMediaType.image;
       case 2:
-        return audio;
+        return DwMediaType.audio;
       default:
         throw ArgumentError(
             'Value "$index" cannot be converted to "DwMediaType"');

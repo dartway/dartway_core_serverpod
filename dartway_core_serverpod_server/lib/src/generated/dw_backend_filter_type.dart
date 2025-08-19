@@ -26,25 +26,25 @@ enum DwBackendFilterType implements _i1.SerializableModel {
   static DwBackendFilterType fromJson(String name) {
     switch (name) {
       case 'equals':
-        return equals;
+        return DwBackendFilterType.equals;
       case 'greaterThan':
-        return greaterThan;
+        return DwBackendFilterType.greaterThan;
       case 'greaterThanOrEquals':
-        return greaterThanOrEquals;
+        return DwBackendFilterType.greaterThanOrEquals;
       case 'lessThan':
-        return lessThan;
+        return DwBackendFilterType.lessThan;
       case 'lessThanOrEquals':
-        return lessThanOrEquals;
+        return DwBackendFilterType.lessThanOrEquals;
       case 'like':
-        return like;
+        return DwBackendFilterType.like;
       case 'ilike':
-        return ilike;
+        return DwBackendFilterType.ilike;
       case 'inSet':
-        return inSet;
+        return DwBackendFilterType.inSet;
       case 'and':
-        return and;
+        return DwBackendFilterType.and;
       case 'or':
-        return or;
+        return DwBackendFilterType.or;
       default:
         throw ArgumentError(
             'Value "$name" cannot be converted to "DwBackendFilterType"');
