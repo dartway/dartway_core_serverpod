@@ -8,24 +8,26 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 
+import 'package:dartway_core_serverpod_client/src/extra_classes/dw_model_wrapper.dart'
+    as _i8;
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+
+import '/src/extra_classes/dw_api_response.dart' as _i9;
+import '/src/extra_classes/dw_backend_filter.dart' as _i10;
+import '/src/extra_classes/dw_model_wrapper.dart' as _i7;
 import 'dw_app_notification.dart' as _i2;
 import 'dw_backend_filter_type.dart' as _i3;
 import 'dw_updates_transport.dart' as _i4;
 import 'media/dw_media.dart' as _i5;
 import 'media/dw_media_type.dart' as _i6;
-import '/src/extra_classes/dw_model_wrapper.dart' as _i7;
-import 'package:dartway_core_serverpod_client/src/extra_classes/dw_model_wrapper.dart'
-    as _i8;
-import '/src/extra_classes/dw_api_response.dart' as _i9;
-import '/src/extra_classes/dw_backend_filter.dart' as _i10;
+
+export 'client.dart';
 export 'dw_app_notification.dart';
 export 'dw_backend_filter_type.dart';
 export 'dw_updates_transport.dart';
 export 'media/dw_media.dart';
 export 'media/dw_media_type.dart';
-export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
   Protocol._();
@@ -40,6 +42,11 @@ class Protocol extends _i1.SerializationManager {
     Type? t,
   ]) {
     t ??= T;
+    if (data is Map<String, dynamic>) {
+      final manualDeserialization =
+          _i9.DwApiResponse.manualDeserialization<T>(data);
+      if (manualDeserialization != null) return manualDeserialization;
+    }
     if (t == _i2.DwAppNotification) {
       return _i2.DwAppNotification.fromJson(data) as T;
     }
