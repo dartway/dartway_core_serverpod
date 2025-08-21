@@ -47,6 +47,18 @@ class _State extends ConsumerState<DwAdminDatabasePage> {
             spacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
+              // IconButton(onPressed: () async =>
+              //       _selectedPage.pageDescriptor.entityManagerBlock. editingFormPresenter(
+              //             context,
+              //             NitGenericForm<Entity, FormDescriptor>(
+              //               fields: fields,
+              //               model: null,
+              //               entityManager: ref.dwGenericEntityManager<Entity>(),
+              //               defaultValues: await defaultValuesProvider?.call(
+              //                 ref,
+              //               ),
+              //             ),
+              //           ), icon: icon)
               const Text("Другие разделы:"),
               ...widget.pageDescriptors
                   .where((e) => e != _selectedPage)

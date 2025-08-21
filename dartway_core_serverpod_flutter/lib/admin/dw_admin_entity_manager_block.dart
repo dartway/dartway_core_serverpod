@@ -42,38 +42,40 @@ class DwAdminEntityManagerBlock<
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
-        InfiniteListView(
-          listViewConfig: DwEntityListStateConfig<Entity>(
-            backendFilter: customBackendFilter,
-            pageSize: 20,
-          ),
-          listTileBuilder:
-              (context, model) => Card(
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed:
-                          () async => editingFormPresenter(
-                            context,
-                            NitGenericForm<Entity, FormDescriptor>(
-                              fields: fields,
-                              model: model,
-                              entityManager: ref.dwGenericEntityManager(
-                                allowDelete: allowDelete,
+        Positioned.fill(
+          child: InfiniteListView(
+            listViewConfig: DwEntityListStateConfig<Entity>(
+              backendFilter: customBackendFilter,
+              pageSize: 20,
+            ),
+            listTileBuilder:
+                (context, model) => Card(
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed:
+                            () async => editingFormPresenter(
+                              context,
+                              NitGenericForm<Entity, FormDescriptor>(
+                                fields: fields,
+                                model: model,
+                                entityManager: ref.dwGenericEntityManager(
+                                  allowDelete: allowDelete,
+                                ),
                               ),
                             ),
-                          ),
-                      icon: const Icon(Icons.edit),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: listViewBuilder(model: model),
+                        icon: const Icon(Icons.edit),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: listViewBuilder(model: model),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+          ),
         ),
         Positioned(
           right: 20,

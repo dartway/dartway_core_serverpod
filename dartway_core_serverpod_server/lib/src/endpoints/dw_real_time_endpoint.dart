@@ -34,9 +34,13 @@ class DwRealTimeEndpoint extends Endpoint {
 
   @override
   Future<void> streamClosed(StreamingSession session) async {
-    session.messages.removeListener(
-      getUserObject(session),
-      (update) => _listener(session, update),
-    );
+    final channel = getUserObject(session);
+
+    if (channel != null) {
+      session.messages.removeListener(
+        getUserObject(session),
+        (update) => _listener(session, update),
+      );
+    }
   }
 }
