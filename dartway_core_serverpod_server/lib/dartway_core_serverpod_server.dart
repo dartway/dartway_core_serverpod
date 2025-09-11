@@ -1,3 +1,5 @@
+export 'package:serverpod_cloud_storage_s3/serverpod_cloud_storage_s3.dart';
+
 export 'src/business/crud_config/dw_crud_config.dart';
 export 'src/business/crud_config/dw_get_all_config.dart';
 export 'src/business/crud_config/dw_get_one_config.dart';

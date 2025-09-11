@@ -19,8 +19,13 @@ class DwRepository {
   static final Map<String, List<Function(List<DwModelWrapper>)>>
   _updateListeners = {};
 
-  static String typeName<T extends SerializableModel>() =>
-      _typeNamesMapping[T]!;
+  static String typeName<T extends SerializableModel>() {
+    final name = _typeNamesMapping[T];
+    if (name == null) {
+      throw Exception("Dw Repository was not initialized for type $T");
+    }
+    return name;
+  }
 
   static String? maybeTypeName<T>() => _typeNamesMapping[T];
 
