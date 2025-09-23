@@ -19,14 +19,14 @@ class DwApiResponse<T> implements SerializableModel {
   })  : isOk = false,
         value = null,
         error =
-            'Действие не поддерживается сервером${source != null ? ' ($source)' : ''}',
+            'Action not configured on server ${source != null ? ' ($source)' : ''}',
         warning = null,
         updatedEntities = null;
 
   const DwApiResponse.forbidden()
       : isOk = false,
         value = null,
-        error = 'Недостаточно полномочий',
+        error = 'Not enough permissions',
         warning = null,
         updatedEntities = null;
 

@@ -6,11 +6,13 @@ class DwEntityListStateConfig<Entity extends SerializableModel>
     implements DwInfiniteListViewConfig<Entity> {
   final DwBackendFilter? backendFilter;
   final int? pageSize;
+  final String? apiGroupOverride;
   final Function(List<DwModelWrapper>)? customUpdatesListener;
 
   const DwEntityListStateConfig({
     this.backendFilter,
     this.pageSize,
+    this.apiGroupOverride,
     this.customUpdatesListener,
   });
 
@@ -27,30 +29,44 @@ class DwEntityListStateConfig<Entity extends SerializableModel>
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DwEntityListStateConfig<Entity> &&
-          runtimeType == other.runtimeType &&
-          backendFilter == other.backendFilter &&
-          pageSize == other.pageSize &&
-          customUpdatesListener == other.customUpdatesListener;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is DwEntityListStateConfig<Entity> &&
+            backendFilter == other.backendFilter &&
+            pageSize == other.pageSize &&
+            apiGroupOverride == other.apiGroupOverride &&
+            customUpdatesListener == other.customUpdatesListener;
+  }
 
   @override
   int get hashCode =>
       backendFilter.hashCode ^
       pageSize.hashCode ^
+      apiGroupOverride.hashCode ^
       customUpdatesListener.hashCode;
 
   DwEntityListStateConfig<Entity> copyWith({
     DwBackendFilter? backendFilter,
     int? pageSize,
+    String? apiGroupOverride,
     Function(List<DwModelWrapper>)? customUpdatesListener,
   }) {
     return DwEntityListStateConfig<Entity>(
       backendFilter: backendFilter ?? this.backendFilter,
       pageSize: pageSize ?? this.pageSize,
+      apiGroupOverride: apiGroupOverride ?? this.apiGroupOverride,
       customUpdatesListener:
           customUpdatesListener ?? this.customUpdatesListener,
     );
+  }
+
+  @override
+  String toString() {
+    return 'DwEntityListStateConfig<$Entity>('
+        'backendFilter: $backendFilter, '
+        'pageSize: $pageSize, '
+        'apiGroupOverride: $apiGroupOverride, '
+        'customUpdatesListener: $customUpdatesListener'
+        ')';
   }
 }

@@ -1,74 +1,88 @@
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-extension RefWatchAndReadExtension on Ref {
-  static _defaultConfig<T extends SerializableModel>(
-    int id, {
+extension RefEntityAccessExtension on Ref {
+  /// Subscribes to the entity state.
+  /// May return `null` if the entity is not found.
+  Future<T?> watchMaybeModel<T extends SerializableModel>({
+    int? id,
+    DwBackendFilter? filter,
+    String? apiGroupOverride,
     T? initialModel,
-  }) => DwSingleEntityStateConfig<T>(
-    backendFilter: DwBackendFilter<int>.value(
-      type: DwBackendFilterType.equals,
-      fieldName: 'id',
-      fieldValue: id,
-    ),
-    initialModel: initialModel,
-  );
-
-  Future<T> watchModel<T extends SerializableModel>(int id) async {
-    return await watch(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)).future,
-    ).then((res) => res!);
+  }) {
+    final cfg = DwSingleEntityStateConfig<T>(
+      id: id,
+      filter: filter,
+      apiGroupOverride: apiGroupOverride,
+      initialModel: initialModel,
+    );
+    return watch(DwRepository.singleEntityProvider<T>()(cfg).future);
   }
 
-  Future<T> readModel<T extends SerializableModel>(int id) async {
-    return await read(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)).future,
-    ).then((res) => res!);
+  /// Subscribes to the entity state.
+  /// Throws [StateError] if the entity is not found.
+  Future<T> watchModel<T extends SerializableModel>({
+    int? id,
+    DwBackendFilter? filter,
+    String? apiGroupOverride,
+    T? initialModel,
+  }) async {
+    final res = await watchMaybeModel<T>(
+      id: id,
+      filter: filter,
+      apiGroupOverride: apiGroupOverride,
+      initialModel: initialModel,
+    );
+    if (res == null) {
+      throw StateError(
+        'watchModel<$T>: entity not found '
+        '(id=$id, filter=$filter, apiGroup=$apiGroupOverride)',
+      );
+    }
+    return res;
   }
 
-  AsyncValue<T> watchModelAsync<T extends SerializableModel>(int id) {
-    return watch(
-      DwRepository.singleEntityProvider<T>()(_defaultConfig<T>(id)),
-    ).whenData((res) => res!);
+  /// Performs a one-time fetch from the backend.
+  /// May return `null` if the entity is not found.
+  Future<T?> readMaybeModel<T extends SerializableModel>({
+    int? id,
+    DwBackendFilter? filter,
+    String? apiGroupOverride,
+    T? initialModel,
+    bool forceFetch = false,
+  }) {
+    final cfg = DwSingleEntityStateConfig<T>(
+      id: id,
+      filter: filter,
+      apiGroupOverride: apiGroupOverride,
+      initialModel: initialModel,
+    );
+    final notifier = read(DwRepository.singleEntityProvider<T>()(cfg).notifier);
+    return notifier.read(forceFetch: forceFetch);
   }
 
-  Future<T> readModelCustom<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) async => (await readMaybeModelCustom<T>(backendFilter: backendFilter))!;
-
-  Future<T?> readMaybeModelCustom<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) async => read(
-    DwRepository.singleEntityProvider<T>()(
-          DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
-        )
-        .future,
-  );
-
-  Future<T> watchModelCustom<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) async => (await watchMaybeModelCustom<T>(backendFilter: backendFilter))!;
-
-  Future<T?> watchMaybeModelCustom<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) async => watch(
-    DwRepository.singleEntityProvider<T>()(
-          DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
-        )
-        .future,
-  );
-
-  AsyncValue<T> watchModelCustomAsync<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) => watchMaybeModelCustomAsync<T>(
-    backendFilter: backendFilter,
-  ).whenData((res) => res!);
-
-  AsyncValue<T?> watchMaybeModelCustomAsync<T extends SerializableModel>({
-    required DwBackendFilter backendFilter,
-  }) => watch(
-    DwRepository.singleEntityProvider<T>()(
-      DwSingleEntityStateConfig<T>(backendFilter: backendFilter),
-    ),
-  );
+  /// Performs a one-time fetch from the backend.
+  /// Throws [StateError] if the entity is not found.
+  Future<T> readModel<T extends SerializableModel>({
+    int? id,
+    DwBackendFilter? filter,
+    String? apiGroupOverride,
+    T? initialModel,
+    bool forceFetch = false,
+  }) async {
+    final res = await readMaybeModel<T>(
+      id: id,
+      filter: filter,
+      apiGroupOverride: apiGroupOverride,
+      initialModel: initialModel,
+      forceFetch: forceFetch,
+    );
+    if (res == null) {
+      throw StateError(
+        'readModel<$T>: entity not found '
+        '(id=$id, filter=$filter, apiGroup=$apiGroupOverride)',
+      );
+    }
+    return res;
+  }
 }

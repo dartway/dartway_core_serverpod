@@ -6,10 +6,10 @@ class DwCore {
 
   static late final SessionManager serverpodSessionManager;
 
-  static DwBackendFilter prepareUserProfileFilter(int serverpodUserInfoId) =>
-      DwBackendFilter<int>.value(
-        type: DwBackendFilterType.equals,
-        fieldName: 'userId',
-        fieldValue: serverpodUserInfoId,
-      );
+  // static DwBackendFilter prepareUserProfileFilter(int serverpodUserInfoId) =>
+  //     DwBackendFilter<int>.value(
+  //       type: DwBackendFilterType.equals,
+  //       fieldName: 'userId',
+  //       fieldValue: serverpodUserInfoId,
+  //     );
 }

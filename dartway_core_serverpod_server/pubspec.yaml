@@ -6,10 +6,24 @@ environment:
 
 dependencies:
   serverpod: ^2.9.1
+  serverpod_auth_server: ^2.9.1
+
   serverpod_cloud_storage_s3: # ^2.9.1
     path: packages/serverpod_cloud_storage_s3
+
+  dartway_core_serverpod_shared:
+    git:
+      url: https://github.com/dartway/dartway_core_serverpod.git
+      path: dartway_core_serverpod_shared
+
   collection: ^1.19.1
+  crypto: ^3.0.6
+
 
 
 dev_dependencies:
   lints: '>=3.0.0 <6.0.0'
+
+dependency_overrides:
+  dartway_core_serverpod_shared:
+    path: ../dartway_core_serverpod_shared

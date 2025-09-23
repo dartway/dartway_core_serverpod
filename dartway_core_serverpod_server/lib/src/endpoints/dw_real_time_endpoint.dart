@@ -1,4 +1,4 @@
-import 'package:dartway_core_serverpod_server/src/business/dw_session_extension.dart';
+import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/serverpod.dart';
 
 class DwRealTimeEndpoint extends Endpoint {
@@ -6,7 +6,7 @@ class DwRealTimeEndpoint extends Endpoint {
 
   @override
   Future<void> streamOpened(StreamingSession session) async {
-    final userId = await session.currentUserId;
+    final userId = await session.currentUserProfileId;
 
     if (userId == null) {
       return;

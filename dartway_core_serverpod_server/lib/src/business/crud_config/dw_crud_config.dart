@@ -5,24 +5,6 @@ import 'dw_get_all_config.dart';
 import 'dw_post_config.dart';
 
 class DwCrudConfig<T extends TableRow> {
-  static final Map<String, DwCrudConfig> _serverConfiguration = {};
-
-  static initConfiguration(List<DwCrudConfig> configuration) {
-    _serverConfiguration.addEntries(
-      [
-        // fcmTokenConfig,
-        // userInfoConfig,
-        // ...defaultChatCrudConfigs,
-        ...configuration,
-      ].map(
-        (config) => MapEntry(config.className, config),
-      ),
-    );
-  }
-
-  static DwCrudConfig<TableRow>? getCaller(String className) =>
-      _serverConfiguration[className];
-
   const DwCrudConfig({
     required this.table,
     this.getOneCustomConfigs,

@@ -12,25 +12,22 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # serverpod_client: ^2.9.1
-  # dartway_core_serverpod_client:
-  #   path: ../dartway_core_serverpod_client
+  serverpod_auth_client: ^2.9.1
+  serverpod_auth_shared_flutter: ^2.9.1
+
   dartway_app:
-    # path: ../../dartway_app
     git: https://github.com/dartway/dartway_app.git
 
+  
   dartway_core_serverpod_client:
     git:
       url: https://github.com/dartway/dartway_core_serverpod.git
       path: dartway_core_serverpod_client
 
-  nit_generic_forms: ^0.0.1
-    # path: ../nit_generic_forms
-    # git:
-    #   url: git@github.com:novikov-it/nit_generic_forms.git
-
-  serverpod_auth_client: ^2.9.1
-  serverpod_auth_shared_flutter: ^2.9.1
+  dartway_core_serverpod_shared:
+    git:
+      url: https://github.com/dartway/dartway_core_serverpod.git
+      path: dartway_core_serverpod_shared
 
   collection: ^1.19.1
   flutter_riverpod: ^2.5.1
@@ -57,6 +54,9 @@ dev_dependencies:
 dependency_overrides:
   dartway_core_serverpod_client:
     path: ../dartway_core_serverpod_client
+  
+  dartway_core_serverpod_shared:
+    path: ../dartway_core_serverpod_shared
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

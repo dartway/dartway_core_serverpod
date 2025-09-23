@@ -6,22 +6,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../dw_repository.dart';
 
 extension WidgetRefUpdateActionsExtension on WidgetRef {
-  Future<T?> saveModel<T extends SerializableModel>(T model) async {
-    return saveModels([
-      model,
-    ]).then((ids) => ids == null ? null : ids.first as T);
-  }
-
-  Future<List<SerializableModel>?> saveModels(
-    List<SerializableModel> models,
-  ) async {
+  Future<Entity> saveModel<Entity extends SerializableModel>(
+    Entity model, {
+    String? apiGroupOverride,
+  }) async {
     return await DwCore.endpointCaller.dwCrud
-        .saveModels(
-          wrappedModels:
-              models.map((model) => DwModelWrapper.wrap(model: model)).toList(),
+        .saveModel(
+          wrappedModel: DwModelWrapper.wrap(model: model),
+          apiGroup: apiGroupOverride,
         )
-        .then((response) => processApiResponse<List<DwModelWrapper>>(response))
-        .then((res) => res?.map((e) => e.model).toList());
+        .then((response) => processApiResponse<DwModelWrapper>(response))
+        .then((res) => res!.model as Entity);
   }
 
   // Future<DwModelWrapper?> saveModel<T extends SerializableModel>(
@@ -41,7 +36,10 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
   //       .then((response) => processApiResponse<List<DwModelWrapper>>(response));
   // }
 
-  Future<bool> deleteModel<T extends SerializableModel>(T model) async {
+  Future<bool> deleteModel<T extends SerializableModel>(
+    T model, {
+    String? apiGroupOverride,
+  }) async {
     // TODO: подумать, как сделать это получше, может апи поменять или засылать objectWrapper.deleted просто
 
     final modelId = model.toJson()['id'];
@@ -55,6 +53,7 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
         .delete(
           className: DwModelWrapper.getClassNameForObject(model),
           modelId: modelId,
+          apiGroup: apiGroupOverride,
         )
         .then((response) => processApiResponse<bool>(response) ?? false);
   }

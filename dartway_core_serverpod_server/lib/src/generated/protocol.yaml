@@ -1,8 +1,11 @@
+dwPhoneAuth:
+  - startVerification:
+  - verifyWithOneTimePassword:
+  - forceVerification:
 dwCrud:
   - getOne:
   - getCount:
   - getAll:
-  - saveModels:
   - saveModel:
   - delete:
 dwRealTime:

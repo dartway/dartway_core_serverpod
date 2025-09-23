@@ -6,7 +6,7 @@ part of 'dw_session_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dwSessionStateHash() => r'80644dab53ab8dd6ed03ce8d5f67368139bc00bf';
+String _$dwSessionStateHash() => r'526a61dc57878c148e5e34b6ab439f59fed6221c';
 
 /// See also [DwSessionState].
 @ProviderFor(DwSessionState)

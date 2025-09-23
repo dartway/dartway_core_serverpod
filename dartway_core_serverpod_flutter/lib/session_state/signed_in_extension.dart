@@ -4,31 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dw_session_state.dart';
 
 extension SignedInExtension on Ref {
-  Future<bool> signOut() => read(dwSessionStateProvider.notifier).signOut();
+  Future<bool> signOut({bool allDevices = false}) =>
+      read(dwSessionStateProvider.notifier).signOut(allDevices: allDevices);
 
   bool get signedIn => watch(
-    dwSessionStateProvider.select((value) => value.signedInUserId != null),
+    dwSessionStateProvider.select((value) => value.signedInUserInfoId != null),
   );
-
-  DwBackendFilter? get userProfileBackendFilter => watch(
-    dwSessionStateProvider.select((value) => value.userProfileBackendFilter),
-  );
-
-  int? get signedInUserId =>
-      watch(dwSessionStateProvider.select((value) => value.signedInUserId));
 }
 
 extension SignedInWidgetExtension on WidgetRef {
-  Future<bool> signOut() => read(dwSessionStateProvider.notifier).signOut();
+  Future<bool> signOut({bool allDevices = false}) =>
+      read(dwSessionStateProvider.notifier).signOut(allDevices: allDevices);
 
   bool get signedIn => watch(
-    dwSessionStateProvider.select((value) => value.signedInUserId != null),
+    dwSessionStateProvider.select((value) => value.signedInUserInfoId != null),
   );
-
-  DwBackendFilter? get userProfileBackendFilter => watch(
-    dwSessionStateProvider.select((value) => value.userProfileBackendFilter),
-  );
-
-  int? get signedInUserId =>
-      watch(dwSessionStateProvider.select((value) => value.signedInUserId));
 }

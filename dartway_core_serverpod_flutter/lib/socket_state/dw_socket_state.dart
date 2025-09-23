@@ -24,7 +24,7 @@ class DwSocketState extends _$DwSocketState {
   @override
   DwSocketStateModel build() {
     ref.listen(dwSessionStateProvider, (previousState, nextState) {
-      if (nextState.signedInUserId != previousState?.signedInUserId
+      if (nextState.signedInUserInfoId != previousState?.signedInUserInfoId
       //  &&
       //     _connectionHandler?.status.status ==
       //         StreamingConnectionStatus.connected
