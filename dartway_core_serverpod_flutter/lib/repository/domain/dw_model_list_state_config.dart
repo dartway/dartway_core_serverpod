@@ -25,7 +25,7 @@ class DwModelListStateConfig<Model extends SerializableModel>
 
   @override
   AsyncValue<List<Model>> watchAsyncValue(WidgetRef ref) {
-    return ref.watchModelListCustomizedAsync<Model>(config: this);
+    return ref.watch(DwRepository.modelListStateProvider<Model>()(this));
   }
 
   @override
