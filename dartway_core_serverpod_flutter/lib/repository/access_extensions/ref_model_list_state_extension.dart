@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 _filter<T>(T? model, bool Function(T model) filter) =>
     model != null ? filter(model) : false;
 
-extension RefEntityListStateExtensions on Ref {
-  Future<List<T>> watchEntityList<T extends SerializableModel>({
+extension RefModelListStateExtensions on Ref {
+  Future<List<T>> watchModelList<T extends SerializableModel>({
     DwBackendFilter? backendFilter,
     bool Function(T model)? frontendFilter,
   }) async {
     final items = await watch(
-      DwRepository.entityListStateProvider<T>()(
-            DwEntityListStateConfig<T>(backendFilter: backendFilter),
+      DwRepository.modelListStateProvider<T>()(
+            DwModelListStateConfig<T>(backendFilter: backendFilter),
           )
           .future,
     );
@@ -21,12 +21,12 @@ extension RefEntityListStateExtensions on Ref {
         : items.where((e) => _filter(e, frontendFilter)).toList();
   }
 
-  AsyncValue<List<T>> watchEntityListAsync<T extends SerializableModel>({
+  AsyncValue<List<T>> watchModelListAsync<T extends SerializableModel>({
     DwBackendFilter? backendFilter,
     bool Function(T model)? frontendFilter,
   }) => watch(
-    DwRepository.entityListStateProvider<T>()(
-      DwEntityListStateConfig<T>(backendFilter: backendFilter),
+    DwRepository.modelListStateProvider<T>()(
+      DwModelListStateConfig<T>(backendFilter: backendFilter),
     ),
   ).whenData(
     (data) =>
@@ -36,20 +36,20 @@ extension RefEntityListStateExtensions on Ref {
   );
 
   AsyncValue<List<T>>
-  watchEntityListCustomizedAsync<T extends SerializableModel>({
-    required DwEntityListStateConfig config,
+  watchModelListCustomizedAsync<T extends SerializableModel>({
+    required DwModelListStateConfig config,
     bool Function(T model)? frontendFilter,
-  }) => watch(DwRepository.entityListStateProvider<T>()(config)).whenData(
+  }) => watch(DwRepository.modelListStateProvider<T>()(config)).whenData(
     (data) =>
         frontendFilter == null
             ? data
             : data.where((e) => _filter(e, frontendFilter)).toList(),
   );
 
-  loadNextPageForCustomizedEntityListMore<T extends SerializableModel>({
-    required DwEntityListStateConfig config,
+  loadNextPageForCustomizedModelListMore<T extends SerializableModel>({
+    required DwModelListStateConfig config,
   }) =>
       read(
-        DwRepository.entityListStateProvider<T>()(config).notifier,
+        DwRepository.modelListStateProvider<T>()(config).notifier,
       ).loadNextPage();
 }

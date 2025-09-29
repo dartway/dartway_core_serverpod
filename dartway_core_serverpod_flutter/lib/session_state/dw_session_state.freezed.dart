@@ -9,7 +9,7 @@ part of 'dw_session_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
-T _$identity<T>(T value) => value;
+T _$idmodel<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
@@ -135,7 +135,7 @@ class _$DwSessionStateModelImpl implements _DwSessionStateModel {
   _$$DwSessionStateModelImplCopyWith<_$DwSessionStateModelImpl> get copyWith =>
       __$$DwSessionStateModelImplCopyWithImpl<_$DwSessionStateModelImpl>(
         this,
-        _$identity,
+        _$idmodel,
       );
 }
 

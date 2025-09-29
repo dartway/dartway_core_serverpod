@@ -2,11 +2,11 @@
 // export 'state/nit_repository_state.dart';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
-import 'package:dartway_core_serverpod_flutter/repository/states/dw_entity_list_state.dart';
+import 'package:dartway_core_serverpod_flutter/repository/states/dw_model_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'states/dw_single_entity_state.dart';
+import 'states/dw_single_model_state.dart';
 
 class DwRepository {
   static const int mockModelId = 0;
@@ -97,67 +97,67 @@ class DwRepository {
     }
   }
 
-  static final _entityListStateProviders =
+  static final _modelListStateProviders =
       <
         Type,
         AsyncNotifierProviderFamily<
-          DwEntityListState,
+          DwModelListState,
           List<dynamic>,
-          DwEntityListStateConfig
+          DwModelListStateConfig
         >
       >{};
 
   static AsyncNotifierProviderFamily<
-    DwEntityListState<T>,
+    DwModelListState<T>,
     List<T>,
-    DwEntityListStateConfig
+    DwModelListStateConfig
   >
-  entityListStateProvider<T extends SerializableModel>() {
-    if (_entityListStateProviders[T] == null) {
-      _entityListStateProviders[T] = AsyncNotifierProviderFamily<
-        DwEntityListState<T>,
+  modelListStateProvider<T extends SerializableModel>() {
+    if (_modelListStateProviders[T] == null) {
+      _modelListStateProviders[T] = AsyncNotifierProviderFamily<
+        DwModelListState<T>,
         List<T>,
-        DwEntityListStateConfig
-      >(DwEntityListState<T>.new);
+        DwModelListStateConfig
+      >(DwModelListState<T>.new);
     }
 
-    return _entityListStateProviders[T]
+    return _modelListStateProviders[T]
         as AsyncNotifierProviderFamily<
-          DwEntityListState<T>,
+          DwModelListState<T>,
           List<T>,
-          DwEntityListStateConfig
+          DwModelListStateConfig
         >;
   }
 
-  static final _singleEntityStateProviders =
+  static final _singleModelStateProviders =
       <
         Type,
         AsyncNotifierProviderFamily<
-          DwSingleEntityState,
+          DwSingleModelState,
           dynamic,
-          DwSingleEntityStateConfig
+          DwSingleModelStateConfig
         >
       >{};
 
   static AsyncNotifierProviderFamily<
-    DwSingleEntityState<T>,
+    DwSingleModelState<T>,
     T?,
-    DwSingleEntityStateConfig
+    DwSingleModelStateConfig
   >
-  singleEntityProvider<T extends SerializableModel>() {
-    if (_singleEntityStateProviders[T] == null) {
-      _singleEntityStateProviders[T] = AsyncNotifierProviderFamily<
-        DwSingleEntityState<T>,
+  singleModelProvider<T extends SerializableModel>() {
+    if (_singleModelStateProviders[T] == null) {
+      _singleModelStateProviders[T] = AsyncNotifierProviderFamily<
+        DwSingleModelState<T>,
         T?,
-        DwSingleEntityStateConfig
-      >(DwSingleEntityState<T>.new);
+        DwSingleModelStateConfig
+      >(DwSingleModelState<T>.new);
     }
 
-    return _singleEntityStateProviders[T]
+    return _singleModelStateProviders[T]
         as AsyncNotifierProviderFamily<
-          DwSingleEntityState<T>,
+          DwSingleModelState<T>,
           T?,
-          DwSingleEntityStateConfig
+          DwSingleModelStateConfig
         >;
   }
 }

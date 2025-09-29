@@ -12,7 +12,7 @@ class DwApiResponse<T> implements SerializableModel {
     required this.value,
     this.warning,
     this.error,
-    this.updatedEntities,
+    this.updatedModels,
   });
 
   const DwApiResponse.notConfigured()
@@ -20,20 +20,20 @@ class DwApiResponse<T> implements SerializableModel {
         value = null,
         error = 'Действие не поддерживается сервером',
         warning = null,
-        updatedEntities = null;
+        updatedModels = null;
 
   const DwApiResponse.forbidden()
       : isOk = false,
         value = null,
         error = 'Недостаточно полномочий',
         warning = null,
-        updatedEntities = null;
+        updatedModels = null;
 
   final bool isOk;
   final T? value;
   final String? warning;
   final String? error;
-  final List<DwModelWrapper>? updatedEntities;
+  final List<DwModelWrapper>? updatedModels;
 
   static K? manualDeserialization<K>(
     Map<String, dynamic> jsonSerialization,
@@ -76,9 +76,9 @@ class DwApiResponse<T> implements SerializableModel {
               .deserialize<T>(jsonSerialization['value']),
       warning: jsonSerialization['warning'] as String?,
       error: jsonSerialization['error'] as String?,
-      updatedEntities: jsonSerialization['updatedEntities'] == null
+      updatedModels: jsonSerialization['updatedModels'] == null
           ? null
-          : (jsonSerialization['updatedEntities'] as List)
+          : (jsonSerialization['updatedModels'] as List)
               .map((e) =>
                   DwCoreServerpodClient.protocol.deserialize<DwModelWrapper>(e))
               .toList() as dynamic,
@@ -94,9 +94,8 @@ class DwApiResponse<T> implements SerializableModel {
           : value,
       if (warning != null) 'warning': warning,
       if (error != null) 'error': error,
-      if (updatedEntities != null)
-        'updatedEntities':
-            updatedEntities?.toJson(valueToJson: (v) => v.toJson()),
+      if (updatedModels != null)
+        'updatedModels': updatedModels?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 }

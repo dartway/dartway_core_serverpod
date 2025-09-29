@@ -75,7 +75,7 @@ class DwSocketState extends _$DwSocketState {
     // if (update.model is DwAppNotification) {
     //   ref.notifyUser(update.model as DwAppNotification);
     //   // for (var enclosedObject
-    //   //     in (update.model as DwAppNotification).updatedEntities ?? []) {
+    //   //     in (update.model as DwAppNotification).updatedModels ?? []) {
     //   //   ref.updateFromStream(enclosedObject);
     //   // }
     // }

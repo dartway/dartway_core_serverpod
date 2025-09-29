@@ -1,21 +1,21 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 
-class DwSingleEntityStateConfig<Entity extends SerializableModel> {
+class DwSingleModelStateConfig<Model extends SerializableModel> {
   final DwBackendFilter backendFilter;
   final String? apiGroupOverride;
-  final Entity? initialModel;
+  final Model? initialModel;
 
-  const DwSingleEntityStateConfig._({
+  const DwSingleModelStateConfig._({
     required this.backendFilter,
     this.apiGroupOverride,
     this.initialModel,
   });
 
-  factory DwSingleEntityStateConfig({
+  factory DwSingleModelStateConfig({
     int? id,
     DwBackendFilter? filter,
     String? apiGroupOverride,
-    Entity? initialModel,
+    Model? initialModel,
   }) {
     assert(
       id != null || filter != null,
@@ -30,19 +30,19 @@ class DwSingleEntityStateConfig<Entity extends SerializableModel> {
           fieldValue: id!,
         );
 
-    return DwSingleEntityStateConfig._(
+    return DwSingleModelStateConfig._(
       backendFilter: backendFilter,
       apiGroupOverride: apiGroupOverride,
       initialModel: initialModel,
     );
   }
 
-  DwSingleEntityStateConfig<Entity> copyWith({
+  DwSingleModelStateConfig<Model> copyWith({
     DwBackendFilter? backendFilter,
     String? apiGroupOverride,
-    Entity? initialModel,
+    Model? initialModel,
   }) {
-    return DwSingleEntityStateConfig<Entity>._(
+    return DwSingleModelStateConfig<Model>._(
       backendFilter: backendFilter ?? this.backendFilter,
       apiGroupOverride: apiGroupOverride ?? this.apiGroupOverride,
       initialModel: initialModel ?? this.initialModel,
@@ -52,7 +52,7 @@ class DwSingleEntityStateConfig<Entity extends SerializableModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DwSingleEntityStateConfig<Entity> &&
+      other is DwSingleModelStateConfig<Model> &&
           backendFilter == other.backendFilter &&
           apiGroupOverride == other.apiGroupOverride &&
           initialModel == other.initialModel;
@@ -65,7 +65,7 @@ class DwSingleEntityStateConfig<Entity extends SerializableModel> {
 
   @override
   String toString() =>
-      'DwSingleEntityStateConfig<$Entity>('
+      'DwSingleModelStateConfig<$Model>('
       'backendFilter: $backendFilter, '
       'apiGroupOverride: $apiGroupOverride, '
       'initialModel: $initialModel'

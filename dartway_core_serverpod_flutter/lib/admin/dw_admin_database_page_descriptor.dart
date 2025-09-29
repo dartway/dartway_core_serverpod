@@ -7,7 +7,7 @@ abstract class DwAdminDatabasePageDescriptor implements Enum {
 }
 
 class DwADPD {
-  const DwADPD({required this.pageTitle, required this.entityManagerBlock});
+  const DwADPD({required this.pageTitle, required this.modelManagerBlock});
   final String pageTitle;
-  final Widget entityManagerBlock;
+  final Widget modelManagerBlock;
 }

@@ -20,12 +20,11 @@ class DwCrudEndpoint extends Endpoint {
         "Received getOneCustom request for $className with filter: ${filter.attributeMap}",
       );
 
-      if (caller?.getOneCustomConfigs == null ||
-          caller!.getOneCustomConfigs!.isEmpty) {
+      if (caller?.getModelConfigs == null || caller!.getModelConfigs!.isEmpty) {
         return DwApiResponse.notConfigured(source: 'получение $className');
       }
 
-      final config = caller.getOneCustomConfigs!.firstWhereOrNull(
+      final config = caller.getModelConfigs!.firstWhereOrNull(
         (e) => _deepEquality.equals(
           e.filterPrototype.attributeMap,
           filter.attributeMap,
@@ -61,11 +60,11 @@ class DwCrudEndpoint extends Endpoint {
       "CRUD: getCount for $className with filter: $filter",
     );
 
-    if (caller?.getAll == null) {
+    if (caller?.getListConfig == null) {
       return DwApiResponse.notConfigured(source: 'getCount for $className');
     }
 
-    return await caller!.getAll!.getCount(
+    return await caller!.getListConfig!.getCount(
       session,
       whereClause: filter?.prepareWhere(
         caller.table,
@@ -83,46 +82,17 @@ class DwCrudEndpoint extends Endpoint {
   }) async {
     final caller = DwCore.instance.getCrudConfig(className, api: apiGroup);
 
-    if (caller?.getAll == null) {
+    if (caller?.getListConfig == null) {
       return DwApiResponse.notConfigured(source: 'получение списка $className');
     }
 
-    return await caller!.getAll!.getEntityList(
+    return await caller!.getListConfig!.getModelList(
       session,
       whereClause: filter?.prepareWhere(caller.table),
       limit: limit,
       offset: offset,
     );
   }
-
-  // Future<DwApiResponse<List<DwModelWrapper>>> saveModels(
-  //   Session session, {
-  //   required List<DwModelWrapper> wrappedModels,
-  //   String? api,
-  // }) async {
-  //   final res = DwApiResponse<List<DwModelWrapper>>(
-  //     isOk: true,
-  //     value: [],
-  //     updatedEntities: [],
-  //   );
-  //   for (DwModelWrapper model in wrappedModels) {
-  //     final t = await saveModel(session, wrappedModel: model);
-
-  //     if (t.isOk && t.value != null) {
-  //       res.value!.add(t.value!);
-  //       res.updatedEntities!.addAll(t.updatedEntities ?? []);
-  //     } else {
-  //       return DwApiResponse(
-  //         isOk: false,
-  //         value: null,
-  //         error: t.error,
-  //         warning: t.warning,
-  //       );
-  //     }
-  //   }
-
-  //   return res;
-  // }
 
   Future<DwApiResponse<DwModelWrapper>> saveModel(
     Session session, {
@@ -139,23 +109,22 @@ class DwCrudEndpoint extends Endpoint {
 
     final className = wrappedModel.dwMappingClassname;
     final caller =
-        DwCore.instance.getCrudConfig(className, api: apiGroup)?.post;
+        DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
 
     if (caller == null) {
       return DwApiResponse.notConfigured(source: 'сохранение $className');
     }
-    return await caller.upsert(session, model);
+    return await caller.save(session, model);
   }
 
   Future<DwApiResponse<bool>> delete(
     Session session, {
     required String className,
     required int modelId,
-    // required ObjectWrapper wrappedModel,
     String? apiGroup,
   }) async {
     final caller =
-        DwCore.instance.getCrudConfig(className, api: apiGroup)?.post;
+        DwCore.instance.getCrudConfig(className, api: apiGroup)?.deleteConfig;
 
     if (caller == null) {
       return DwApiResponse.notConfigured(source: 'delete $className');

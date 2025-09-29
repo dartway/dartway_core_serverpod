@@ -40,7 +40,7 @@ class _State extends ConsumerState<DwAdminDatabasePage> {
           // Expanded(
           //   child: Padding(
           //     padding: const EdgeInsets.only(bottom: 8),
-          //     child: _selectedPage.pageDescriptor.entityManagerBlock,
+          //     child: _selectedPage.pageDescriptor.modelManagerBlock,
           //   ),
           // ),
           Wrap(
@@ -48,12 +48,12 @@ class _State extends ConsumerState<DwAdminDatabasePage> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               // IconButton(onPressed: () async =>
-              //       _selectedPage.pageDescriptor.entityManagerBlock. editingFormPresenter(
+              //       _selectedPage.pageDescriptor.modelManagerBlock. editingFormPresenter(
               //             context,
-              //             NitGenericForm<Entity, FormDescriptor>(
+              //             NitGenericForm<Model, FormDescriptor>(
               //               fields: fields,
               //               model: null,
-              //               entityManager: ref.dwGenericEntityManager<Entity>(),
+              //               modelManager: ref.dwGenericModelManager<Model>(),
               //               defaultValues: await defaultValuesProvider?.call(
               //                 ref,
               //               ),
@@ -97,7 +97,7 @@ class _State extends ConsumerState<DwAdminDatabasePage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: _selectedPage.pageDescriptor.entityManagerBlock,
+              child: _selectedPage.pageDescriptor.modelManagerBlock,
             ),
           ),
         ],

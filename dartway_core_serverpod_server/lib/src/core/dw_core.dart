@@ -2,11 +2,12 @@
 
 // dw.dart
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
-import 'package:dartway_core_serverpod_server/src/business/crud_config/dartway_default_configs/user_info_default_crud_config.dart';
 import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 
-import '../business/crud_config/dartway_default_configs/user_profile_default_crud_config_builder.dart';
+part 'dartway_default_configs/user_info_default_crud_config.dart';
+part 'dartway_default_configs/user_profile_default_crud_config_builder.dart';
 
 class DwCore<UserProfileClass extends TableRow> {
   final Table userProfileTable;

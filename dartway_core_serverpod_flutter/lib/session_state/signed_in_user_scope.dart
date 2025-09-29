@@ -33,6 +33,7 @@ class SignedInUserScope<UserProfileClass extends SerializableModel>
     }
 
     final userProfileAsync = ref.watchModel<UserProfileClass>(
+      apiGroupOverride: DwCoreConst.dartwayInternalApi,
       filter: DwBackendFilter<int>.value(
         type: DwBackendFilterType.equals,
         fieldName: DwCoreConst.userInfoIdColumnName,

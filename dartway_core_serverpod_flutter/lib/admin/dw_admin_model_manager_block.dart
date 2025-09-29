@@ -5,21 +5,21 @@
 // import 'package:nit_generic_forms/nit_generic_forms.dart';
 
 // extension GenericFormsExtension on WidgetRef {
-//   NitGenericEntityManager<Entity> dwGenericEntityManager<
-//     Entity extends SerializableModel
-//   >({bool allowDelete = false}) => NitGenericEntityManager(
-//     saveAction: (model) async => await saveModel<Entity>(model),
+//   NitGenericModelManager<Model> dwGenericModelManager<
+//     Model extends SerializableModel
+//   >({bool allowDelete = false}) => NitGenericModelManager(
+//     saveAction: (model) async => await saveModel<Model>(model),
 //     deleteAction:
-//         allowDelete ? (model) async => await deleteModel<Entity>(model) : null,
+//         allowDelete ? (model) async => await deleteModel<Model>(model) : null,
 //   );
 // }
 
-// class DwAdminEntityManagerBlock<
-//   Entity extends SerializableModel,
-//   FormDescriptor extends NitGenericFormsFieldsEnum<Entity>
+// class DwAdminModelManagerBlock<
+//   Model extends SerializableModel,
+//   FormDescriptor extends NitGenericFormsFieldsEnum<Model>
 // >
 //     extends ConsumerWidget {
-//   const DwAdminEntityManagerBlock({
+//   const DwAdminModelManagerBlock({
 //     super.key,
 //     required this.fields,
 //     required this.listViewBuilder,
@@ -30,7 +30,7 @@
 //   });
 
 //   final List<FormDescriptor> fields;
-//   final Widget Function({required Entity model}) listViewBuilder;
+//   final Widget Function({required Model model}) listViewBuilder;
 
 //   final DwBackendFilter? customBackendFilter;
 //   final Function(BuildContext context, Widget editingForm) editingFormPresenter;
@@ -44,7 +44,7 @@
 //       children: [
 //         Positioned.fill(
 //           child: InfiniteListView(
-//             listViewConfig: DwEntityListStateConfig<Entity>(
+//             listViewConfig: DwModelListStateConfig<Model>(
 //               backendFilter: customBackendFilter,
 //               pageSize: 20,
 //             ),
@@ -56,10 +56,10 @@
 //                         onPressed:
 //                             () async => editingFormPresenter(
 //                               context,
-//                               NitGenericForm<Entity, FormDescriptor>(
+//                               NitGenericForm<Model, FormDescriptor>(
 //                                 fields: fields,
 //                                 model: model,
-//                                 entityManager: ref.dwGenericEntityManager(
+//                                 modelManager: ref.dwGenericModelManager(
 //                                   allowDelete: allowDelete,
 //                                 ),
 //                               ),
@@ -87,10 +87,10 @@
 //                         ? {}
 //                         : editingFormPresenter(
 //                           context,
-//                           NitGenericForm<Entity, FormDescriptor>(
+//                           NitGenericForm<Model, FormDescriptor>(
 //                             fields: fields,
 //                             model: null,
-//                             entityManager: ref.dwGenericEntityManager<Entity>(),
+//                             modelManager: ref.dwGenericModelManager<Model>(),
 //                             defaultValues: await defaultValuesProvider?.call(
 //                               ref,
 //                             ),

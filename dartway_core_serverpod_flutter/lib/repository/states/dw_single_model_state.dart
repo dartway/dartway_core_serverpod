@@ -3,12 +3,12 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DwSingleEntityState<Entity extends SerializableModel>
-    extends FamilyAsyncNotifier<Entity?, DwSingleEntityStateConfig<Entity>> {
+class DwSingleModelState<Model extends SerializableModel>
+    extends FamilyAsyncNotifier<Model?, DwSingleModelStateConfig<Model>> {
   @override
-  Future<Entity?> build(DwSingleEntityStateConfig<Entity> config) async {
+  Future<Model?> build(DwSingleModelStateConfig<Model> config) async {
     ref.onDispose(
-      () => DwRepository.removeUpdatesListener<Entity>(_updatesListener),
+      () => DwRepository.removeUpdatesListener<Model>(_updatesListener),
     );
 
     final globalTimestamp = ref.watch(
@@ -16,7 +16,7 @@ class DwSingleEntityState<Entity extends SerializableModel>
     );
 
     debugPrint(
-      "Getting single ${DwRepository.typeName<Entity>()} "
+      "Getting single ${DwRepository.typeName<Model>()} "
       "with filter ${config.backendFilter} "
       "and timestamp $globalTimestamp",
     );
@@ -26,7 +26,7 @@ class DwSingleEntityState<Entity extends SerializableModel>
             ? null
             : await DwCore.endpointCaller.dwCrud
                 .getOne(
-                  className: DwRepository.typeName<Entity>(),
+                  className: DwRepository.typeName<Model>(),
                   filter: config.backendFilter,
                   apiGroup: config.apiGroupOverride,
                 )
@@ -35,18 +35,18 @@ class DwSingleEntityState<Entity extends SerializableModel>
                       ref.processApiResponse<DwModelWrapper>(response),
                 );
 
-    DwRepository.addUpdatesListener<Entity>(_updatesListener);
+    DwRepository.addUpdatesListener<Model>(_updatesListener);
 
     return config.initialModel != null
-        ? config.initialModel as Entity
-        : (res == null ? null : res.model as Entity);
+        ? config.initialModel as Model
+        : (res == null ? null : res.model as Model);
   }
 
-  /// Reads the entity either from state or from backend.
+  /// Reads the model either from state or from backend.
   /// - Awaits the current `future` if already loading.
   /// - If `forceFetch = false` → return cached/loaded value.
   /// - If `forceFetch = true` → always fetch fresh from backend.
-  Future<Entity?> read({bool forceFetch = false}) async {
+  Future<Model?> read({bool forceFetch = false}) async {
     if (!forceFetch) {
       // this will wait for loading if needed
       final current = await future;
@@ -58,13 +58,13 @@ class DwSingleEntityState<Entity extends SerializableModel>
     // always fetch from backend when forced or no cached value
     final res = await DwCore.endpointCaller.dwCrud
         .getOne(
-          className: DwRepository.typeName<Entity>(),
+          className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,
           apiGroup: arg.apiGroupOverride,
         )
         .then((response) => ref.processApiResponse<DwModelWrapper>(response));
 
-    final model = res?.model as Entity?;
+    final model = res?.model as Model?;
     state = AsyncValue.data(model);
     return model;
   }
@@ -79,10 +79,10 @@ class DwSingleEntityState<Entity extends SerializableModel>
 
       if (match != null) {
         debugPrint(
-          "Updating singleState ${DwRepository.typeName<Entity>()} "
+          "Updating singleState ${DwRepository.typeName<Model>()} "
           "with id ${(currentState as dynamic).id}",
         );
-        state = AsyncValue.data(match.isDeleted ? null : match.model as Entity);
+        state = AsyncValue.data(match.isDeleted ? null : match.model as Model);
       }
     });
   }

@@ -1,26 +1,26 @@
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-extension RefEntityAccessExtension on Ref {
-  /// Subscribes to the entity state.
-  /// May return `null` if the entity is not found.
+extension RefModelAccessExtension on Ref {
+  /// Subscribes to the model state.
+  /// May return `null` if the model is not found.
   Future<T?> watchMaybeModel<T extends SerializableModel>({
     int? id,
     DwBackendFilter? filter,
     String? apiGroupOverride,
     T? initialModel,
   }) {
-    final cfg = DwSingleEntityStateConfig<T>(
+    final cfg = DwSingleModelStateConfig<T>(
       id: id,
       filter: filter,
       apiGroupOverride: apiGroupOverride,
       initialModel: initialModel,
     );
-    return watch(DwRepository.singleEntityProvider<T>()(cfg).future);
+    return watch(DwRepository.singleModelProvider<T>()(cfg).future);
   }
 
-  /// Subscribes to the entity state.
-  /// Throws [StateError] if the entity is not found.
+  /// Subscribes to the model state.
+  /// Throws [StateError] if the model is not found.
   Future<T> watchModel<T extends SerializableModel>({
     int? id,
     DwBackendFilter? filter,
@@ -35,7 +35,7 @@ extension RefEntityAccessExtension on Ref {
     );
     if (res == null) {
       throw StateError(
-        'watchModel<$T>: entity not found '
+        'watchModel<$T>: model not found '
         '(id=$id, filter=$filter, apiGroup=$apiGroupOverride)',
       );
     }
@@ -43,7 +43,7 @@ extension RefEntityAccessExtension on Ref {
   }
 
   /// Performs a one-time fetch from the backend.
-  /// May return `null` if the entity is not found.
+  /// May return `null` if the model is not found.
   Future<T?> readMaybeModel<T extends SerializableModel>({
     int? id,
     DwBackendFilter? filter,
@@ -51,18 +51,18 @@ extension RefEntityAccessExtension on Ref {
     T? initialModel,
     bool forceFetch = false,
   }) {
-    final cfg = DwSingleEntityStateConfig<T>(
+    final cfg = DwSingleModelStateConfig<T>(
       id: id,
       filter: filter,
       apiGroupOverride: apiGroupOverride,
       initialModel: initialModel,
     );
-    final notifier = read(DwRepository.singleEntityProvider<T>()(cfg).notifier);
+    final notifier = read(DwRepository.singleModelProvider<T>()(cfg).notifier);
     return notifier.read(forceFetch: forceFetch);
   }
 
   /// Performs a one-time fetch from the backend.
-  /// Throws [StateError] if the entity is not found.
+  /// Throws [StateError] if the model is not found.
   Future<T> readModel<T extends SerializableModel>({
     int? id,
     DwBackendFilter? filter,
@@ -79,7 +79,7 @@ extension RefEntityAccessExtension on Ref {
     );
     if (res == null) {
       throw StateError(
-        'readModel<$T>: entity not found '
+        'readModel<$T>: model not found '
         '(id=$id, filter=$filter, apiGroup=$apiGroupOverride)',
       );
     }

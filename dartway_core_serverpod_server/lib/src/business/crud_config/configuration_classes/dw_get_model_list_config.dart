@@ -1,17 +1,18 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/serverpod.dart';
 
-class DwGetAllConfig<T extends TableRow> {
-  const DwGetAllConfig({
+class DwGetListConfig<T extends TableRow> {
+  const DwGetListConfig({
     this.include,
-    this.additionalEntitiesFetchFunction,
+    this.additionalModelsFetchFunction,
     this.defaultOrderByList,
   });
 
   final Include? include;
   final List<Order>? defaultOrderByList;
+
   final Future<List<TableRow>> Function(Session session, List<T> models)?
-      additionalEntitiesFetchFunction;
+      additionalModelsFetchFunction;
 
   Future<DwApiResponse<int>> getCount(
     Session session, {
@@ -27,7 +28,7 @@ class DwGetAllConfig<T extends TableRow> {
     );
   }
 
-  Future<DwApiResponse<List<DwModelWrapper>>> getEntityList(
+  Future<DwApiResponse<List<DwModelWrapper>>> getModelList(
     Session session, {
     Expression? whereClause,
     int? limit,
@@ -43,22 +44,14 @@ class DwGetAllConfig<T extends TableRow> {
 
     return DwApiResponse<List<DwModelWrapper>>(
       isOk: true,
-      value: resultItems
-          .map(
-            (e) => DwModelWrapper(object: e),
-          )
-          .toList(),
-      updatedEntities: [
-        if (additionalEntitiesFetchFunction != null)
-          ...(await additionalEntitiesFetchFunction!(
+      value: resultItems.map((e) => DwModelWrapper(object: e)).toList(),
+      updatedModels: [
+        if (additionalModelsFetchFunction != null)
+          ...(await additionalModelsFetchFunction!(
             session,
             resultItems,
           ))
-      ]
-          .map(
-            (e) => DwModelWrapper(object: e),
-          )
-          .toList(),
+      ].map((e) => DwModelWrapper(object: e)).toList(),
     );
   }
 }

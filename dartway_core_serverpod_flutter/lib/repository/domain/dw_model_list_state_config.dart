@@ -2,14 +2,14 @@ import 'package:dartway_app/dartway_app.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DwEntityListStateConfig<Entity extends SerializableModel>
-    implements DwInfiniteListViewConfig<Entity> {
+class DwModelListStateConfig<Model extends SerializableModel>
+    implements DwInfiniteListViewConfig<Model> {
   final DwBackendFilter? backendFilter;
   final int? pageSize;
   final String? apiGroupOverride;
   final Function(List<DwModelWrapper>)? customUpdatesListener;
 
-  const DwEntityListStateConfig({
+  const DwModelListStateConfig({
     this.backendFilter,
     this.pageSize,
     this.apiGroupOverride,
@@ -19,19 +19,19 @@ class DwEntityListStateConfig<Entity extends SerializableModel>
   @override
   Future<bool> loadNextPage(WidgetRef ref) {
     return ref
-        .read(DwRepository.entityListStateProvider<Entity>()(this).notifier)
+        .read(DwRepository.modelListStateProvider<Model>()(this).notifier)
         .loadNextPage();
   }
 
   @override
-  AsyncValue<List<Entity>> watchAsyncValue(WidgetRef ref) {
-    return ref.watchEntityListCustomizedAsync<Entity>(config: this);
+  AsyncValue<List<Model>> watchAsyncValue(WidgetRef ref) {
+    return ref.watchModelListCustomizedAsync<Model>(config: this);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is DwEntityListStateConfig<Entity> &&
+        other is DwModelListStateConfig<Model> &&
             backendFilter == other.backendFilter &&
             pageSize == other.pageSize &&
             apiGroupOverride == other.apiGroupOverride &&
@@ -45,13 +45,13 @@ class DwEntityListStateConfig<Entity extends SerializableModel>
       apiGroupOverride.hashCode ^
       customUpdatesListener.hashCode;
 
-  DwEntityListStateConfig<Entity> copyWith({
+  DwModelListStateConfig<Model> copyWith({
     DwBackendFilter? backendFilter,
     int? pageSize,
     String? apiGroupOverride,
     Function(List<DwModelWrapper>)? customUpdatesListener,
   }) {
-    return DwEntityListStateConfig<Entity>(
+    return DwModelListStateConfig<Model>(
       backendFilter: backendFilter ?? this.backendFilter,
       pageSize: pageSize ?? this.pageSize,
       apiGroupOverride: apiGroupOverride ?? this.apiGroupOverride,
@@ -62,7 +62,7 @@ class DwEntityListStateConfig<Entity extends SerializableModel>
 
   @override
   String toString() {
-    return 'DwEntityListStateConfig<$Entity>('
+    return 'DwModelListStateConfig<$Model>('
         'backendFilter: $backendFilter, '
         'pageSize: $pageSize, '
         'apiGroupOverride: $apiGroupOverride, '

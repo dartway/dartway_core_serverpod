@@ -1,8 +1,4 @@
-import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
-import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart';
-
-import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
+part of '../dw_core.dart';
 
 userProfileDefaultCrudConfigBuilder<UserProfileClass extends TableRow>(
   Table table,
@@ -13,8 +9,8 @@ userProfileDefaultCrudConfigBuilder<UserProfileClass extends TableRow>(
 ) =>
     DwCrudConfig<UserProfileClass>(
       table: table,
-      getOneCustomConfigs: [
-        DwGetOneConfig(
+      getModelConfigs: [
+        DwGetModelConfig(
           filterPrototype: DwBackendFilter.equalsPrototype(
             fieldName: DwCoreConst.userInfoIdColumnName,
           ),

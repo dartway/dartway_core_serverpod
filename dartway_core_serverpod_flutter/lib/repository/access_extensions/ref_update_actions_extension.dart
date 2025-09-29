@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../dw_repository.dart';
 
 extension RefUpdateActionsExtension on Ref {
-  Future<Entity> saveModel<Entity extends SerializableModel>(
-    Entity model, {
+  Future<Model> saveModel<Model extends SerializableModel>(
+    Model model, {
     String? apiGroupOverride,
   }) async {
     return await DwCore.endpointCaller.dwCrud
@@ -16,7 +16,7 @@ extension RefUpdateActionsExtension on Ref {
           apiGroup: apiGroupOverride,
         )
         .then((response) => processApiResponse<DwModelWrapper>(response))
-        .then((res) => res!.model as Entity);
+        .then((res) => res!.model as Model);
   }
 
   Future<bool> deleteModel<T extends SerializableModel>(
@@ -71,9 +71,9 @@ extension RefUpdateActionsExtension on Ref {
     //   );
     // }
 
-    if ((response.updatedEntities ?? []).isNotEmpty) {
+    if ((response.updatedModels ?? []).isNotEmpty) {
       updateRepository(
-        response.updatedEntities ?? [],
+        response.updatedModels ?? [],
         updateListeners: updateListeners,
       );
     }

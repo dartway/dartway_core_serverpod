@@ -2,16 +2,16 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DwEntityListState<Entity extends SerializableModel>
-    extends FamilyAsyncNotifier<List<Entity>, DwEntityListStateConfig<Entity>>
-// implements EntityManagerInterface<Entity>
+class DwModelListState<Model extends SerializableModel>
+    extends FamilyAsyncNotifier<List<Model>, DwModelListStateConfig<Model>>
+// implements ModelManagerInterface<Model>
 {
   late int _nextPage;
 
   @override
-  Future<List<Entity>> build(DwEntityListStateConfig config) async {
+  Future<List<Model>> build(DwModelListStateConfig config) async {
     ref.onDispose(
-      () => DwRepository.removeUpdatesListener<Entity>(
+      () => DwRepository.removeUpdatesListener<Model>(
         config.customUpdatesListener ?? _updatesListener,
       ),
     );
@@ -23,12 +23,12 @@ class DwEntityListState<Entity extends SerializableModel>
     );
 
     debugPrint(
-      "Building state for ${DwRepository.typeName<Entity>()} with timestamp $globalTimestamp",
+      "Building state for ${DwRepository.typeName<Model>()} with timestamp $globalTimestamp",
     );
 
     final data = await _loadData();
 
-    DwRepository.addUpdatesListener<Entity>(
+    DwRepository.addUpdatesListener<Model>(
       config.customUpdatesListener ?? _updatesListener,
     );
 
@@ -39,18 +39,18 @@ class DwEntityListState<Entity extends SerializableModel>
     return await future.then((currentState) async {
       final data = await _loadData();
 
-      state = AsyncValue.data(<Entity>[...currentState, ..._processData(data)]);
+      state = AsyncValue.data(<Model>[...currentState, ..._processData(data)]);
 
       return data.length == arg.pageSize;
     });
   }
 
-  _processData(List<DwModelWrapper> data) => data.map((e) => e.model as Entity);
+  _processData(List<DwModelWrapper> data) => data.map((e) => e.model as Model);
 
   Future<List<DwModelWrapper>> _loadData() async {
     final result = await DwCore.endpointCaller.dwCrud
         .getAll(
-          className: DwRepository.typeName<Entity>(),
+          className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,
           limit: arg.pageSize,
           offset: arg.pageSize != null ? _nextPage++ : null,
@@ -76,13 +76,13 @@ class DwEntityListState<Entity extends SerializableModel>
       state = AsyncValue.data([
         ...wrappedModelUpdates
             .where((e) => !e.isDeleted)
-            .map((e) => e.model as Entity),
+            .map((e) => e.model as Model),
         ...value.where((e) => !ids.contains((e as dynamic).id)),
       ]);
     });
   }
 
-  // void manualInsert(int modelId, Entity model) async {
+  // void manualInsert(int modelId, Model model) async {
   //   return await future.then((value) async {
   //     ref.manualUpdate(modelId, model);
 
@@ -97,7 +97,7 @@ class DwEntityListState<Entity extends SerializableModel>
 
   // @override
   // Future<int?> save(
-  //   Entity model, {
+  //   Model model, {
   //   bool andRemoveFromList = false,
   // }) async {
   //   return await future.then(
@@ -127,7 +127,7 @@ class DwEntityListState<Entity extends SerializableModel>
   //     (value) async => await nitToolsCaller!.nitCrud
   //         .delete(
   //           // TODO: Изменить, toString() не работает на Web release из-за minification
-  //           className: Entity.toString(), modelId: modelId,
+  //           className: Model.toString(), modelId: modelId,
   //         )
   //         .then((response) => ref.processApiResponse<bool>(response))
   //         .then(

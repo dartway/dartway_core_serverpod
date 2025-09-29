@@ -1,7 +1,9 @@
 export 'src/business/crud_config/dw_crud_config.dart';
-export 'src/business/crud_config/dw_get_all_config.dart';
-export 'src/business/crud_config/dw_get_one_config.dart';
-export 'src/business/crud_config/dw_post_config.dart';
+export 'src/business/crud_config/configuration_classes/dw_get_model_list_config.dart';
+export 'src/business/crud_config/configuration_classes/dw_get_model_config.dart';
+export 'src/business/crud_config/configuration_classes/dw_save_config.dart';
+export 'src/business/crud_config/configuration_classes/dw_pre_save_result.dart';
+export 'src/business/crud_config/configuration_classes/dw_delete_config.dart';
 export 'src/business/dw_session_extension.dart';
 export 'src/core/dw_core.dart';
 export 'src/domain/dw_api_response.dart';
