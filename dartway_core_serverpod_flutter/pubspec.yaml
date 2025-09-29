@@ -17,16 +17,19 @@ dependencies:
 
   dartway_app:
     git: https://github.com/dartway/dartway_app.git
+    ref: main
 
   
   dartway_core_serverpod_client:
     git:
       url: https://github.com/dartway/dartway_core_serverpod.git
+      ref: main
       path: dartway_core_serverpod_client
 
   dartway_core_serverpod_shared:
     git:
       url: https://github.com/dartway/dartway_core_serverpod.git
+      ref: main
       path: dartway_core_serverpod_shared
 
   collection: ^1.19.1
