@@ -1,4 +1,4 @@
-import 'package:dartway_app/dartway_app.dart';
+import 'package:dartway_flutter/dartway_flutter.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,7 +25,7 @@ class DwModelListStateConfig<Model extends SerializableModel>
 
   @override
   AsyncValue<List<Model>> watchAsyncValue(WidgetRef ref) {
-    return ref.watchModelListCustomizedAsync<Model>(config: this);
+    return ref.watchModelList<Model>(customConfig: this);
   }
 
   @override
