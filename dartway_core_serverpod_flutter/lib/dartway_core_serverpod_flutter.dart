@@ -1,11 +1,13 @@
 library dartway_core_serverpod_flutter;
 
 export 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
+export 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 
 export 'admin/dw_admin_database_page.dart';
 export 'admin/dw_admin_database_page_descriptor.dart';
-export 'admin/dw_admin_model_manager_block.dart';
-export 'auth/phone_auth/dw_phone_auth_state.dart';
+export 'zarchive/admin/dw_admin_model_manager_block.dart';
+export 'auth/auth_ref_extension.dart';
+export 'zarchive/phone_auth/dw_phone_auth_state.dart';
 export 'core/dw_core.dart';
 export 'core/dw_core_setup_extension.dart';
 export 'repository/access_extensions/ref_model_list_state_extension.dart';

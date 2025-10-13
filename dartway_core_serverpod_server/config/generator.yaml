@@ -4,6 +4,6 @@ nickname: dartway_core_serverpod
 client_package_path: ../dartway_core_serverpod_client
 
 extraClasses:
-- /src/extra_classes/dw_model_wrapper.dart:DwModelWrapper
-- /src/extra_classes/dw_api_response.dart:DwApiResponse
-- /src/extra_classes/dw_backend_filter.dart:DwBackendFilter
+- /src/domain/extra_classes/dw_model_wrapper.dart:DwModelWrapper
+- /src/domain/extra_classes/dw_api_response.dart:DwApiResponse
+- /src/domain/extra_classes/dw_backend_filter.dart:DwBackendFilter

@@ -1,0 +1,131 @@
+import 'dart:math';
+
+import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
+import 'package:serverpod/server.dart';
+import 'package:serverpod_auth_server/serverpod_auth_server.dart';
+
+// typedef InitVerificationCallback = Future<bool> Function(
+//   Session session,
+//   String userIdentifier,
+//   String verificationOneTimePassword, {
+//   Map<String, String>? verificationExtraParams,
+// });
+
+// typedef GenerateOneTimePasswordCallback = Future<String> Function(
+//   Session session,
+//   String userIdentifier, {
+//   Map<String, String>? verificationExtraParams,
+// });
+
+// typedef OnVerificationSuccessCallback = Future<bool> Function(
+//   Session session,
+//   DwAuthRequest verificationRequest,
+// );
+
+class DwAuthConfig {
+  // static DwAuthConfig _config = DwAuthConfig(
+  //   secretHashKey: 'DwHashSecret',
+  //   initVerificationCallback:
+  //       (session, phoneNumber, verificationOneTimePassword,
+  //           {verificationExtraParams}) async {
+  //     throw StateError(
+  //       'DwAuthConfig is not configured. '
+  //       'Please provide your own config in initDartwayCore().',
+  //     );
+  //   },
+  // );
+
+  // static void set(DwAuthConfig config) {
+  //   _config = config;
+  // }
+
+  // static DwAuthConfig get current => _config;
+
+  // static final DwAuthConfig defaultDevelopmentConfig = DwAuthConfig(
+  //   secretHashKey: 'phoneVerificationHashKey',
+  //   maxInitVerificationRequests: 5,
+  //   maxAllowedVerificationAttempts: 5,
+  //   initVerificationCallback:
+  //       (session, phoneNumber, verificationOneTimePassword,
+  //           {verificationExtraParams}) async {
+  //     session.log(verificationOneTimePassword);
+
+  //     Future.delayed(
+  //       Duration(seconds: 1),
+  //       () => DwAuth.postOnVerificationStream(
+  //         session,
+  //         phoneNumber: phoneNumber,
+  //         message: DwAppNotification(
+  //           toUserId: 0,
+  //           title: verificationOneTimePassword,
+  //         ),
+  //       ),
+  //     );
+
+  //     return true;
+  //   },
+  // );
+
+  // /// Default OTP generation callback that generates a random 6-digit OTP and prints it to the server.
+  // static Future<String> defaultOtpGenerationCallback(
+  //   session,
+  //   number, {
+  //   verificationExtraParams,
+  // }) async {
+  //   final otp = randomDigits(6);
+  //   print('Generated OTP for $number: $otp');
+  //   return otp;
+  // }
+
+  // /// Generates a new DwPhoneAuthConfig.current.validationCodeLength digit OTP.
+  // static String randomDigits(int length) {
+  //   return Random().nextString(length: length, chars: '0123456789');
+  // }
+
+  // const DwAuthConfig({
+  //   required this.secretHashKey,
+  //   this.maxAllowedVerificationAttempts = 5,
+  //   this.phoneVerificationAttemptsResetTime = const Duration(minutes: 5),
+  //   this.verificationRequestExpirationTime = const Duration(minutes: 5),
+  //   this.maxInitVerificationRequests = 3,
+  //   this.initVerificationRequestsResetTime = const Duration(minutes: 5),
+  //   this.generateOneTimePasswordCallback = defaultOtpGenerationCallback,
+  //   this.initVerificationCallback,
+  //   this.onVerificationSuccessCallback,
+  //   this.allowManuallyForcedVerification = false,
+  // });
+
+  // /// Secret key used for hashing phone numbers with One Time Passwords.
+  // final String secretHashKey;
+
+  // /// If true, endpoint for manual verification is enabled
+  // final bool allowManuallyForcedVerification;
+
+  // /// Callback for sending validation message.
+  // final InitVerificationCallback? initVerificationCallback;
+
+  // /// Callback for OTP generation.
+  // final GenerateOneTimePasswordCallback generateOneTimePasswordCallback;
+
+  // /// Amount of attempts allowed to request verification. Defaults to 3.
+  // final int maxInitVerificationRequests;
+
+  // /// The reset period of resend validation code. Defaults to 5 minutes.
+  // final Duration initVerificationRequestsResetTime;
+
+  // /// Verification request expiration time. Defaults to 5 minutes.
+  // final Duration verificationRequestExpirationTime;
+
+  // /// Max allowed failed phone verification attempts within the reset period.
+  // /// Defaults to 5. (By default, a user can make 5 sign in attempts within a
+  // /// 5 minute window.)
+  // final int maxAllowedVerificationAttempts;
+
+  // /// the reset period for phone verification attempts. Defaults to 5 minutes.
+  // final Duration phoneVerificationAttemptsResetTime;
+
+  // /// Callback that is called when the verification is successful.
+  // /// Optional for signIn and registration scenarios but required for other
+  // /// Because there are no default actions after successful verification
+  // final OnVerificationSuccessCallback? onVerificationSuccessCallback;
+}

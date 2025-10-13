@@ -1,7 +1,3 @@
-dwPhoneAuth:
-  - startVerification:
-  - verifyWithOneTimePassword:
-  - forceVerification:
 dwCrud:
   - getOne:
   - getCount:

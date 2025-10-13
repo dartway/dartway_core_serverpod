@@ -1,0 +1,136 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "dw_phone_verification_request"
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "dw_phone_failed_sign_in"
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "dw_auth_data_stash"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "dw_auth_request",
+        "dartName": "DwAuthRequest",
+        "module": "dartway_core_serverpod",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('dw_auth_request_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "requestType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:DwAuthRequestType"
+          },
+          {
+            "name": "userIdentifier",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "authProvider",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:DwAuthProvider"
+          },
+          {
+            "name": "verificationType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:DwAuthVerificationType"
+          },
+          {
+            "name": "status",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'pending'::text",
+            "dartType": "protocol:DwAuthRequestStatus"
+          },
+          {
+            "name": "errorMessage",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "errorData",
+            "columnType": 8,
+            "isNullable": true,
+            "dartType": "Map<String,String>?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "verifiedAt",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "extraData",
+            "columnType": 8,
+            "isNullable": false,
+            "dartType": "Map<String,String>"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "dw_auth_request_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "tableDropped",
+      "message": "Table \"dw_phone_verification_request\" will be dropped.",
+      "table": "dw_phone_verification_request",
+      "columns": [],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "Table \"dw_phone_failed_sign_in\" will be dropped.",
+      "table": "dw_phone_failed_sign_in",
+      "columns": [],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "Table \"dw_auth_data_stash\" will be dropped.",
+      "table": "dw_auth_data_stash",
+      "columns": [],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

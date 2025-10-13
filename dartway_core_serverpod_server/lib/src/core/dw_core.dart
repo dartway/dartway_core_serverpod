@@ -6,12 +6,15 @@ import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 
-part 'dartway_default_configs/user_info_default_crud_config.dart';
-part 'dartway_default_configs/user_profile_default_crud_config_builder.dart';
+import '../crud/dw_auth_request_config.dart';
+
+part '../crud/user_info_default_crud_config.dart';
+part '../crud/user_profile_default_crud_config_builder.dart';
 
 class DwCore<UserProfileClass extends TableRow> {
   final Table userProfileTable;
   final Map<String, Map<String, DwCrudConfig>> _crudConfiguration = {};
+  late final DwAuthConfig? _authConfig;
   late final ColumnInt _userInfoIdColumn;
 
   static DwCore? _instance;
@@ -29,8 +32,10 @@ class DwCore<UserProfileClass extends TableRow> {
     required List<DwCrudConfig> crudConfigurations,
     required Future<UserProfileClass> Function({
       required int userInfoId,
-      required DwAuthDataStash dwDataStash,
+      required String userIdentifier,
+      required Map<String, String> registrationExtraData,
     }) userProfileConstructor,
+    DwAuthConfig? authConfig,
   }) {
     if (_instance != null) {
       throw Exception('DwCore already initialized');
@@ -39,6 +44,7 @@ class DwCore<UserProfileClass extends TableRow> {
       userProfileTable: userProfileTable,
       crudConfigurations: crudConfigurations,
       userProfileConstructor: userProfileConstructor,
+      authConfig: authConfig,
     );
 
     return _instance! as DwCore<UserProfileClass>;
@@ -49,8 +55,10 @@ class DwCore<UserProfileClass extends TableRow> {
     required List<DwCrudConfig> crudConfigurations,
     required Future<UserProfileClass> Function({
       required int userInfoId,
-      required DwAuthDataStash dwDataStash,
+      required String userIdentifier,
+      required Map<String, String> registrationExtraData,
     }) userProfileConstructor,
+    required DwAuthConfig? authConfig,
   }) {
     _userInfoIdColumn = userProfileTable.columns.firstWhereOrThrow(
       (column) =>
@@ -66,6 +74,7 @@ class DwCore<UserProfileClass extends TableRow> {
           userProfileTable,
           userProfileConstructor,
         ),
+        dwAuthRequestConfig
       ].map(
         (config) => MapEntry(config.className, config),
       ),
@@ -77,6 +86,16 @@ class DwCore<UserProfileClass extends TableRow> {
         (config) => MapEntry(config.className, config),
       ),
     );
+    _authConfig = authConfig;
+  }
+
+  DwAuthConfig? get authConfig {
+    if (_authConfig == null) {
+      throw Exception(
+        'DwAuthConfig not initialized. Configure it in DwCore.init params',
+      );
+    }
+    return _authConfig;
   }
 
   DwCrudConfig<TableRow>? getCrudConfig(

@@ -10,144 +10,38 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../endpoints/auth/dw_phone_auth_endpoint.dart' as _i2;
-import '../endpoints/dw_crud_endpoint.dart' as _i3;
-import '../endpoints/dw_real_time_endpoint.dart' as _i4;
-import '../endpoints/dw_upload_endpoint.dart' as _i5;
-import 'package:dartway_core_serverpod_server/src/generated/auth/phone/dw_phone_verification_request_type.dart'
+import '../endpoints/dw_crud_endpoint.dart' as _i2;
+import '../endpoints/dw_real_time_endpoint.dart' as _i3;
+import '../endpoints/dw_upload_endpoint.dart' as _i4;
+import 'package:dartway_core_serverpod_server/src/domain/extra_classes/dw_backend_filter.dart'
+    as _i5;
+import 'package:dartway_core_serverpod_server/src/domain/extra_classes/dw_model_wrapper.dart'
     as _i6;
-import 'package:dartway_core_serverpod_server/src/domain/dw_backend_filter.dart'
-    as _i7;
-import 'package:dartway_core_serverpod_server/src/domain/dw_model_wrapper.dart'
-    as _i8;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i9;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i7;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
   void initializeEndpoints(_i1.Server server) {
     var endpoints = <String, _i1.Endpoint>{
-      'dwPhoneAuth': _i2.DwPhoneAuthEndpoint()
-        ..initialize(
-          server,
-          'dwPhoneAuth',
-          'dartway_core_serverpod',
-        ),
-      'dwCrud': _i3.DwCrudEndpoint()
+      'dwCrud': _i2.DwCrudEndpoint()
         ..initialize(
           server,
           'dwCrud',
           'dartway_core_serverpod',
         ),
-      'dwRealTime': _i4.DwRealTimeEndpoint()
+      'dwRealTime': _i3.DwRealTimeEndpoint()
         ..initialize(
           server,
           'dwRealTime',
           'dartway_core_serverpod',
         ),
-      'dwUpload': _i5.DwUploadEndpoint()
+      'dwUpload': _i4.DwUploadEndpoint()
         ..initialize(
           server,
           'dwUpload',
           'dartway_core_serverpod',
         ),
     };
-    connectors['dwPhoneAuth'] = _i1.EndpointConnector(
-      name: 'dwPhoneAuth',
-      endpoint: endpoints['dwPhoneAuth']!,
-      methodConnectors: {
-        'verifyWithOneTimePassword': _i1.MethodConnector(
-          name: 'verifyWithOneTimePassword',
-          params: {
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'oneTimePassword': _i1.ParameterDescription(
-              name: 'oneTimePassword',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['dwPhoneAuth'] as _i2.DwPhoneAuthEndpoint)
-                  .verifyWithOneTimePassword(
-            session,
-            params['phoneNumber'],
-            params['oneTimePassword'],
-          ),
-        ),
-        'forceVerification': _i1.MethodConnector(
-          name: 'forceVerification',
-          params: {
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'sendAuthenticationResponseToStream': _i1.ParameterDescription(
-              name: 'sendAuthenticationResponseToStream',
-              type: _i1.getType<bool>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['dwPhoneAuth'] as _i2.DwPhoneAuthEndpoint)
-                  .forceVerification(
-            session,
-            phoneNumber: params['phoneNumber'],
-            sendAuthenticationResponseToStream:
-                params['sendAuthenticationResponseToStream'],
-          ),
-        ),
-        'startVerification': _i1.MethodStreamConnector(
-          name: 'startVerification',
-          params: {
-            'requestType': _i1.ParameterDescription(
-              name: 'requestType',
-              type: _i1.getType<_i6.DwPhoneVerificationRequestType>(),
-              nullable: false,
-            ),
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'requestExtraData': _i1.ParameterDescription(
-              name: 'requestExtraData',
-              type: _i1.getType<Map<String, String>?>(),
-              nullable: true,
-            ),
-            'verificationExtraParams': _i1.ParameterDescription(
-              name: 'verificationExtraParams',
-              type: _i1.getType<Map<String, String>?>(),
-              nullable: true,
-            ),
-          },
-          streamParams: {},
-          returnType: _i1.MethodStreamReturnType.streamType,
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-            Map<String, Stream> streamParams,
-          ) =>
-              (endpoints['dwPhoneAuth'] as _i2.DwPhoneAuthEndpoint)
-                  .startVerification(
-            session,
-            requestType: params['requestType'],
-            phoneNumber: params['phoneNumber'],
-            requestExtraData: params['requestExtraData'],
-            verificationExtraParams: params['verificationExtraParams'],
-          ),
-        ),
-      },
-    );
     connectors['dwCrud'] = _i1.EndpointConnector(
       name: 'dwCrud',
       endpoint: endpoints['dwCrud']!,
@@ -162,7 +56,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'filter': _i1.ParameterDescription(
               name: 'filter',
-              type: _i1.getType<_i7.DwBackendFilter>(),
+              type: _i1.getType<_i5.DwBackendFilter>(),
               nullable: false,
             ),
             'apiGroup': _i1.ParameterDescription(
@@ -175,7 +69,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i3.DwCrudEndpoint).getOne(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getOne(
             session,
             className: params['className'],
             filter: params['filter'],
@@ -192,7 +86,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'filter': _i1.ParameterDescription(
               name: 'filter',
-              type: _i1.getType<_i7.DwBackendFilter?>(),
+              type: _i1.getType<_i5.DwBackendFilter?>(),
               nullable: true,
             ),
             'apiGroup': _i1.ParameterDescription(
@@ -205,7 +99,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i3.DwCrudEndpoint).getCount(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getCount(
             session,
             className: params['className'],
             filter: params['filter'],
@@ -222,7 +116,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'filter': _i1.ParameterDescription(
               name: 'filter',
-              type: _i1.getType<_i7.DwBackendFilter?>(),
+              type: _i1.getType<_i5.DwBackendFilter?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -245,7 +139,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i3.DwCrudEndpoint).getAll(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).getAll(
             session,
             className: params['className'],
             filter: params['filter'],
@@ -259,7 +153,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'wrappedModel': _i1.ParameterDescription(
               name: 'wrappedModel',
-              type: _i1.getType<_i8.DwModelWrapper>(),
+              type: _i1.getType<_i6.DwModelWrapper>(),
               nullable: false,
             ),
             'apiGroup': _i1.ParameterDescription(
@@ -272,7 +166,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i3.DwCrudEndpoint).saveModel(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).saveModel(
             session,
             wrappedModel: params['wrappedModel'],
             apiGroup: params['apiGroup'],
@@ -301,7 +195,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwCrud'] as _i3.DwCrudEndpoint).delete(
+              (endpoints['dwCrud'] as _i2.DwCrudEndpoint).delete(
             session,
             className: params['className'],
             modelId: params['modelId'],
@@ -332,7 +226,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwUpload'] as _i5.DwUploadEndpoint)
+              (endpoints['dwUpload'] as _i4.DwUploadEndpoint)
                   .getUploadDescription(
             session,
             path: params['path'],
@@ -351,13 +245,13 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['dwUpload'] as _i5.DwUploadEndpoint).verifyUpload(
+              (endpoints['dwUpload'] as _i4.DwUploadEndpoint).verifyUpload(
             session,
             path: params['path'],
           ),
         ),
       },
     );
-    modules['serverpod_auth'] = _i9.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i7.Endpoints()..initializeEndpoints(server);
   }
 }

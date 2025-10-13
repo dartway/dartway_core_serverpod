@@ -58,13 +58,13 @@ class DwModelListState<Model extends SerializableModel>
         .then(
           (response) => ref.processApiResponse<List<DwModelWrapper>>(
             response,
-            updateListeners: false,
+            // updateListeners: false,
           ),
         );
 
     if (result == null) return <DwModelWrapper>[];
 
-    ref.updateRepository(result, updateListeners: false);
+    // ref.updateRepository(result, updateListeners: false);
 
     return result;
   }

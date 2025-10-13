@@ -1,5 +1,6 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
+import 'package:dartway_flutter/dartway_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,9 +43,11 @@ extension RefUpdateActionsExtension on Ref {
   }
 
   updateRepository(
-    List<DwModelWrapper> wrappedModels, {
-    bool updateListeners = true,
-  }) {
+    List<DwModelWrapper> wrappedModels,
+    // {
+    // bool updateListeners = true,
+    // }
+  ) {
     // for (var wrapper in wrappedModels) {
     //   // for (var repo in NitRepository.getAllModelProviders(wrapper)) {
     //   //   read(repo.notifier).state = wrapper.isDeleted ? null : wrapper.model;
@@ -52,29 +55,28 @@ extension RefUpdateActionsExtension on Ref {
 
     // }
 
-    if (updateListeners) {
-      DwRepository.updateListeningStates(wrappedModelUpdates: wrappedModels);
-    }
+    // if (updateListeners) {
+    DwRepository.updateListeningStates(wrappedModelUpdates: wrappedModels);
+    // }
   }
 
   K? processApiResponse<K>(
-    DwApiResponse<K> response, {
-    bool updateListeners = true,
-  }) {
-    debugPrint(response.toJson().toString());
-    // TODO: setup user notifications
-    // if (response.error != null || response.warning != null) {
-    //   notifyUser(
-    //     response.error != null
-    //         ? NitNotification.error(response.error!)
-    //         : NitNotification.warning(response.warning!),
-    //   );
+    DwApiResponse<K> response,
+    // {
+    // bool updateListeners = true,
     // }
+  ) {
+    debugPrint(response.toJson().toString());
+    if (response.error != null) {
+      dw.notify.error(response.error!);
+    } else if (response.warning != null) {
+      dw.notify.warning(response.warning!);
+    }
 
     if ((response.updatedModels ?? []).isNotEmpty) {
       updateRepository(
         response.updatedModels ?? [],
-        updateListeners: updateListeners,
+        // updateListeners: updateListeners,
       );
     }
     return response.value;

@@ -1,0 +1,17 @@
+class: DwAuthRequest
+table: dw_auth_request
+fields:
+  requestType: DwAuthRequestType          # login / register / resetPassword / etc.
+  userIdentifier: String                  # email / phone / external id
+  authProvider: DwAuthProvider            # email / phone / google / apple / telegram
+  verificationType: DwAuthVerificationType?
+  password: String?, !persist
+
+  status: DwAuthRequestStatus, default = pending
+  errorMessage: String?
+  errorData: Map<String, String>?
+
+  createdAt: DateTime, default = now
+  verifiedAt: DateTime?
+
+  extraData: Map<String, String>?

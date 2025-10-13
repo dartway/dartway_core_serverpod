@@ -9,17 +9,19 @@ import 'dw_session_state.dart';
 class SignedInUserScope<UserProfileClass extends SerializableModel>
     extends ConsumerWidget {
   final Widget child;
-  final Widget notSignedInChild;
+  final Widget profileLoadingWidget;
 
   /// The provider that will be overridden with the current user profile.
   /// This provider is guaranteed to contain a non-null value inside this scope.
-  final Provider<UserProfileClass> userProfileProvider;
+  final Provider<UserProfileClass?> userProfileProvider;
 
   const SignedInUserScope({
     super.key,
     required this.child,
     required this.userProfileProvider,
-    this.notSignedInChild = const Center(child: CircularProgressIndicator()),
+    this.profileLoadingWidget = const Center(
+      child: CircularProgressIndicator(),
+    ),
   });
 
   @override
@@ -28,25 +30,30 @@ class SignedInUserScope<UserProfileClass extends SerializableModel>
       dwSessionStateProvider.select((value) => value.signedInUserInfoId),
     );
 
-    if (signedInUserInfoId == null) {
-      return notSignedInChild;
-    }
+    // if (signedInUserInfoId == null) {
+    //   return notSignedInChild;
+    // }
 
-    final userProfileAsync = ref.watchModel<UserProfileClass>(
-      apiGroupOverride: DwCoreConst.dartwayInternalApi,
-      filter: DwBackendFilter<int>.value(
-        type: DwBackendFilterType.equals,
-        fieldName: DwCoreConst.userInfoIdColumnName,
-        fieldValue: signedInUserInfoId,
-      ),
-    );
+    final userProfileAsync =
+        signedInUserInfoId == null
+            ? AsyncValue.data(null)
+            : ref.watchModel<UserProfileClass>(
+              apiGroupOverride: DwCoreConst.dartwayInternalApi,
+              filter: DwBackendFilter<int>.value(
+                type: DwBackendFilterType.equals,
+                fieldName: DwCoreConst.userInfoIdColumnName,
+                fieldValue: signedInUserInfoId,
+              ),
+            );
 
-    return userProfileAsync.dwBuildAsync(
-      childBuilder:
+    return userProfileAsync.when(
+      data:
           (userProfile) => ProviderScope(
             overrides: [userProfileProvider.overrideWithValue(userProfile)],
             child: child,
           ),
+      error: (error, stackTrace) => profileLoadingWidget,
+      loading: () => profileLoadingWidget,
     );
   }
 }

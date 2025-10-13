@@ -59,25 +59,28 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
   }
 
   updateRepository(
-    List<DwModelWrapper> wrappedModels, {
-    bool updateListeners = true,
-  }) {
+    List<DwModelWrapper> wrappedModels,
+    // {
+    // bool updateListeners = true,
+    // }
+  ) {
     // for (var wrapper in wrappedModels) {
     //   // for (var repo in NitRepository.getAllModelProviders(wrapper)) {
     //   //   read(repo.notifier).state = wrapper.isDeleted ? null : wrapper.model;
     //   // }
 
     // }
-
-    if (updateListeners) {
-      DwRepository.updateListeningStates(wrappedModelUpdates: wrappedModels);
-    }
+    // if (updateListeners) {
+    DwRepository.updateListeningStates(wrappedModelUpdates: wrappedModels);
+    // }
   }
 
   K? processApiResponse<K>(
-    DwApiResponse<K> response, {
-    bool updateListeners = true,
-  }) {
+    DwApiResponse<K> response,
+    // {
+    // bool updateListeners = true,
+    // }
+  ) {
     debugPrint(response.toJson().toString());
     // TODO: setup user notifications
     // if (response.error != null || response.warning != null) {
@@ -91,7 +94,7 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
     if ((response.updatedModels ?? []).isNotEmpty) {
       updateRepository(
         response.updatedModels ?? [],
-        updateListeners: updateListeners,
+        // updateListeners: updateListeners,
       );
     }
     return response.value;

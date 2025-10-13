@@ -112,9 +112,56 @@ class DwCrudEndpoint extends Endpoint {
         DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
 
     if (caller == null) {
-      return DwApiResponse.notConfigured(source: 'сохранение $className');
+      return DwApiResponse.notConfigured(source: 'saveModel $className');
     }
     return await caller.save(session, model);
+  }
+
+  Stream<SerializableModel> saveModelStream(
+    Session session, {
+    required DwModelWrapper wrappedModel,
+    required String channelName,
+    String? apiGroup,
+  }) async* {
+    final model = wrappedModel.object;
+
+    if (model is! TableRow) {
+      throw UnsupportedError(
+        'Received item of unsupported type: ${model.runtimeType}. Only TableRow could be saved to database',
+      );
+    }
+
+    final className = wrappedModel.dwMappingClassname;
+    final caller =
+        DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
+
+    if (caller == null) {
+      throw Exception('notConfigured(source: saveModelStream $className');
+    }
+
+    final stream = session.messages.createStream<SerializableModel>(
+      channelName,
+    );
+
+    () async {
+      try {
+        final res = await caller.save(session, model);
+
+        await session.messages.postMessage(
+          channelName,
+          DwUpdatesTransport(wrappedModelUpdates: [
+            if (res.value != null) res.value!,
+            if (res.updatedModels != null) ...res.updatedModels!
+          ]),
+        );
+      } catch (e, st) {
+        session.log('startVerification error: $e\n$st');
+      }
+    }(); // fire-and-forget
+
+    await for (var message in stream) {
+      yield message;
+    }
   }
 
   Future<DwApiResponse<bool>> delete(

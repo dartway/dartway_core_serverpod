@@ -12,24 +12,26 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
-import 'auth/dw_auth_data_stash.dart' as _i4;
-import 'auth/phone/dw_phone_failed_sign_in.dart' as _i5;
-import 'auth/phone/dw_phone_verification_request.dart' as _i6;
-import 'auth/phone/dw_phone_verification_request_type.dart' as _i7;
-import 'dw_app_notification.dart' as _i8;
-import 'dw_backend_filter_type.dart' as _i9;
-import 'dw_updates_transport.dart' as _i10;
-import 'media/dw_media.dart' as _i11;
-import 'media/dw_media_type.dart' as _i12;
-import '/src/domain/dw_model_wrapper.dart' as _i13;
-import 'package:dartway_core_serverpod_server/src/domain/dw_model_wrapper.dart'
-    as _i14;
-import '/src/domain/dw_api_response.dart' as _i15;
-import '/src/domain/dw_backend_filter.dart' as _i16;
-export 'auth/dw_auth_data_stash.dart';
-export 'auth/phone/dw_phone_failed_sign_in.dart';
-export 'auth/phone/dw_phone_verification_request.dart';
-export 'auth/phone/dw_phone_verification_request_type.dart';
+import 'auth/dw_auth_provider.dart' as _i4;
+import 'auth/dw_auth_request.dart' as _i5;
+import 'auth/dw_auth_request_status.dart' as _i6;
+import 'auth/dw_auth_request_type.dart' as _i7;
+import 'auth/dw_auth_verification_type.dart' as _i8;
+import 'dw_app_notification.dart' as _i9;
+import 'dw_backend_filter_type.dart' as _i10;
+import 'dw_updates_transport.dart' as _i11;
+import 'media/dw_media.dart' as _i12;
+import 'media/dw_media_type.dart' as _i13;
+import '../domain/extra_classes/dw_model_wrapper.dart' as _i14;
+import 'package:dartway_core_serverpod_server/src/domain/extra_classes/dw_model_wrapper.dart'
+    as _i15;
+import '../domain/extra_classes/dw_api_response.dart' as _i16;
+import '../domain/extra_classes/dw_backend_filter.dart' as _i17;
+export 'auth/dw_auth_provider.dart';
+export 'auth/dw_auth_request.dart';
+export 'auth/dw_auth_request_status.dart';
+export 'auth/dw_auth_request_type.dart';
+export 'auth/dw_auth_verification_type.dart';
 export 'dw_app_notification.dart';
 export 'dw_backend_filter_type.dart';
 export 'dw_updates_transport.dart';
@@ -121,8 +123,8 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
-      name: 'dw_auth_data_stash',
-      dartName: 'DwAuthDataStash',
+      name: 'dw_auth_request',
+      dartName: 'DwAuthRequest',
       schema: 'public',
       module: 'dartway_core_serverpod',
       columns: [
@@ -131,28 +133,66 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
-          columnDefault: 'nextval(\'dw_auth_data_stash_id_seq\'::regclass)',
+          columnDefault: 'nextval(\'dw_auth_request_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'type',
+          name: 'requestType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:DwAuthRequestType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userIdentifier',
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'String',
         ),
         _i2.ColumnDefinition(
-          name: 'identifier',
+          name: 'authProvider',
           columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'String',
+          dartType: 'protocol:DwAuthProvider',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verificationType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'protocol:DwAuthVerificationType?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:DwAuthRequestStatus',
+          columnDefault: '\'pending\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'errorMessage',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'errorData',
+          columnType: _i2.ColumnType.json,
+          isNullable: true,
+          dartType: 'Map<String,String>?',
         ),
         _i2.ColumnDefinition(
           name: 'createdAt',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
         ),
         _i2.ColumnDefinition(
-          name: 'data',
+          name: 'verifiedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'extraData',
           columnType: _i2.ColumnType.json,
           isNullable: false,
           dartType: 'Map<String,String>',
@@ -161,7 +201,7 @@ class Protocol extends _i1.SerializationManagerServer {
       foreignKeys: [],
       indexes: [
         _i2.IndexDefinition(
-          indexName: 'dw_auth_data_stash_pkey',
+          indexName: 'dw_auth_request_pkey',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
@@ -232,184 +272,6 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
-    _i2.TableDefinition(
-      name: 'dw_phone_failed_sign_in',
-      dartName: 'DwPhoneFailedSignIn',
-      schema: 'public',
-      module: 'dartway_core_serverpod',
-      columns: [
-        _i2.ColumnDefinition(
-          name: 'id',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: false,
-          dartType: 'int?',
-          columnDefault:
-              'nextval(\'dw_phone_failed_sign_in_id_seq\'::regclass)',
-        ),
-        _i2.ColumnDefinition(
-          name: 'phoneNumber',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-        _i2.ColumnDefinition(
-          name: 'time',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
-        ),
-        _i2.ColumnDefinition(
-          name: 'ipAddress',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-      ],
-      foreignKeys: [],
-      indexes: [
-        _i2.IndexDefinition(
-          indexName: 'dw_phone_failed_sign_in_pkey',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'id',
-            )
-          ],
-          type: 'btree',
-          isUnique: true,
-          isPrimary: true,
-        ),
-        _i2.IndexDefinition(
-          indexName: 'serverpod_phone_failed_sign_in_email_idx',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'phoneNumber',
-            )
-          ],
-          type: 'btree',
-          isUnique: false,
-          isPrimary: false,
-        ),
-        _i2.IndexDefinition(
-          indexName: 'serverpod_phone_failed_sign_in_time_idx',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'time',
-            )
-          ],
-          type: 'btree',
-          isUnique: false,
-          isPrimary: false,
-        ),
-      ],
-      managed: true,
-    ),
-    _i2.TableDefinition(
-      name: 'dw_phone_verification_request',
-      dartName: 'DwPhoneVerificationRequest',
-      schema: 'public',
-      module: 'dartway_core_serverpod',
-      columns: [
-        _i2.ColumnDefinition(
-          name: 'id',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: false,
-          dartType: 'int?',
-          columnDefault:
-              'nextval(\'dw_phone_verification_request_id_seq\'::regclass)',
-        ),
-        _i2.ColumnDefinition(
-          name: 'requestType',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:DwPhoneVerificationRequestType',
-        ),
-        _i2.ColumnDefinition(
-          name: 'phoneNumber',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-        _i2.ColumnDefinition(
-          name: 'hash',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-        _i2.ColumnDefinition(
-          name: 'createdAt',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
-          columnDefault: 'CURRENT_TIMESTAMP',
-        ),
-        _i2.ColumnDefinition(
-          name: 'expirationTime',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
-        ),
-        _i2.ColumnDefinition(
-          name: 'stashDataId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
-        ),
-        _i2.ColumnDefinition(
-          name: 'isUsed',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
-        ),
-      ],
-      foreignKeys: [
-        _i2.ForeignKeyDefinition(
-          constraintName: 'dw_phone_verification_request_fk_0',
-          columns: ['stashDataId'],
-          referenceTable: 'dw_auth_data_stash',
-          referenceTableSchema: 'public',
-          referenceColumns: ['id'],
-          onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
-          matchType: null,
-        )
-      ],
-      indexes: [
-        _i2.IndexDefinition(
-          indexName: 'dw_phone_verification_request_pkey',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'id',
-            )
-          ],
-          type: 'btree',
-          isUnique: true,
-          isPrimary: true,
-        ),
-        _i2.IndexDefinition(
-          indexName: 'serverpod_phone_auth_phone',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'phoneNumber',
-            )
-          ],
-          type: 'btree',
-          isUnique: false,
-          isPrimary: false,
-        ),
-      ],
-      managed: true,
-    ),
     ..._i3.Protocol.targetTableDefinitions,
   ];
 
@@ -419,78 +281,69 @@ class Protocol extends _i1.SerializationManagerServer {
     Type? t,
   ]) {
     t ??= T;
-    if (t == _i4.DwAuthDataStash) {
-      return _i4.DwAuthDataStash.fromJson(data) as T;
+    if (t == _i4.DwAuthProvider) {
+      return _i4.DwAuthProvider.fromJson(data) as T;
     }
-    if (t == _i5.DwPhoneFailedSignIn) {
-      return _i5.DwPhoneFailedSignIn.fromJson(data) as T;
+    if (t == _i5.DwAuthRequest) {
+      return _i5.DwAuthRequest.fromJson(data) as T;
     }
-    if (t == _i6.DwPhoneVerificationRequest) {
-      return _i6.DwPhoneVerificationRequest.fromJson(data) as T;
+    if (t == _i6.DwAuthRequestStatus) {
+      return _i6.DwAuthRequestStatus.fromJson(data) as T;
     }
-    if (t == _i7.DwPhoneVerificationRequestType) {
-      return _i7.DwPhoneVerificationRequestType.fromJson(data) as T;
+    if (t == _i7.DwAuthRequestType) {
+      return _i7.DwAuthRequestType.fromJson(data) as T;
     }
-    if (t == _i8.DwAppNotification) {
-      return _i8.DwAppNotification.fromJson(data) as T;
+    if (t == _i8.DwAuthVerificationType) {
+      return _i8.DwAuthVerificationType.fromJson(data) as T;
     }
-    if (t == _i9.DwBackendFilterType) {
-      return _i9.DwBackendFilterType.fromJson(data) as T;
+    if (t == _i9.DwAppNotification) {
+      return _i9.DwAppNotification.fromJson(data) as T;
     }
-    if (t == _i10.DwUpdatesTransport) {
-      return _i10.DwUpdatesTransport.fromJson(data) as T;
+    if (t == _i10.DwBackendFilterType) {
+      return _i10.DwBackendFilterType.fromJson(data) as T;
     }
-    if (t == _i11.DwMedia) {
-      return _i11.DwMedia.fromJson(data) as T;
+    if (t == _i11.DwUpdatesTransport) {
+      return _i11.DwUpdatesTransport.fromJson(data) as T;
     }
-    if (t == _i12.DwMediaType) {
-      return _i12.DwMediaType.fromJson(data) as T;
+    if (t == _i12.DwMedia) {
+      return _i12.DwMedia.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i4.DwAuthDataStash?>()) {
-      return (data != null ? _i4.DwAuthDataStash.fromJson(data) : null) as T;
+    if (t == _i13.DwMediaType) {
+      return _i13.DwMediaType.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i5.DwPhoneFailedSignIn?>()) {
-      return (data != null ? _i5.DwPhoneFailedSignIn.fromJson(data) : null)
+    if (t == _i1.getType<_i4.DwAuthProvider?>()) {
+      return (data != null ? _i4.DwAuthProvider.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.DwAuthRequest?>()) {
+      return (data != null ? _i5.DwAuthRequest.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i6.DwAuthRequestStatus?>()) {
+      return (data != null ? _i6.DwAuthRequestStatus.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i6.DwPhoneVerificationRequest?>()) {
-      return (data != null
-          ? _i6.DwPhoneVerificationRequest.fromJson(data)
-          : null) as T;
+    if (t == _i1.getType<_i7.DwAuthRequestType?>()) {
+      return (data != null ? _i7.DwAuthRequestType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.DwPhoneVerificationRequestType?>()) {
-      return (data != null
-          ? _i7.DwPhoneVerificationRequestType.fromJson(data)
-          : null) as T;
-    }
-    if (t == _i1.getType<_i8.DwAppNotification?>()) {
-      return (data != null ? _i8.DwAppNotification.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i9.DwBackendFilterType?>()) {
-      return (data != null ? _i9.DwBackendFilterType.fromJson(data) : null)
+    if (t == _i1.getType<_i8.DwAuthVerificationType?>()) {
+      return (data != null ? _i8.DwAuthVerificationType.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i10.DwUpdatesTransport?>()) {
-      return (data != null ? _i10.DwUpdatesTransport.fromJson(data) : null)
+    if (t == _i1.getType<_i9.DwAppNotification?>()) {
+      return (data != null ? _i9.DwAppNotification.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i10.DwBackendFilterType?>()) {
+      return (data != null ? _i10.DwBackendFilterType.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i11.DwMedia?>()) {
-      return (data != null ? _i11.DwMedia.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.DwUpdatesTransport?>()) {
+      return (data != null ? _i11.DwUpdatesTransport.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i12.DwMediaType?>()) {
-      return (data != null ? _i12.DwMediaType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.DwMedia?>()) {
+      return (data != null ? _i12.DwMedia.fromJson(data) : null) as T;
     }
-    if (t == Map<String, String>) {
-      return (data as Map).map((k, v) =>
-          MapEntry(deserialize<String>(k), deserialize<String>(v))) as T;
-    }
-    if (t == List<_i13.DwModelWrapper>) {
-      return (data as List)
-          .map((e) => deserialize<_i13.DwModelWrapper>(e))
-          .toList() as T;
-    }
-    if (t == _i13.DwModelWrapper) {
-      return _i13.DwModelWrapper.fromJson(data) as T;
+    if (t == _i1.getType<_i13.DwMediaType?>()) {
+      return (data != null ? _i13.DwMediaType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<Map<String, String>?>()) {
       return (data != null
@@ -498,25 +351,37 @@ class Protocol extends _i1.SerializationManagerServer {
               MapEntry(deserialize<String>(k), deserialize<String>(v)))
           : null) as T;
     }
+    if (t == Map<String, String>) {
+      return (data as Map).map((k, v) =>
+          MapEntry(deserialize<String>(k), deserialize<String>(v))) as T;
+    }
     if (t == List<_i14.DwModelWrapper>) {
       return (data as List)
           .map((e) => deserialize<_i14.DwModelWrapper>(e))
           .toList() as T;
     }
-    if (t == _i15.DwApiResponse) {
-      return _i15.DwApiResponse.fromJson(data) as T;
+    if (t == _i14.DwModelWrapper) {
+      return _i14.DwModelWrapper.fromJson(data) as T;
     }
-    if (t == _i16.DwBackendFilter) {
-      return _i16.DwBackendFilter.fromJson(data) as T;
+    if (t == List<_i15.DwModelWrapper>) {
+      return (data as List)
+          .map((e) => deserialize<_i15.DwModelWrapper>(e))
+          .toList() as T;
     }
-    if (t == _i1.getType<_i13.DwModelWrapper?>()) {
-      return (data != null ? _i13.DwModelWrapper.fromJson(data) : null) as T;
+    if (t == _i16.DwApiResponse) {
+      return _i16.DwApiResponse.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i15.DwApiResponse?>()) {
-      return (data != null ? _i15.DwApiResponse.fromJson(data) : null) as T;
+    if (t == _i17.DwBackendFilter) {
+      return _i17.DwBackendFilter.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i16.DwBackendFilter?>()) {
-      return (data != null ? _i16.DwBackendFilter.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.DwModelWrapper?>()) {
+      return (data != null ? _i14.DwModelWrapper.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i16.DwApiResponse?>()) {
+      return (data != null ? _i16.DwApiResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i17.DwBackendFilter?>()) {
+      return (data != null ? _i17.DwBackendFilter.fromJson(data) : null) as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -531,40 +396,43 @@ class Protocol extends _i1.SerializationManagerServer {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i13.DwModelWrapper) {
+    if (data is _i14.DwModelWrapper) {
       return 'DwModelWrapper';
     }
-    if (data is _i15.DwApiResponse) {
+    if (data is _i16.DwApiResponse) {
       return 'DwApiResponse';
     }
-    if (data is _i16.DwBackendFilter) {
+    if (data is _i17.DwBackendFilter) {
       return 'DwBackendFilter';
     }
-    if (data is _i4.DwAuthDataStash) {
-      return 'DwAuthDataStash';
+    if (data is _i4.DwAuthProvider) {
+      return 'DwAuthProvider';
     }
-    if (data is _i5.DwPhoneFailedSignIn) {
-      return 'DwPhoneFailedSignIn';
+    if (data is _i5.DwAuthRequest) {
+      return 'DwAuthRequest';
     }
-    if (data is _i6.DwPhoneVerificationRequest) {
-      return 'DwPhoneVerificationRequest';
+    if (data is _i6.DwAuthRequestStatus) {
+      return 'DwAuthRequestStatus';
     }
-    if (data is _i7.DwPhoneVerificationRequestType) {
-      return 'DwPhoneVerificationRequestType';
+    if (data is _i7.DwAuthRequestType) {
+      return 'DwAuthRequestType';
     }
-    if (data is _i8.DwAppNotification) {
+    if (data is _i8.DwAuthVerificationType) {
+      return 'DwAuthVerificationType';
+    }
+    if (data is _i9.DwAppNotification) {
       return 'DwAppNotification';
     }
-    if (data is _i9.DwBackendFilterType) {
+    if (data is _i10.DwBackendFilterType) {
       return 'DwBackendFilterType';
     }
-    if (data is _i10.DwUpdatesTransport) {
+    if (data is _i11.DwUpdatesTransport) {
       return 'DwUpdatesTransport';
     }
-    if (data is _i11.DwMedia) {
+    if (data is _i12.DwMedia) {
       return 'DwMedia';
     }
-    if (data is _i12.DwMediaType) {
+    if (data is _i13.DwMediaType) {
       return 'DwMediaType';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -585,40 +453,43 @@ class Protocol extends _i1.SerializationManagerServer {
       return super.deserializeByClassName(data);
     }
     if (dataClassName == 'DwModelWrapper') {
-      return deserialize<_i13.DwModelWrapper>(data['data']);
+      return deserialize<_i14.DwModelWrapper>(data['data']);
     }
     if (dataClassName == 'DwApiResponse') {
-      return deserialize<_i15.DwApiResponse>(data['data']);
+      return deserialize<_i16.DwApiResponse>(data['data']);
     }
     if (dataClassName == 'DwBackendFilter') {
-      return deserialize<_i16.DwBackendFilter>(data['data']);
+      return deserialize<_i17.DwBackendFilter>(data['data']);
     }
-    if (dataClassName == 'DwAuthDataStash') {
-      return deserialize<_i4.DwAuthDataStash>(data['data']);
+    if (dataClassName == 'DwAuthProvider') {
+      return deserialize<_i4.DwAuthProvider>(data['data']);
     }
-    if (dataClassName == 'DwPhoneFailedSignIn') {
-      return deserialize<_i5.DwPhoneFailedSignIn>(data['data']);
+    if (dataClassName == 'DwAuthRequest') {
+      return deserialize<_i5.DwAuthRequest>(data['data']);
     }
-    if (dataClassName == 'DwPhoneVerificationRequest') {
-      return deserialize<_i6.DwPhoneVerificationRequest>(data['data']);
+    if (dataClassName == 'DwAuthRequestStatus') {
+      return deserialize<_i6.DwAuthRequestStatus>(data['data']);
     }
-    if (dataClassName == 'DwPhoneVerificationRequestType') {
-      return deserialize<_i7.DwPhoneVerificationRequestType>(data['data']);
+    if (dataClassName == 'DwAuthRequestType') {
+      return deserialize<_i7.DwAuthRequestType>(data['data']);
+    }
+    if (dataClassName == 'DwAuthVerificationType') {
+      return deserialize<_i8.DwAuthVerificationType>(data['data']);
     }
     if (dataClassName == 'DwAppNotification') {
-      return deserialize<_i8.DwAppNotification>(data['data']);
+      return deserialize<_i9.DwAppNotification>(data['data']);
     }
     if (dataClassName == 'DwBackendFilterType') {
-      return deserialize<_i9.DwBackendFilterType>(data['data']);
+      return deserialize<_i10.DwBackendFilterType>(data['data']);
     }
     if (dataClassName == 'DwUpdatesTransport') {
-      return deserialize<_i10.DwUpdatesTransport>(data['data']);
+      return deserialize<_i11.DwUpdatesTransport>(data['data']);
     }
     if (dataClassName == 'DwMedia') {
-      return deserialize<_i11.DwMedia>(data['data']);
+      return deserialize<_i12.DwMedia>(data['data']);
     }
     if (dataClassName == 'DwMediaType') {
-      return deserialize<_i12.DwMediaType>(data['data']);
+      return deserialize<_i13.DwMediaType>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -646,16 +517,12 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i4.DwAuthDataStash:
-        return _i4.DwAuthDataStash.t;
-      case _i5.DwPhoneFailedSignIn:
-        return _i5.DwPhoneFailedSignIn.t;
-      case _i6.DwPhoneVerificationRequest:
-        return _i6.DwPhoneVerificationRequest.t;
-      case _i8.DwAppNotification:
-        return _i8.DwAppNotification.t;
-      case _i11.DwMedia:
-        return _i11.DwMedia.t;
+      case _i5.DwAuthRequest:
+        return _i5.DwAuthRequest.t;
+      case _i9.DwAppNotification:
+        return _i9.DwAppNotification.t;
+      case _i12.DwMedia:
+        return _i12.DwMedia.t;
     }
     return null;
   }

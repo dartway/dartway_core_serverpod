@@ -17,7 +17,9 @@ class DwRepository {
   static final Map<Type, String> _typeNamesMapping = {};
 
   static final Map<String, List<Function(List<DwModelWrapper>)>>
-  _updateListeners = {};
+  _updateListeners = {
+    'AuthenticationResponse': [DwCore.registerSignedInUser],
+  };
 
   static String typeName<T extends SerializableModel>() {
     final name = _typeNamesMapping[T];

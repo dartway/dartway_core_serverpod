@@ -1,0 +1,6 @@
+enum: DwAuthRequestStatus
+serialized: byName
+values:
+    - failed # failed to init verification
+    - pending # pending verification
+    - confirmed # verification confirmed, user proceeded to next step (e.g. password reset, registration, etc.)
