@@ -33,31 +33,39 @@ class _SignedInUserScopeState<UserProfileClass extends SerializableModel>
   @override
   void initState() {
     super.initState();
-    _currentUserInfoId = ref.read(dwSessionStateProvider).signedInUserInfoId;
+    _loadProfile(ref.read(dwSessionStateProvider).signedInUserInfoId);
+  }
+
+  _loadProfile(int? userInfoId) {
+    setState(() {
+      _isLoading = true;
+      _delayed = true;
+      _currentUserInfoId = userInfoId;
+    });
+
+    // // // небольшой искусственный “fade-in” delay
+    Future.delayed(const Duration(milliseconds: 200)).then((_) {
+      if (mounted) {
+        setState(() {
+          _delayed = false;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Создаём listener один раз
+    // final signedInUserInfoId = ref.watch(
+    //   dwSessionStateProvider.select((v) => v.signedInUserInfoId),
+    // );
+
     ref.listen(dwSessionStateProvider, (prev, next) {
       final prevId = prev?.signedInUserInfoId;
       final nextId = next.signedInUserInfoId;
 
       if (prevId != nextId) {
-        setState(() {
-          _isLoading = true;
-          _delayed = true;
-          _currentUserInfoId = nextId;
-        });
-
-        // плавная пауза для "мягкости" при смене
-        Future.delayed(const Duration(milliseconds: 150)).then((_) {
-          if (mounted) {
-            setState(() {
-              _delayed = false;
-            });
-          }
-        });
+        // Пользователь сменился — активируем загрузку
+        _loadProfile(nextId);
       }
     });
 
@@ -74,15 +82,16 @@ class _SignedInUserScopeState<UserProfileClass extends SerializableModel>
               ),
             );
 
+    // Обрабатываем состояние AsyncValue
     final content = asyncProfile.when(
       loading: () => widget.profileLoadingWidget,
       error: (e, _) => Center(child: Text('Ошибка загрузки профиля: $e')),
       data: (profile) {
-        // После успешной загрузки
+        // после успешной загрузки
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           ref.read(widget.userProfileProvider.notifier).state = profile;
 
-          // Если только что сменился userId — ждём 200 мс
+          // Если только что сменился userId — задержка 200мс
           if (_isLoading) {
             await Future.delayed(const Duration(milliseconds: 200));
             if (mounted) {
@@ -93,12 +102,11 @@ class _SignedInUserScopeState<UserProfileClass extends SerializableModel>
           }
         });
 
-        // Если загрузка ещё не снята — показываем лоадер
+        // если загрузка активна или идёт задержка — показываем спиннер
         if (_isLoading || _delayed) {
           return widget.profileLoadingWidget;
         }
 
-        // Основной контент
         return widget.child;
       },
     );
