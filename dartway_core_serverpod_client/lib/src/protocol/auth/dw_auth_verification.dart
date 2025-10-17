@@ -1,0 +1,118 @@
+/* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
+/*   To generate run: "serverpod generate"    */
+
+// ignore_for_file: implementation_imports
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
+// ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:serverpod_client/serverpod_client.dart' as _i1;
+
+abstract class DwAuthVerification implements _i1.SerializableModel {
+  DwAuthVerification._({
+    this.id,
+    required this.dwAuthRequestId,
+    DateTime? createdAt,
+    required this.verificationCode,
+    this.accessToken,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  factory DwAuthVerification({
+    int? id,
+    required int dwAuthRequestId,
+    DateTime? createdAt,
+    required String verificationCode,
+    String? accessToken,
+  }) = _DwAuthVerificationImpl;
+
+  factory DwAuthVerification.fromJson(Map<String, dynamic> jsonSerialization) {
+    return DwAuthVerification(
+      id: jsonSerialization['id'] as int?,
+      dwAuthRequestId: jsonSerialization['dwAuthRequestId'] as int,
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      verificationCode: jsonSerialization['verificationCode'] as String,
+      accessToken: jsonSerialization['accessToken'] as String?,
+    );
+  }
+
+  /// The database id, set if the object has been inserted into the
+  /// database or if it has been fetched from the database. Otherwise,
+  /// the id will be null.
+  int? id;
+
+  int dwAuthRequestId;
+
+  DateTime createdAt;
+
+  String verificationCode;
+
+  String? accessToken;
+
+  /// Returns a shallow copy of this [DwAuthVerification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  DwAuthVerification copyWith({
+    int? id,
+    int? dwAuthRequestId,
+    DateTime? createdAt,
+    String? verificationCode,
+    String? accessToken,
+  });
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      'dwAuthRequestId': dwAuthRequestId,
+      'createdAt': createdAt.toJson(),
+      'verificationCode': verificationCode,
+      if (accessToken != null) 'accessToken': accessToken,
+    };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
+  }
+}
+
+class _Undefined {}
+
+class _DwAuthVerificationImpl extends DwAuthVerification {
+  _DwAuthVerificationImpl({
+    int? id,
+    required int dwAuthRequestId,
+    DateTime? createdAt,
+    required String verificationCode,
+    String? accessToken,
+  }) : super._(
+          id: id,
+          dwAuthRequestId: dwAuthRequestId,
+          createdAt: createdAt,
+          verificationCode: verificationCode,
+          accessToken: accessToken,
+        );
+
+  /// Returns a shallow copy of this [DwAuthVerification]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
+  @override
+  DwAuthVerification copyWith({
+    Object? id = _Undefined,
+    int? dwAuthRequestId,
+    DateTime? createdAt,
+    String? verificationCode,
+    Object? accessToken = _Undefined,
+  }) {
+    return DwAuthVerification(
+      id: id is int? ? id : this.id,
+      dwAuthRequestId: dwAuthRequestId ?? this.dwAuthRequestId,
+      createdAt: createdAt ?? this.createdAt,
+      verificationCode: verificationCode ?? this.verificationCode,
+      accessToken: accessToken is String? ? accessToken : this.accessToken,
+    );
+  }
+}

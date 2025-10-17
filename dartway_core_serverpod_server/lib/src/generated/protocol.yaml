@@ -3,6 +3,7 @@ dwCrud:
   - getCount:
   - getAll:
   - saveModel:
+  - saveModelStream:
   - delete:
 dwRealTime:
 dwUpload:

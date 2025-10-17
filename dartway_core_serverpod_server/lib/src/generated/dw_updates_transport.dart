@@ -10,7 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../domain/extra_classes/dw_model_wrapper.dart' as _i2;
+import '/src/domain/extra_classes/dw_model_wrapper.dart' as _i2;
 
 abstract class DwUpdatesTransport
     implements _i1.SerializableModel, _i1.ProtocolSerialization {

@@ -11,14 +11,15 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:dartway_core_serverpod_client/src/domain/dw_api_response.dart'
+import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_api_response.dart'
     as _i3;
-import 'package:dartway_core_serverpod_client/src/domain/dw_model_wrapper.dart'
+import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_model_wrapper.dart'
     as _i4;
-import 'package:dartway_core_serverpod_client/src/domain/dw_backend_filter.dart'
+import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_backend_filter.dart'
     as _i5;
+import 'package:serverpod_serialization/src/serialization.dart' as _i6;
 import 'package:dartway_core_serverpod_client/src/protocol/media/dw_media.dart'
-    as _i6;
+    as _i7;
 
 /// {@category Endpoint}
 class EndpointDwCrud extends _i1.EndpointRef {
@@ -89,6 +90,23 @@ class EndpointDwCrud extends _i1.EndpointRef {
         },
       );
 
+  _i2.Stream<_i6.SerializableModel> saveModelStream({
+    required _i4.DwModelWrapper wrappedModel,
+    required String channelName,
+    String? apiGroup,
+  }) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i6.SerializableModel>,
+          _i6.SerializableModel>(
+        'dartway_core_serverpod.dwCrud',
+        'saveModelStream',
+        {
+          'wrappedModel': wrappedModel,
+          'channelName': channelName,
+          'apiGroup': apiGroup,
+        },
+        {},
+      );
+
   _i2.Future<_i3.DwApiResponse<bool>> delete({
     required String className,
     required int modelId,
@@ -127,8 +145,8 @@ class EndpointDwUpload extends _i1.EndpointRef {
         {'path': path},
       );
 
-  _i2.Future<_i6.DwMedia?> verifyUpload({required String path}) =>
-      caller.callServerEndpoint<_i6.DwMedia?>(
+  _i2.Future<_i7.DwMedia?> verifyUpload({required String path}) =>
+      caller.callServerEndpoint<_i7.DwMedia?>(
         'dartway_core_serverpod.dwUpload',
         'verifyUpload',
         {'path': path},

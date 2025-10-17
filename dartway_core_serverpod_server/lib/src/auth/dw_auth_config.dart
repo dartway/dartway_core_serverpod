@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/server.dart';
 import 'package:serverpod_auth_server/serverpod_auth_server.dart';
+
+import 'dw_auth_utils.dart';
 
 // typedef InitVerificationCallback = Future<bool> Function(
 //   Session session,
@@ -23,6 +27,25 @@ import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 // );
 
 class DwAuthConfig {
+  const DwAuthConfig({
+    this.generateVerificationCodeMethod =
+        DwAuthUtils.defaultVerificationCodeGenerationMethod,
+    this.sendVerificationCodeMethod,
+  });
+
+  /// Callback for generating a verification code.
+  final Future<String> Function(
+    Session session, {
+    required DwAuthRequest verificationRequest,
+  })? generateVerificationCodeMethod;
+
+  /// Callback for sending validation message.
+  final Future<void> Function(
+    Session session, {
+    required DwAuthRequest verificationRequest,
+    required String verificationCode,
+  })? sendVerificationCodeMethod;
+
   // static DwAuthConfig _config = DwAuthConfig(
   //   secretHashKey: 'DwHashSecret',
   //   initVerificationCallback:
@@ -66,22 +89,6 @@ class DwAuthConfig {
   //   },
   // );
 
-  // /// Default OTP generation callback that generates a random 6-digit OTP and prints it to the server.
-  // static Future<String> defaultOtpGenerationCallback(
-  //   session,
-  //   number, {
-  //   verificationExtraParams,
-  // }) async {
-  //   final otp = randomDigits(6);
-  //   print('Generated OTP for $number: $otp');
-  //   return otp;
-  // }
-
-  // /// Generates a new DwPhoneAuthConfig.current.validationCodeLength digit OTP.
-  // static String randomDigits(int length) {
-  //   return Random().nextString(length: length, chars: '0123456789');
-  // }
-
   // const DwAuthConfig({
   //   required this.secretHashKey,
   //   this.maxAllowedVerificationAttempts = 5,
@@ -100,12 +107,6 @@ class DwAuthConfig {
 
   // /// If true, endpoint for manual verification is enabled
   // final bool allowManuallyForcedVerification;
-
-  // /// Callback for sending validation message.
-  // final InitVerificationCallback? initVerificationCallback;
-
-  // /// Callback for OTP generation.
-  // final GenerateOneTimePasswordCallback generateOneTimePasswordCallback;
 
   // /// Amount of attempts allowed to request verification. Defaults to 3.
   // final int maxInitVerificationRequests;

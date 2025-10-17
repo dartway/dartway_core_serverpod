@@ -6,6 +6,9 @@ fields:
   authProvider: DwAuthProvider            # email / phone / google / apple / telegram
   verificationType: DwAuthVerificationType?
   password: String?, !persist
+  accessToken: String?, !persist
+
+  verificationHash: String?, scope=serverOnly
 
   status: DwAuthRequestStatus, default = pending
   errorMessage: String?

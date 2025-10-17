@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
+import 'package:dartway_core_serverpod_client/src/protocol/protocol.dart';
 
 class DwBackendFilter<T> implements SerializableModel {
   static final _listEquality = DeepCollectionEquality();

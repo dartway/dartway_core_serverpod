@@ -23,12 +23,13 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     required this.authProvider,
     this.verificationType,
     this.password,
+    this.accessToken,
     _i2.DwAuthRequestStatus? status,
     this.errorMessage,
     this.errorData,
     DateTime? createdAt,
     this.verifiedAt,
-    required this.extraData,
+    this.extraData,
   })  : status = status ?? _i2.DwAuthRequestStatus.pending,
         createdAt = createdAt ?? DateTime.now();
 
@@ -39,12 +40,13 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? accessToken,
     _i2.DwAuthRequestStatus? status,
     String? errorMessage,
     Map<String, String>? errorData,
     DateTime? createdAt,
     DateTime? verifiedAt,
-    required Map<String, String> extraData,
+    Map<String, String>? extraData,
   }) = _DwAuthRequestImpl;
 
   factory DwAuthRequest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -60,6 +62,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
           : _i5.DwAuthVerificationType.fromJson(
               (jsonSerialization['verificationType'] as int)),
       password: jsonSerialization['password'] as String?,
+      accessToken: jsonSerialization['accessToken'] as String?,
       status: _i2.DwAuthRequestStatus.fromJson(
           (jsonSerialization['status'] as String)),
       errorMessage: jsonSerialization['errorMessage'] as String?,
@@ -73,10 +76,11 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
       verifiedAt: jsonSerialization['verifiedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['verifiedAt']),
-      extraData: (jsonSerialization['extraData'] as Map).map((k, v) => MapEntry(
-            k as String,
-            v as String,
-          )),
+      extraData:
+          (jsonSerialization['extraData'] as Map?)?.map((k, v) => MapEntry(
+                k as String,
+                v as String,
+              )),
     );
   }
 
@@ -95,6 +99,8 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
 
   String? password;
 
+  String? accessToken;
+
   _i2.DwAuthRequestStatus status;
 
   String? errorMessage;
@@ -105,7 +111,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
 
   DateTime? verifiedAt;
 
-  Map<String, String> extraData;
+  Map<String, String>? extraData;
 
   /// Returns a shallow copy of this [DwAuthRequest]
   /// with some or all fields replaced by the given arguments.
@@ -117,6 +123,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     _i4.DwAuthProvider? authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? accessToken,
     _i2.DwAuthRequestStatus? status,
     String? errorMessage,
     Map<String, String>? errorData,
@@ -134,12 +141,13 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
       if (verificationType != null)
         'verificationType': verificationType?.toJson(),
       if (password != null) 'password': password,
+      if (accessToken != null) 'accessToken': accessToken,
       'status': status.toJson(),
       if (errorMessage != null) 'errorMessage': errorMessage,
       if (errorData != null) 'errorData': errorData?.toJson(),
       'createdAt': createdAt.toJson(),
       if (verifiedAt != null) 'verifiedAt': verifiedAt?.toJson(),
-      'extraData': extraData.toJson(),
+      if (extraData != null) 'extraData': extraData?.toJson(),
     };
   }
 
@@ -159,12 +167,13 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? accessToken,
     _i2.DwAuthRequestStatus? status,
     String? errorMessage,
     Map<String, String>? errorData,
     DateTime? createdAt,
     DateTime? verifiedAt,
-    required Map<String, String> extraData,
+    Map<String, String>? extraData,
   }) : super._(
           id: id,
           requestType: requestType,
@@ -172,6 +181,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           authProvider: authProvider,
           verificationType: verificationType,
           password: password,
+          accessToken: accessToken,
           status: status,
           errorMessage: errorMessage,
           errorData: errorData,
@@ -191,12 +201,13 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     _i4.DwAuthProvider? authProvider,
     Object? verificationType = _Undefined,
     Object? password = _Undefined,
+    Object? accessToken = _Undefined,
     _i2.DwAuthRequestStatus? status,
     Object? errorMessage = _Undefined,
     Object? errorData = _Undefined,
     DateTime? createdAt,
     Object? verifiedAt = _Undefined,
-    Map<String, String>? extraData,
+    Object? extraData = _Undefined,
   }) {
     return DwAuthRequest(
       id: id is int? ? id : this.id,
@@ -207,6 +218,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           ? verificationType
           : this.verificationType,
       password: password is String? ? password : this.password,
+      accessToken: accessToken is String? ? accessToken : this.accessToken,
       status: status ?? this.status,
       errorMessage: errorMessage is String? ? errorMessage : this.errorMessage,
       errorData: errorData is Map<String, String>?
@@ -221,8 +233,9 @@ class _DwAuthRequestImpl extends DwAuthRequest {
                   )),
       createdAt: createdAt ?? this.createdAt,
       verifiedAt: verifiedAt is DateTime? ? verifiedAt : this.verifiedAt,
-      extraData: extraData ??
-          this.extraData.map((
+      extraData: extraData is Map<String, String>?
+          ? extraData
+          : this.extraData?.map((
                 key0,
                 value0,
               ) =>
