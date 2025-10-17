@@ -14,7 +14,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 enum DwAuthRequestType implements _i1.SerializableModel {
   login,
   register,
-  resetPassword,
+  changePassword,
   changeIdentifier,
   addAuthProvider,
   removeAuthProvider,
@@ -26,8 +26,8 @@ enum DwAuthRequestType implements _i1.SerializableModel {
         return DwAuthRequestType.login;
       case 'register':
         return DwAuthRequestType.register;
-      case 'resetPassword':
-        return DwAuthRequestType.resetPassword;
+      case 'changePassword':
+        return DwAuthRequestType.changePassword;
       case 'changeIdentifier':
         return DwAuthRequestType.changeIdentifier;
       case 'addAuthProvider':

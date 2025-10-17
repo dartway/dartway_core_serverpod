@@ -26,12 +26,66 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
               saveContext.currentModel.password!,
             );
 
-      if (authResponse?.success == true) {
+      final hasPriorVerification = saveContext.currentModel.accessToken == null
+          ? false
+          : await DwAuthVerification.db
+              .findFirstRow(
+                session,
+                where: (verification) => verification.accessToken
+                    .equals(saveContext.currentModel.accessToken),
+                include: DwAuthVerification.include(
+                  dwAuthRequest: DwAuthRequest.include(),
+                ),
+              )
+              .then(
+                (value) =>
+                    value != null &&
+                    value.dwAuthRequest?.userIdentifier ==
+                        saveContext.currentModel.userIdentifier,
+              );
+
+      final isConfirmed = authResponse?.success == true || hasPriorVerification;
+
+      if (isConfirmed) {
         saveContext.currentModel.status = DwAuthRequestStatus.confirmed;
-        saveContext.beforeUpdates.add(DwModelWrapper(object: authResponse!));
       } else {
         saveContext.currentModel.status = DwAuthRequestStatus.pending;
+      }
 
+      if (saveContext.currentModel.status == DwAuthRequestStatus.confirmed) {
+        switch (saveContext.currentModel.requestType) {
+          case DwAuthRequestType.login:
+            saveContext.beforeUpdates
+                .add(DwModelWrapper(object: authResponse!));
+            break;
+          case DwAuthRequestType.register:
+            // TODO: Handle this case.
+            throw UnimplementedError();
+          case DwAuthRequestType.changePassword:
+            final emailAuth = await EmailAuth.db.findFirstRow(session,
+                where: (auth) =>
+                    auth.email.equals(saveContext.currentModel.userIdentifier));
+            emailAuth!.hash = await AuthConfig.current.passwordHashGenerator(
+              saveContext.currentModel.extraData!['newPassword'] as String,
+            );
+            await EmailAuth.db.updateRow(session, emailAuth);
+            break;
+          case DwAuthRequestType.changeIdentifier:
+            // TODO: Handle this case.
+            throw UnimplementedError();
+          case DwAuthRequestType.addAuthProvider:
+            // TODO: Handle this case.
+            throw UnimplementedError();
+          case DwAuthRequestType.removeAuthProvider:
+            // TODO: Handle this case.
+            throw UnimplementedError();
+          case DwAuthRequestType.custom:
+            // TODO: Handle this case.
+            throw UnimplementedError();
+        }
+      }
+
+      if (saveContext.currentModel.status == DwAuthRequestStatus.pending) {
         final verificationCode = await DwCore
             .instance.authConfig?.generateVerificationCodeMethod
             ?.call(

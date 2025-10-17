@@ -1,8 +1,8 @@
 class: DwAuthVerification
 table: dw_auth_verification
 fields:
-  dwAuthRequestId: int, relation(parent=dw_auth_request)
+  dwAuthRequest: DwAuthRequest?, relation
   createdAt: DateTime, default=now
-  verificationCode: String, !persist
+  verificationCode: String?, !persist
 
   accessToken: String?

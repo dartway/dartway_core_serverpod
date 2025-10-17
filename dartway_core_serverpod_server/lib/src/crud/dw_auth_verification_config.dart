@@ -19,9 +19,10 @@ final dwAuthVerificationConfig = DwCrudConfig<DwAuthVerification>(
         saveContext.currentModel.dwAuthRequestId,
       );
 
-      if (authRequest?.verificationHash !=
-          DwAuthUtils.hashVerificationCode(
-              saveContext.currentModel.verificationCode)) {
+      if (saveContext.currentModel.verificationCode == null ||
+          authRequest?.verificationHash !=
+              DwAuthUtils.hashVerificationCode(
+                  saveContext.currentModel.verificationCode!)) {
         throw Exception(
           'Invalid verification code',
         );

@@ -3,7 +3,7 @@ serialized: byName
 values:
   - login
   - register
-  - resetPassword
+  - changePassword
   - changeIdentifier
   - addAuthProvider
   - removeAuthProvider

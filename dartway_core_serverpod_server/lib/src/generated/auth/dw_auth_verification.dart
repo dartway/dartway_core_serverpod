@@ -8,24 +8,29 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 
+// ignore_for_file: unnecessary_null_comparison
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import '../auth/dw_auth_request.dart' as _i2;
 
 abstract class DwAuthVerification
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   DwAuthVerification._({
     this.id,
     required this.dwAuthRequestId,
+    this.dwAuthRequest,
     DateTime? createdAt,
-    required this.verificationCode,
+    this.verificationCode,
     this.accessToken,
   }) : createdAt = createdAt ?? DateTime.now();
 
   factory DwAuthVerification({
     int? id,
     required int dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
-    required String verificationCode,
+    String? verificationCode,
     String? accessToken,
   }) = _DwAuthVerificationImpl;
 
@@ -33,9 +38,13 @@ abstract class DwAuthVerification
     return DwAuthVerification(
       id: jsonSerialization['id'] as int?,
       dwAuthRequestId: jsonSerialization['dwAuthRequestId'] as int,
+      dwAuthRequest: jsonSerialization['dwAuthRequest'] == null
+          ? null
+          : _i2.DwAuthRequest.fromJson(
+              (jsonSerialization['dwAuthRequest'] as Map<String, dynamic>)),
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      verificationCode: jsonSerialization['verificationCode'] as String,
+      verificationCode: jsonSerialization['verificationCode'] as String?,
       accessToken: jsonSerialization['accessToken'] as String?,
     );
   }
@@ -49,9 +58,11 @@ abstract class DwAuthVerification
 
   int dwAuthRequestId;
 
+  _i2.DwAuthRequest? dwAuthRequest;
+
   DateTime createdAt;
 
-  String verificationCode;
+  String? verificationCode;
 
   String? accessToken;
 
@@ -64,6 +75,7 @@ abstract class DwAuthVerification
   DwAuthVerification copyWith({
     int? id,
     int? dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
     String? verificationCode,
     String? accessToken,
@@ -73,8 +85,9 @@ abstract class DwAuthVerification
     return {
       if (id != null) 'id': id,
       'dwAuthRequestId': dwAuthRequestId,
+      if (dwAuthRequest != null) 'dwAuthRequest': dwAuthRequest?.toJson(),
       'createdAt': createdAt.toJson(),
-      'verificationCode': verificationCode,
+      if (verificationCode != null) 'verificationCode': verificationCode,
       if (accessToken != null) 'accessToken': accessToken,
     };
   }
@@ -84,14 +97,17 @@ abstract class DwAuthVerification
     return {
       if (id != null) 'id': id,
       'dwAuthRequestId': dwAuthRequestId,
+      if (dwAuthRequest != null)
+        'dwAuthRequest': dwAuthRequest?.toJsonForProtocol(),
       'createdAt': createdAt.toJson(),
-      'verificationCode': verificationCode,
+      if (verificationCode != null) 'verificationCode': verificationCode,
       if (accessToken != null) 'accessToken': accessToken,
     };
   }
 
-  static DwAuthVerificationInclude include() {
-    return DwAuthVerificationInclude._();
+  static DwAuthVerificationInclude include(
+      {_i2.DwAuthRequestInclude? dwAuthRequest}) {
+    return DwAuthVerificationInclude._(dwAuthRequest: dwAuthRequest);
   }
 
   static DwAuthVerificationIncludeList includeList({
@@ -126,12 +142,14 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
   _DwAuthVerificationImpl({
     int? id,
     required int dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
-    required String verificationCode,
+    String? verificationCode,
     String? accessToken,
   }) : super._(
           id: id,
           dwAuthRequestId: dwAuthRequestId,
+          dwAuthRequest: dwAuthRequest,
           createdAt: createdAt,
           verificationCode: verificationCode,
           accessToken: accessToken,
@@ -144,15 +162,21 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
   DwAuthVerification copyWith({
     Object? id = _Undefined,
     int? dwAuthRequestId,
+    Object? dwAuthRequest = _Undefined,
     DateTime? createdAt,
-    String? verificationCode,
+    Object? verificationCode = _Undefined,
     Object? accessToken = _Undefined,
   }) {
     return DwAuthVerification(
       id: id is int? ? id : this.id,
       dwAuthRequestId: dwAuthRequestId ?? this.dwAuthRequestId,
+      dwAuthRequest: dwAuthRequest is _i2.DwAuthRequest?
+          ? dwAuthRequest
+          : this.dwAuthRequest?.copyWith(),
       createdAt: createdAt ?? this.createdAt,
-      verificationCode: verificationCode ?? this.verificationCode,
+      verificationCode: verificationCode is String?
+          ? verificationCode
+          : this.verificationCode,
       accessToken: accessToken is String? ? accessToken : this.accessToken,
     );
   }
@@ -178,9 +202,24 @@ class DwAuthVerificationTable extends _i1.Table<int?> {
 
   late final _i1.ColumnInt dwAuthRequestId;
 
+  _i2.DwAuthRequestTable? _dwAuthRequest;
+
   late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnString accessToken;
+
+  _i2.DwAuthRequestTable get dwAuthRequest {
+    if (_dwAuthRequest != null) return _dwAuthRequest!;
+    _dwAuthRequest = _i1.createRelationTable(
+      relationFieldName: 'dwAuthRequest',
+      field: DwAuthVerification.t.dwAuthRequestId,
+      foreignField: _i2.DwAuthRequest.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.DwAuthRequestTable(tableRelation: foreignTableRelation),
+    );
+    return _dwAuthRequest!;
+  }
 
   @override
   List<_i1.Column> get columns => [
@@ -189,13 +228,25 @@ class DwAuthVerificationTable extends _i1.Table<int?> {
         createdAt,
         accessToken,
       ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'dwAuthRequest') {
+      return dwAuthRequest;
+    }
+    return null;
+  }
 }
 
 class DwAuthVerificationInclude extends _i1.IncludeObject {
-  DwAuthVerificationInclude._();
+  DwAuthVerificationInclude._({_i2.DwAuthRequestInclude? dwAuthRequest}) {
+    _dwAuthRequest = dwAuthRequest;
+  }
+
+  _i2.DwAuthRequestInclude? _dwAuthRequest;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'dwAuthRequest': _dwAuthRequest};
 
   @override
   _i1.Table<int?> get table => DwAuthVerification.t;
@@ -223,6 +274,8 @@ class DwAuthVerificationIncludeList extends _i1.IncludeList {
 
 class DwAuthVerificationRepository {
   const DwAuthVerificationRepository._();
+
+  final attachRow = const DwAuthVerificationAttachRowRepository._();
 
   /// Returns a list of [DwAuthVerification]s matching the given query parameters.
   ///
@@ -255,6 +308,7 @@ class DwAuthVerificationRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<DwAuthVerificationTable>? orderByList,
     _i1.Transaction? transaction,
+    DwAuthVerificationInclude? include,
   }) async {
     return session.db.find<DwAuthVerification>(
       where: where?.call(DwAuthVerification.t),
@@ -264,6 +318,7 @@ class DwAuthVerificationRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -292,6 +347,7 @@ class DwAuthVerificationRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<DwAuthVerificationTable>? orderByList,
     _i1.Transaction? transaction,
+    DwAuthVerificationInclude? include,
   }) async {
     return session.db.findFirstRow<DwAuthVerification>(
       where: where?.call(DwAuthVerification.t),
@@ -300,6 +356,7 @@ class DwAuthVerificationRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -308,10 +365,12 @@ class DwAuthVerificationRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
+    DwAuthVerificationInclude? include,
   }) async {
     return session.db.findById<DwAuthVerification>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -429,6 +488,34 @@ class DwAuthVerificationRepository {
     return session.db.count<DwAuthVerification>(
       where: where?.call(DwAuthVerification.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+}
+
+class DwAuthVerificationAttachRowRepository {
+  const DwAuthVerificationAttachRowRepository._();
+
+  /// Creates a relation between the given [DwAuthVerification] and [DwAuthRequest]
+  /// by setting the [DwAuthVerification]'s foreign key `dwAuthRequestId` to refer to the [DwAuthRequest].
+  Future<void> dwAuthRequest(
+    _i1.Session session,
+    DwAuthVerification dwAuthVerification,
+    _i2.DwAuthRequest dwAuthRequest, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (dwAuthVerification.id == null) {
+      throw ArgumentError.notNull('dwAuthVerification.id');
+    }
+    if (dwAuthRequest.id == null) {
+      throw ArgumentError.notNull('dwAuthRequest.id');
+    }
+
+    var $dwAuthVerification =
+        dwAuthVerification.copyWith(dwAuthRequestId: dwAuthRequest.id);
+    await session.db.updateRow<DwAuthVerification>(
+      $dwAuthVerification,
+      columns: [DwAuthVerification.t.dwAuthRequestId],
       transaction: transaction,
     );
   }

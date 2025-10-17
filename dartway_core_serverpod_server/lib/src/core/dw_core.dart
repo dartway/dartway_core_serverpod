@@ -2,6 +2,7 @@
 
 // dw.dart
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
+import 'package:dartway_core_serverpod_server/src/crud/dw_auth_verification_config.dart';
 import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_server/serverpod_auth_server.dart';
@@ -74,7 +75,8 @@ class DwCore<UserProfileClass extends TableRow> {
           userProfileTable,
           userProfileConstructor,
         ),
-        dwAuthRequestConfig
+        dwAuthRequestConfig,
+        dwAuthVerificationConfig,
       ].map(
         (config) => MapEntry(config.className, config),
       ),

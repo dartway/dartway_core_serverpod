@@ -10,21 +10,24 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../auth/dw_auth_request.dart' as _i2;
 
 abstract class DwAuthVerification implements _i1.SerializableModel {
   DwAuthVerification._({
     this.id,
     required this.dwAuthRequestId,
+    this.dwAuthRequest,
     DateTime? createdAt,
-    required this.verificationCode,
+    this.verificationCode,
     this.accessToken,
   }) : createdAt = createdAt ?? DateTime.now();
 
   factory DwAuthVerification({
     int? id,
     required int dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
-    required String verificationCode,
+    String? verificationCode,
     String? accessToken,
   }) = _DwAuthVerificationImpl;
 
@@ -32,9 +35,13 @@ abstract class DwAuthVerification implements _i1.SerializableModel {
     return DwAuthVerification(
       id: jsonSerialization['id'] as int?,
       dwAuthRequestId: jsonSerialization['dwAuthRequestId'] as int,
+      dwAuthRequest: jsonSerialization['dwAuthRequest'] == null
+          ? null
+          : _i2.DwAuthRequest.fromJson(
+              (jsonSerialization['dwAuthRequest'] as Map<String, dynamic>)),
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      verificationCode: jsonSerialization['verificationCode'] as String,
+      verificationCode: jsonSerialization['verificationCode'] as String?,
       accessToken: jsonSerialization['accessToken'] as String?,
     );
   }
@@ -46,9 +53,11 @@ abstract class DwAuthVerification implements _i1.SerializableModel {
 
   int dwAuthRequestId;
 
+  _i2.DwAuthRequest? dwAuthRequest;
+
   DateTime createdAt;
 
-  String verificationCode;
+  String? verificationCode;
 
   String? accessToken;
 
@@ -58,6 +67,7 @@ abstract class DwAuthVerification implements _i1.SerializableModel {
   DwAuthVerification copyWith({
     int? id,
     int? dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
     String? verificationCode,
     String? accessToken,
@@ -67,8 +77,9 @@ abstract class DwAuthVerification implements _i1.SerializableModel {
     return {
       if (id != null) 'id': id,
       'dwAuthRequestId': dwAuthRequestId,
+      if (dwAuthRequest != null) 'dwAuthRequest': dwAuthRequest?.toJson(),
       'createdAt': createdAt.toJson(),
-      'verificationCode': verificationCode,
+      if (verificationCode != null) 'verificationCode': verificationCode,
       if (accessToken != null) 'accessToken': accessToken,
     };
   }
@@ -85,12 +96,14 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
   _DwAuthVerificationImpl({
     int? id,
     required int dwAuthRequestId,
+    _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
-    required String verificationCode,
+    String? verificationCode,
     String? accessToken,
   }) : super._(
           id: id,
           dwAuthRequestId: dwAuthRequestId,
+          dwAuthRequest: dwAuthRequest,
           createdAt: createdAt,
           verificationCode: verificationCode,
           accessToken: accessToken,
@@ -103,15 +116,21 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
   DwAuthVerification copyWith({
     Object? id = _Undefined,
     int? dwAuthRequestId,
+    Object? dwAuthRequest = _Undefined,
     DateTime? createdAt,
-    String? verificationCode,
+    Object? verificationCode = _Undefined,
     Object? accessToken = _Undefined,
   }) {
     return DwAuthVerification(
       id: id is int? ? id : this.id,
       dwAuthRequestId: dwAuthRequestId ?? this.dwAuthRequestId,
+      dwAuthRequest: dwAuthRequest is _i2.DwAuthRequest?
+          ? dwAuthRequest
+          : this.dwAuthRequest?.copyWith(),
       createdAt: createdAt ?? this.createdAt,
-      verificationCode: verificationCode ?? this.verificationCode,
+      verificationCode: verificationCode is String?
+          ? verificationCode
+          : this.verificationCode,
       accessToken: accessToken is String? ? accessToken : this.accessToken,
     );
   }
