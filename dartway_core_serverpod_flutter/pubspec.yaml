@@ -55,6 +55,9 @@ dev_dependencies:
   freezed: ^2.4.6
   build_runner: ^2.4.8
 
+# dependency_overrides:
+#   dartway_core_serverpod_client:
+#     path: ../dartway_core_serverpod_client
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
