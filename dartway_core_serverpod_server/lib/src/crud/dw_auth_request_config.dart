@@ -46,7 +46,10 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
 
       final isConfirmed = authResponse?.success == true || hasPriorVerification;
 
-      if (isConfirmed) {
+      if (saveContext.currentModel.password != null &&
+          authResponse?.success != true) {
+        saveContext.currentModel.status = DwAuthRequestStatus.failed;
+      } else if (isConfirmed) {
         saveContext.currentModel.status = DwAuthRequestStatus.confirmed;
       } else {
         saveContext.currentModel.status = DwAuthRequestStatus.pending;
