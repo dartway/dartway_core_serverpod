@@ -13,11 +13,10 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/dw_crud_endpoint.dart' as _i2;
 import '../endpoints/dw_real_time_endpoint.dart' as _i3;
 import '../endpoints/dw_upload_endpoint.dart' as _i4;
-import 'package:dartway_core_serverpod_server/src/domain/extra_classes/dw_backend_filter.dart'
+import 'package:dartway_core_serverpod_server/src/domain/api/dw_backend_filter.dart'
     as _i5;
-import 'package:dartway_core_serverpod_server/src/domain/extra_classes/dw_model_wrapper.dart'
+import 'package:dartway_core_serverpod_server/src/domain/api/dw_model_wrapper.dart'
     as _i6;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i7;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -285,6 +284,5 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth'] = _i7.Endpoints()..initializeEndpoints(server);
   }
 }

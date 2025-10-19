@@ -10,7 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../auth/dw_auth_request.dart' as _i2;
+import '../auth/auth_request/dw_auth_request.dart' as _i2;
 
 abstract class DwAuthVerification implements _i1.SerializableModel {
   DwAuthVerification._({

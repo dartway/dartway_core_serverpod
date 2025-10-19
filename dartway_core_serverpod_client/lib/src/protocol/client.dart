@@ -11,11 +11,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_api_response.dart'
+import 'package:dartway_core_serverpod_client/src/domain/api/dw_api_response.dart'
     as _i3;
-import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_model_wrapper.dart'
+import 'package:dartway_core_serverpod_client/src/domain/api/dw_model_wrapper.dart'
     as _i4;
-import 'package:dartway_core_serverpod_client/src/domain/extra_classes/dw_backend_filter.dart'
+import 'package:dartway_core_serverpod_client/src/domain/api/dw_backend_filter.dart'
     as _i5;
 import 'package:serverpod_serialization/src/serialization.dart' as _i6;
 import 'package:dartway_core_serverpod_client/src/protocol/media/dw_media.dart'

@@ -2,6 +2,8 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/dw_core.dart';
+
 class DwModelListState<Model extends SerializableModel>
     extends FamilyAsyncNotifier<List<Model>, DwModelListStateConfig<Model>>
 // implements ModelManagerInterface<Model>
@@ -48,7 +50,7 @@ class DwModelListState<Model extends SerializableModel>
   _processData(List<DwModelWrapper> data) => data.map((e) => e.model as Model);
 
   Future<List<DwModelWrapper>> _loadData() async {
-    final result = await DwCore.endpointCaller.dwCrud
+    final result = await DwCore.instance.endpointCaller.dwCrud
         .getAll(
           className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,

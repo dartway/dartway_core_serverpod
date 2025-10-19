@@ -1,8 +1,6 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:dartway_core_serverpod_server/src/auth/dw_auth_utils.dart';
 import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_server/module.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 
 const verificationCodeKey = 'verificationCode';
 

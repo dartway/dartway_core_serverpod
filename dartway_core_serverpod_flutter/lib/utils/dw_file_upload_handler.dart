@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../core/dw_core.dart';
+
 class DwFileUploaderHandler {
   static String Function(XFile file, String extension)
   defaultUploadNameTemplate =
@@ -77,7 +79,7 @@ class DwFileUploaderHandler {
   }) async {
     final byteData = ByteData.view(bytes.buffer);
 
-    var uploadDescription = await DwCore.endpointCaller.dwUpload
+    var uploadDescription = await DwCore.instance.endpointCaller.dwUpload
         .getUploadDescription(path: path);
 
     if (uploadDescription == null) {
@@ -88,7 +90,9 @@ class DwFileUploaderHandler {
     var uploader = FileUploader(uploadDescription);
     await uploader.uploadByteData(byteData);
 
-    var dwMedia = await DwCore.endpointCaller.dwUpload.verifyUpload(path: path);
+    var dwMedia = await DwCore.instance.endpointCaller.dwUpload.verifyUpload(
+      path: path,
+    );
 
     if (dwMedia == null) {
       throw Exception("Failed to verify uploaded file with path: $path");

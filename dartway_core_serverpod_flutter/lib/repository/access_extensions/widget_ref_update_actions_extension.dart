@@ -1,8 +1,8 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/dw_core.dart';
 import '../dw_repository.dart';
 
 extension WidgetRefUpdateActionsExtension on WidgetRef {
@@ -10,7 +10,7 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
     Model model, {
     String? apiGroupOverride,
   }) async {
-    return await DwCore.endpointCaller.dwCrud
+    return await DwCore.instance.endpointCaller.dwCrud
         .saveModel(
           wrappedModel: DwModelWrapper.wrap(model: model),
           apiGroup: apiGroupOverride,
@@ -49,7 +49,7 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
       // ));
       return true;
     }
-    return await DwCore.endpointCaller.dwCrud
+    return await DwCore.instance.endpointCaller.dwCrud
         .delete(
           className: DwModelWrapper.getClassNameForObject(model),
           modelId: modelId,

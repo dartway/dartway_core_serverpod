@@ -1,0 +1,19 @@
+class: DwAuthRequest
+table: dw_auth_request
+fields:
+  createdAt: DateTime, default = now
+  requestType: DwAuthRequestType          # login / register / resetPassword / etc.
+  userIdentifier: String                  # email / phone / external id
+  userId: int?                            # user id, if the request is related to a user
+  authProvider: DwAuthProvider            # email / phone / google / apple / telegram
+  verificationType: DwAuthVerificationType?
+
+  password: String?, !persist
+  accessToken: String?, !persist
+
+  verificationHash: String?, scope=serverOnly
+
+  status: DwAuthRequestStatus, default = created
+  failReason: DwAuthFailReason?
+
+  extraData: Map<String, String>?

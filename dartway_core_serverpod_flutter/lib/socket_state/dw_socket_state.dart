@@ -1,11 +1,10 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
 import 'package:dartway_core_serverpod_flutter/repository/access_extensions/ref_update_actions_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../session_state/dw_session_state.dart';
+import '../core/dw_core.dart';
 
 part 'dw_socket_state.freezed.dart';
 part 'dw_socket_state.g.dart';
@@ -23,17 +22,13 @@ class DwSocketState extends _$DwSocketState {
 
   @override
   DwSocketStateModel build() {
-    ref.listen(dwSessionStateProvider, (previousState, nextState) {
-      if (nextState.signedInUserInfoId != previousState?.signedInUserInfoId
-      //  &&
-      //     _connectionHandler?.status.status ==
-      //         StreamingConnectionStatus.connected
-      ) {
-        _connectionHandler?.client.closeStreamingConnection();
-      }
-    });
-
-    // final sessionState = ref.watch(nitSessionStateProvider);
+    if (DwCore.instance.sessionProvider != null) {
+      ref.listen(DwCore.instance.sessionProvider!, (previousState, nextState) {
+        if (nextState.signedInUserId != previousState?.signedInUserId) {
+          _connectionHandler?.client.closeStreamingConnection();
+        }
+      });
+    }
 
     return DwSocketStateModel(
       websocketStatus: StreamingConnectionStatus.disconnected,
@@ -84,11 +79,11 @@ class DwSocketState extends _$DwSocketState {
   }
 
   Future<void> _listenToUpdates() async {
-    DwCore.endpointCaller.dwRealTime.resetStream();
+    DwCore.instance.endpointCaller.dwRealTime.resetStream();
 
     // final t = nitToolsCaller!.nitCrud.stream.listen(onData)
 
-    await for (var update in DwCore.endpointCaller.dwRealTime.stream) {
+    await for (var update in DwCore.instance.endpointCaller.dwRealTime.stream) {
       if (update is DwModelWrapper) {
         _proccessUpdate(update);
       } else if (update is DwUpdatesTransport) {

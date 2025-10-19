@@ -24,7 +24,7 @@ class DwSingleModelState<Model extends SerializableModel>
     final res =
         config.initialModel != null
             ? null
-            : await DwCore.endpointCaller.dwCrud
+            : await DwCore.instance.endpointCaller.dwCrud
                 .getOne(
                   className: DwRepository.typeName<Model>(),
                   filter: config.backendFilter,
@@ -56,7 +56,7 @@ class DwSingleModelState<Model extends SerializableModel>
     }
 
     // always fetch from backend when forced or no cached value
-    final res = await DwCore.endpointCaller.dwCrud
+    final res = await DwCore.instance.endpointCaller.dwCrud
         .getOne(
           className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,

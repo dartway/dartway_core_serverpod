@@ -3,10 +3,11 @@ import 'package:serverpod_client/serverpod_client.dart'
 
 export 'package:serverpod_client/serverpod_client.dart';
 
+export 'src/domain/api/dw_api_response.dart';
+export 'src/domain/api/dw_auth_data.dart';
+export 'src/domain/api/dw_backend_filter.dart';
+export 'src/domain/api/dw_model_wrapper.dart';
 export 'src/protocol/protocol.dart';
-export 'src/domain/extra_classes/dw_api_response.dart';
-export 'src/domain/extra_classes/dw_backend_filter.dart';
-export 'src/domain/extra_classes/dw_model_wrapper.dart';
 // export 'src/protocol/dw_backend_filter_type.dart';
 // export 'src/protocol/auth/dw_auth_provider.dart';
 // export 'src/protocol/auth/dw_auth_request.dart';

@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/server.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart';
 
 import 'dw_auth_utils.dart';
 
@@ -27,7 +22,18 @@ import 'dw_auth_utils.dart';
 // );
 
 class DwAuthConfig {
+  final Map<String, String> passwords;
+
+  String get authKeySalt =>
+      passwords['dwAuthKeySalt'] ??
+      (throw Exception('dwAuthKeySalt missing in passwords'));
+
+  String get verificationCodeSalt =>
+      passwords['dwVerificationCodeSalt'] ??
+      (throw Exception('dwVerificationCodeSalt missing in passwords'));
+
   const DwAuthConfig({
+    required this.passwords,
     this.generateVerificationCodeMethod =
         DwAuthUtils.defaultVerificationCodeGenerationMethod,
     this.sendVerificationCodeMethod,

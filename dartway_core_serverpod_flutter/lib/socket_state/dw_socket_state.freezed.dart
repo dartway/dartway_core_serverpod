@@ -9,7 +9,7 @@ part of 'dw_socket_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
-T _$idmodel<T>(T value) => value;
+T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
@@ -136,7 +136,7 @@ class _$DwSocketStateModelImpl implements _DwSocketStateModel {
   _$$DwSocketStateModelImplCopyWith<_$DwSocketStateModelImpl> get copyWith =>
       __$$DwSocketStateModelImplCopyWithImpl<_$DwSocketStateModelImpl>(
         this,
-        _$idmodel,
+        _$identity,
       );
 }
 

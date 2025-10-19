@@ -1,90 +1,130 @@
 import 'dart:async';
 
-import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_core_serverpod_flutter/core/dw_core.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as auth;
-import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-part 'dw_session_state.freezed.dart';
-part 'dw_session_state.g.dart';
+import 'dw_session_state_model.dart';
 
-@freezed
-class DwSessionStateModel with _$DwSessionStateModel {
-  const factory DwSessionStateModel({
-    required int? signedInUserInfoId,
-    // required DwBackendFilter? userProfileBackendFilter,
-  }) = _DwSessionStateModel;
+StateNotifierProvider<DwSessionStateNotifier<T>, DwSessionStateModel<T>>
+createDwSessionProvider<T extends SerializableModel>(
+  DwAuthenticationKeyManager keyManager,
+) {
+  return StateNotifierProvider<
+    DwSessionStateNotifier<T>,
+    DwSessionStateModel<T>
+  >((ref) => DwSessionStateNotifier<T>(ref, keyManager));
 }
 
-@Riverpod(keepAlive: true)
-class DwSessionState extends _$DwSessionState {
-  // late final Function(int? userId)? _signedInUserIdPreloadProcessing;
-
-  @override
-  DwSessionStateModel build() {
-    return DwSessionStateModel(
-      signedInUserInfoId: null,
-      // userProfileBackendFilter: null,
-    );
-  }
-
-  Future<bool> signOut({bool allDevices = false}) async {
-    return allDevices
-        ? await DwCore.serverpodSessionManager.signOutAllDevices()
-        : await DwCore.serverpodSessionManager.signOutDevice();
-  }
-
-  _refresh() async {
-    if (DwCore.serverpodSessionManager.signedInUser?.id !=
-        state.signedInUserInfoId) {
-      state = DwSessionStateModel(
-        signedInUserInfoId: DwCore.serverpodSessionManager.signedInUser?.id,
-        // await _processUserInfoId(
-        //   DwCore.serverpodSessionManager.signedInUser?.id,
-        // ),
-        // userProfileBackendFilter:
-        //     DwCore.serverpodSessionManager.signedInUser?.id == null
-        //         ? null
-        //         : DwCore.prepareUserProfileFilter(
-        //           DwCore.serverpodSessionManager.signedInUser!.id!,
-        //         ),
+class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
+    extends StateNotifier<DwSessionStateModel<UserProfileClass>> {
+  DwSessionStateNotifier(this.ref, this.keyManager)
+    : super(
+        DwSessionStateModel<UserProfileClass>(
+          signedInUserProfile: null,
+          signedInUserId: null,
+        ),
       );
+
+  final Ref ref;
+  final DwAuthenticationKeyManager keyManager;
+
+  Future<void> initialize() async {
+    final (int? signedInUserId, UserProfileClass? signedInUserProfile) =
+        await keyManager.loadLocalUserProfile<UserProfileClass>();
+
+    state = state.copyWith(
+      signedInUserProfile: signedInUserProfile,
+      signedInUserId: signedInUserId,
+    );
+
+    DwRepository.addUpdatesListener<DwAuthData>(_handleAuthDataUpdates);
+    DwRepository.addUpdatesListener<DwAuthKey>(_handleAuthKeyUpdates);
+    DwRepository.addUpdatesListener<UserProfileClass>(
+      _handleUserProfileUpdates,
+    );
+
+    // TODO: add try catch and alerting
+    // throw Exception('Failed to initialize DwCore session');
+  }
+
+  /// 🧹 Dispose hook
+  @override
+  void dispose() {
+    // Отписываемся от репозитория
+    DwRepository.removeUpdatesListener<DwAuthData>(_handleAuthDataUpdates);
+    DwRepository.removeUpdatesListener<DwAuthKey>(_handleAuthKeyUpdates);
+    DwRepository.removeUpdatesListener<UserProfileClass>(
+      _handleUserProfileUpdates,
+    );
+
+    // Можно очистить runtime ссылки
+    // _storage = null; // (если бы _storage был nullable)
+
+    if (kDebugMode) {
+      debugPrint('[DwSessionStateNotifier] disposed');
+    }
+
+    super.dispose(); // обязательно вызывай super
+  }
+
+  void _handleAuthDataUpdates(List<DwModelWrapper> wrappedModelUpdates) async {
+    for (var wrappedModel in wrappedModelUpdates) {
+      if (wrappedModel.model is DwAuthData && !wrappedModel.isDeleted) {
+        await _signIn(wrappedModel.model as DwAuthData);
+
+        return;
+      }
     }
   }
 
-  Future<bool> init({
-    required auth.Caller authModuleCaller,
-    // Function(int? userId)? signedInUserIdPreloadProcessing,
-  }) async {
-    DwCore.serverpodSessionManager = SessionManager(caller: authModuleCaller);
-    // _signedInUserIdPreloadProcessing = signedInUserIdPreloadProcessing;
-
-    if (!await DwCore.serverpodSessionManager.initialize()) return false;
-
-    state = state.copyWith(
-      signedInUserInfoId: DwCore.serverpodSessionManager.signedInUser?.id,
-      //  await _processUserInfoId(
-      //   DwCore.serverpodSessionManager.signedInUser?.id,
-      // ),
-      // userProfileBackendFilter:
-      //     DwCore.serverpodSessionManager.signedInUser?.id == null
-      //         ? null
-      //         : DwCore.prepareUserProfileFilter(
-      //           DwCore.serverpodSessionManager.signedInUser!.id!,
-      //         ),
-    );
-
-    DwCore.serverpodSessionManager.addListener(_refresh);
-
-    return true;
+  void _handleAuthKeyUpdates(List<DwModelWrapper> wrappedModelUpdates) async {
+    for (var wrappedModel in wrappedModelUpdates) {
+      if (wrappedModel.model is DwAuthKey && wrappedModel.isDeleted) {
+        unawaited(keyManager.remove());
+        state = state.copyWith(signedInUserProfile: null, signedInUserId: null);
+      }
+    }
   }
 
-  // Future<int?> _processUserInfoId(int? serverpodUserInfoId) async =>
-  //     _signedInUserIdPreloadProcessing == null
-  //         ? serverpodUserInfoId
-  //         : await _signedInUserIdPreloadProcessing.call(
-  //           DwCore.serverpodSessionManager.signedInUser?.id,
-  //         );
+  void _handleUserProfileUpdates(
+    List<DwModelWrapper> wrappedModelUpdates,
+  ) async {
+    for (var wrappedModel in wrappedModelUpdates) {
+      if (wrappedModel.model is UserProfileClass &&
+          wrappedModel.modelId == state.signedInUserId) {
+        state = state.copyWith(
+          signedInUserProfile: wrappedModel.model as UserProfileClass,
+        );
+        // await _storeUserProfile(wrappedModel.model as UserProfileClass);
+        return;
+      }
+    }
+  }
+
+  Future<void> _signIn(DwAuthData authData) async {
+    final key = '${authData.keyId}:${authData.key}';
+
+    unawaited(keyManager.put(key));
+    unawaited(
+      keyManager.storeUserProfile(authData.userProfile as UserProfileClass),
+    );
+
+    state = state.copyWith(
+      signedInUserProfile: authData.userProfile as UserProfileClass,
+      signedInUserId: authData.userId,
+    );
+  }
+
+  Future<void> signOut() async {
+    if (state.signedInUserId != null && state.signedInUserProfile != null) {
+      final response = await DwCore.instance.endpointCaller.dwCrud.delete(
+        className: 'DwAuthKey',
+        modelId: keyManager.authKeyId!,
+        apiGroup: DwCoreConst.dartwayInternalApi,
+      );
+
+      ref.processApiResponse<bool>(response);
+    }
+  }
 }

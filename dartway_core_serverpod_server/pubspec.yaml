@@ -6,7 +6,6 @@ environment:
 
 dependencies:
   serverpod: ^2.9.1
-  serverpod_auth_server: ^2.9.1
 
   serverpod_cloud_storage_s3: # ^2.9.1
     path: packages/serverpod_cloud_storage_s3
@@ -19,6 +18,7 @@ dependencies:
 
   collection: ^1.19.1
   crypto: ^3.0.6
+  bcrypt: ^1.1.3
 
 
 
