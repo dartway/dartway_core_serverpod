@@ -2,8 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/serverpod.dart';
 
-import '../core/dw_core.dart';
-
 class DwCrudEndpoint extends Endpoint {
   final _deepEquality = const DeepCollectionEquality();
 
@@ -99,22 +97,33 @@ class DwCrudEndpoint extends Endpoint {
     required DwModelWrapper wrappedModel,
     String? apiGroup,
   }) async {
-    final model = wrappedModel.object;
+    try {
+      final model = wrappedModel.object;
 
-    if (model is! TableRow) {
-      throw UnsupportedError(
-        'Received item of unsupported type: ${model.runtimeType}. Only TableRow could be saved to database',
+      if (model is! TableRow) {
+        throw UnsupportedError(
+          'Received item of unsupported type: ${model.runtimeType}. Only TableRow could be saved to database',
+        );
+      }
+
+      final className = wrappedModel.dwMappingClassname;
+      final caller =
+          DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
+
+      if (caller == null) {
+        return DwApiResponse.notConfigured(source: 'saveModel $className');
+      }
+      return await caller.save(session, model);
+    } catch (e) {
+      print(e);
+      print(StackTrace.current);
+      return DwApiResponse(
+        isOk: false,
+        value: null,
+        error:
+            'Unexpected error during saveModel ${wrappedModel.dwMappingClassname}: $e',
       );
     }
-
-    final className = wrappedModel.dwMappingClassname;
-    final caller =
-        DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
-
-    if (caller == null) {
-      return DwApiResponse.notConfigured(source: 'saveModel $className');
-    }
-    return await caller.save(session, model);
   }
 
   Stream<SerializableModel> saveModelStream(
