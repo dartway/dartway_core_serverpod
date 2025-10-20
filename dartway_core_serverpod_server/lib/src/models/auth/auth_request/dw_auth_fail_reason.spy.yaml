@@ -4,3 +4,4 @@ values:
   - userNotFound
   - passwordNotSet
   - invalidPassword
+  - invalidAccessToken

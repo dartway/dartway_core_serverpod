@@ -1,5 +1,6 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:dartway_core_serverpod_server/src/auth/dw_auth_request_extension.dart';
+import 'package:dartway_core_serverpod_server/src/auth/dw_auth_utils.dart';
 import 'package:serverpod/serverpod.dart';
 
 const verificationCodeKey = 'verificationCode';
@@ -31,6 +32,22 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
 
       await saveContext.currentModel
           .tryVerify(session, userProfile: userProfile);
+
+      if (saveContext.currentModel.status ==
+          DwAuthRequestStatus.pendingVerification) {
+        final verificationCode = await DwCore
+            .instance.auth!.config.generateVerificationCodeMethod
+            ?.call(
+          session,
+          verificationRequest: saveContext.currentModel,
+        );
+
+        if (verificationCode != null) {
+          saveContext.extras[verificationCodeKey] = verificationCode;
+          saveContext.currentModel.verificationHash =
+              DwAuthUtils.hashVerificationCode(verificationCode);
+        }
+      }
     },
     afterSaveTransaction: (
       Session session,
@@ -43,6 +60,15 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
             userProfile:
                 saveContext.extras['userProfile'] as SerializableModel?,
           ),
+        );
+      }
+    },
+    afterSaveSideEffects: (session, saveContext) async {
+      if (saveContext.extras[verificationCodeKey] != null) {
+        await DwCore.instance.auth!.config.sendVerificationCodeMethod?.call(
+          session,
+          verificationRequest: saveContext.currentModel,
+          verificationCode: saveContext.extras[verificationCodeKey] as String,
         );
       }
     },

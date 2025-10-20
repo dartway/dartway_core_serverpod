@@ -1,4 +1,5 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
+import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
 
 import 'dw_auth_utils.dart';
@@ -49,10 +50,30 @@ extension DwAuthRequestVerification on DwAuthRequest {
       } else {
         status = DwAuthRequestStatus.verified;
         session.log(
-          'Auth verified for userId=$userId ($userIdentifier)',
+          'Auth verified for userId=$userId ($userIdentifier) with password',
           level: LogLevel.info,
         );
         return;
+      }
+    } else if (accessToken != null) {
+      final verification = await DwAuthVerification.db.findFirstRow(
+        session,
+        where: (t) => t.accessToken.equals(accessToken!),
+        include: DwAuthVerification.include(
+          dwAuthRequest: DwAuthRequest.include(),
+        ),
+      );
+
+      if (verification != null &&
+          verification.dwAuthRequest?.userIdentifier == userIdentifier) {
+        status = DwAuthRequestStatus.verified;
+        session.log(
+          'Auth verified for userId=$userId ($userIdentifier) with accessToken',
+          level: LogLevel.info,
+        );
+        return;
+      } else {
+        return setFailed(session, DwAuthFailReason.invalidAccessToken);
       }
     }
 
@@ -77,6 +98,17 @@ extension DwAuthRequestVerification on DwAuthRequest {
             ),
           )
         ];
+      case DwAuthRequestType.changePassword:
+        final newPassword =
+            extraData![DwCoreConst.authNewPasswordKey] as String;
+
+        await DwAuth.instance.setUserPassword(
+          session,
+          userId: userId!,
+          newPassword: newPassword,
+        );
+
+        return [];
       default:
         throw UnimplementedError('Unknown request type: $requestType');
     }

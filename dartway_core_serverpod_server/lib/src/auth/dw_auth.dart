@@ -30,19 +30,19 @@ class DwAuth<UserProfileClass extends TableRow> {
     return instance;
   }
 
-  Future<bool> registerUserPassword(
+  Future<bool> setUserPassword(
     Session session, {
     required int userId,
-    String? password,
-    String? passwordHash,
+    String? newPassword,
+    String? newPasswordHash,
   }) async {
     try {
-      if (password == null && passwordHash == null) {
+      if (newPassword == null && newPasswordHash == null) {
         throw ArgumentError(
             'Either password or passwordHash must be provided.');
       }
 
-      if (password != null && passwordHash != null) {
+      if (newPassword != null && newPasswordHash != null) {
         throw ArgumentError('Cannot provide both password and passwordHash.');
       }
 
@@ -52,7 +52,7 @@ class DwAuth<UserProfileClass extends TableRow> {
         where: (t) => t.userId.equals(userId),
       );
 
-      final newHash = passwordHash ?? DwAuthUtils.hashPassword(password!);
+      final newHash = newPasswordHash ?? DwAuthUtils.hashPassword(newPassword!);
 
       if (existing != null) {
         session.log('Updating password for userId=$userId',
@@ -74,7 +74,7 @@ class DwAuth<UserProfileClass extends TableRow> {
       }
 
       // Create new password record
-      final newPassword = DwUserPassword(
+      final newUserPassword = DwUserPassword(
         userId: userId,
         passwordHash: newHash,
         createdAt: DateTime.now(),
@@ -82,7 +82,7 @@ class DwAuth<UserProfileClass extends TableRow> {
       );
 
       session.log('Creating password for userId=$userId', level: LogLevel.info);
-      await DwUserPassword.db.insertRow(session, newPassword);
+      await DwUserPassword.db.insertRow(session, newUserPassword);
 
       return true;
     } catch (e, st) {
