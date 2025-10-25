@@ -11,6 +11,7 @@ class DwCore<UserProfileClass extends TableRow> {
   final Map<String, Map<String, DwCrudConfig>> _crudConfiguration = {};
   late final ColumnInt _userInfoIdColumn;
   late final ColumnString _userIdentifierColumn;
+  late final Include? _userProfileInclude;
 
   /// Auth module (optional)
   late final DwAuth<UserProfileClass>? auth;
@@ -28,6 +29,7 @@ class DwCore<UserProfileClass extends TableRow> {
   static DwCore<UserProfileClass> init<UserProfileClass extends TableRow>({
     required Table userProfileTable,
     required List<DwCrudConfig> crudConfigurations,
+    Include? userProfileInclude,
     // required Future<UserProfileClass> Function({
     //   required int userInfoId,
     //   required String userIdentifier,
@@ -42,6 +44,7 @@ class DwCore<UserProfileClass extends TableRow> {
     final instance = DwCore<UserProfileClass>._(
       userProfileTable: userProfileTable,
       crudConfigurations: crudConfigurations,
+      userProfileInclude: userProfileInclude,
       // userProfileConstructor: userProfileConstructor,
       auth: authConfig != null
           ? DwAuth.init<UserProfileClass>(config: authConfig)
@@ -55,13 +58,14 @@ class DwCore<UserProfileClass extends TableRow> {
   DwCore._({
     required this.userProfileTable,
     required List<DwCrudConfig> crudConfigurations,
+    required Include? userProfileInclude,
     // required Future<UserProfileClass> Function({
     //   required int userInfoId,
     //   required String userIdentifier,
     //   required Map<String, String> registrationExtraData,
     // }) userProfileConstructor,
     required this.auth,
-  }) {
+  }) : _userProfileInclude = userProfileInclude {
     _userInfoIdColumn = userProfileTable.columns.firstWhereOrThrow(
       (column) =>
           column is ColumnInt &&
@@ -102,6 +106,7 @@ class DwCore<UserProfileClass extends TableRow> {
   Future<UserProfileClass?> getUserProfile(Session session, int userId) async {
     final profile = await session.db.findFirstRow<UserProfileClass>(
       where: _userInfoIdColumn.equals(userId),
+      include: _userProfileInclude,
     );
 
     if (profile == null) {
@@ -117,6 +122,7 @@ class DwCore<UserProfileClass extends TableRow> {
   ) async {
     final profile = await session.db.findFirstRow<UserProfileClass>(
       where: _userIdentifierColumn.equals(identifier),
+      include: _userProfileInclude,
     );
 
     if (profile == null) {

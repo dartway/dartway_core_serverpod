@@ -38,6 +38,8 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
       signedInUserId: signedInUserId,
     );
 
+    // TODO: add refresh session after initialization
+
     DwRepository.addUpdatesListener<DwAuthData>(_handleAuthDataUpdates);
     DwRepository.addUpdatesListener<DwAuthKey>(_handleAuthKeyUpdates);
     DwRepository.addUpdatesListener<UserProfileClass>(
