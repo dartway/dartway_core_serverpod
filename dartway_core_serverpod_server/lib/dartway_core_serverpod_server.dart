@@ -1,3 +1,5 @@
+export 'package:serverpod_cloud_storage_s3/serverpod_cloud_storage_s3.dart';
+
 export 'src/auth/dw_auth.dart';
 export 'src/auth/dw_auth_config.dart';
 export 'src/auth/dw_authentification_handler.dart';

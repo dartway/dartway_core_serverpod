@@ -17,4 +17,5 @@ export 'repository/domain/dw_model_list_state_config.dart';
 export 'repository/domain/dw_single_model_state_config.dart';
 export 'repository/dw_repository.dart';
 export 'session_state/dw_authentification_key_manager.dart';
+export 'session_state/dw_signed_in_user_scope.dart';
 export 'utils/dw_file_upload_handler.dart';

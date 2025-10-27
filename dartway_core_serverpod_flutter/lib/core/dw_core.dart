@@ -8,7 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../session_state/dw_session_state.dart';
 import '../session_state/dw_session_state_model.dart';
 
-class DwCore<UserProfileClass extends SerializableModel> {
+class DwCore<
+  ServerpodClientClass extends ServerpodClientShared,
+  UserProfileClass extends SerializableModel
+> {
   DwCore._({
     required this.client,
     required this.sessionProvider,
@@ -16,7 +19,7 @@ class DwCore<UserProfileClass extends SerializableModel> {
     required this.getUserId,
   });
 
-  final ServerpodClientShared client;
+  final ServerpodClientClass client;
 
   final StateNotifierProvider<
     DwSessionStateNotifier<UserProfileClass>,
@@ -39,17 +42,24 @@ class DwCore<UserProfileClass extends SerializableModel> {
     return instance;
   }
 
-  static Future<DwCore<UserProfileClass>>
-  init<UserProfileClass extends SerializableModel>({
-    required ServerpodClientShared client,
+  static Future<DwCore<ServerpodClientClass, UserProfileClass>> init<
+    ServerpodClientClass extends ServerpodClientShared,
+    UserProfileClass extends SerializableModel
+  >({
+    required ServerpodClientClass client,
     required WidgetRef ref,
     required Function() initRepositoryFunction,
     required int? Function(UserProfileClass? user) getUserId,
+    DwTelegramAlertsConfig? telegramAlertsConfig,
   }) async {
     // --- ищем dartway endpoint ---
     final dartwayCaller = client.moduleLookup.values.firstWhereOrNull(
       (e) => e is dartway.Caller,
     );
+
+    if (telegramAlertsConfig != null) {
+      await DwTelegramAlerts.init(config: telegramAlertsConfig);
+    }
 
     if (dartwayCaller == null) {
       throw Exception(
@@ -90,18 +100,18 @@ class DwCore<UserProfileClass extends SerializableModel> {
               ),
             );
 
-    if (sessionProvider != null) {
-      await ref.read(sessionProvider.notifier).initialize();
-    }
-
     // --- создаём и сохраняем экземпляр ---
-    final core = DwCore<UserProfileClass>._(
+    final core = DwCore<ServerpodClientClass, UserProfileClass>._(
       client: client,
       sessionProvider: sessionProvider,
       endpointCaller: dartwayCaller as dartway.Caller,
       getUserId: getUserId,
     );
     _instance = core;
+
+    if (sessionProvider != null) {
+      await ref.read(sessionProvider.notifier).initialize();
+    }
 
     if (kDebugMode) {
       debugPrint('[DwCore] initialized for $UserProfileClass');

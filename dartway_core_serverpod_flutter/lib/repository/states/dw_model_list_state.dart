@@ -2,8 +2,6 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/dw_core.dart';
-
 class DwModelListState<Model extends SerializableModel>
     extends FamilyAsyncNotifier<List<Model>, DwModelListStateConfig<Model>>
 // implements ModelManagerInterface<Model>
@@ -83,64 +81,4 @@ class DwModelListState<Model extends SerializableModel>
       ]);
     });
   }
-
-  // void manualInsert(int modelId, Model model) async {
-  //   return await future.then((value) async {
-  //     ref.manualUpdate(modelId, model);
-
-  //     state = AsyncValue.data(
-  //       [
-  //         modelId,
-  //         ...value.whereNot((e) => e == modelId),
-  //       ],
-  //     );
-  //   });
-  // }
-
-  // @override
-  // Future<int?> save(
-  //   Model model, {
-  //   bool andRemoveFromList = false,
-  // }) async {
-  //   return await future.then(
-  //     (value) async => await nitToolsCaller!.nitCrud
-  //         .saveModel(
-  //           wrappedModel: ObjectWrapper.wrap(model: model),
-  //         )
-  //         .then((response) => ref.processApiResponse<int>(response))
-  //         .then(
-  //       (res) {
-  //         if (res == null) return null;
-
-  //         state = AsyncValue.data([
-  //           if (!andRemoveFromList) res,
-  //           ...value.whereNot((e) => e == res)
-  //         ]);
-  //         debugPrint("Updated value = ${state.value}");
-  //         return res;
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // Future<bool> delete(int modelId) async {
-  //   return await future.then(
-  //     (value) async => await nitToolsCaller!.nitCrud
-  //         .delete(
-  //           // TODO: Изменить, toString() не работает на Web release из-за minification
-  //           className: Model.toString(), modelId: modelId,
-  //         )
-  //         .then((response) => ref.processApiResponse<bool>(response))
-  //         .then(
-  //       (res) {
-  //         if (res == true) {
-  //           state = AsyncValue.data([...value.whereNot((e) => e == modelId)]);
-  //           debugPrint("Updated value = ${state.value}");
-  //         }
-  //         return res ?? false;
-  //       },
-  //     ),
-  //   );
-  // }
 }

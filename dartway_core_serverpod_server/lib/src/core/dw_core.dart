@@ -85,6 +85,17 @@ class DwCore<UserProfileClass extends TableRow> {
         dwAuthRequestConfig,
         dwAuthVerificationConfig,
         dwAuthKeyConfig,
+        DwCrudConfig<UserProfileClass>(
+          table: userProfileTable,
+          getModelConfigs: [
+            DwGetModelConfig<UserProfileClass>(
+              filterPrototype: DwBackendFilter.equalsPrototype(
+                fieldName: DwCoreConst.userProfileIdColumnName,
+              ),
+              include: _userProfileInclude,
+            ),
+          ],
+        ),
       ].map(
         (config) => MapEntry(config.className, config),
       ),

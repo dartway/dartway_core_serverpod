@@ -40,6 +40,15 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
 
     // TODO: add refresh session after initialization
 
+    if (state.signedInUserId != null) {
+      unawaited(
+        ref.readModel<UserProfileClass>(
+          id: state.signedInUserId!,
+          apiGroupOverride: DwCoreConst.dartwayInternalApi,
+        ),
+      );
+    }
+
     DwRepository.addUpdatesListener<DwAuthData>(_handleAuthDataUpdates);
     DwRepository.addUpdatesListener<DwAuthKey>(_handleAuthKeyUpdates);
     DwRepository.addUpdatesListener<UserProfileClass>(
@@ -98,7 +107,9 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
         state = state.copyWith(
           signedInUserProfile: wrappedModel.model as UserProfileClass,
         );
-        // await _storeUserProfile(wrappedModel.model as UserProfileClass);
+        unawaited(
+          keyManager.storeUserProfile(wrappedModel.model as UserProfileClass),
+        );
         return;
       }
     }

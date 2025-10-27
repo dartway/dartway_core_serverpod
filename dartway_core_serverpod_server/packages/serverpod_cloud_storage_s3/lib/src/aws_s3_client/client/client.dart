@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
 import 'package:built_value/serializer.dart';
-import 'exceptions.dart';
 import 'package:http/http.dart';
 import 'package:xml2json/xml2json.dart';
 
 import '../model/list_bucket_result.dart';
 import '../model/list_bucket_result_parker.dart';
+import 'exceptions.dart';
 
 class AwsS3Client {
   final String _secretKey;
@@ -72,13 +72,59 @@ class AwsS3Client {
   String keytoPath(String key) =>
       '/$key'.split('/').map(Uri.encodeQueryComponent).join('/');
 
+//   ///Returns a [SignedRequestParams] object containing the uri and the HTTP headers
+//   ///needed to do a signed GET request to AWS S3. Does not actually execute a request.
+//   ///You can use this method to integrate this client with an HTTP client of your choice.
+//   SignedRequestParams buildSignedParams(
+//       {required String key,
+//       Map<String, String>? queryParams,
+//       String method = 'GET'}) {
+//     final unencodedPath = "$_bucketId/$key";
+//     final uri = Uri.https(_host, unencodedPath, queryParams);
+//     final payload = SigV4.hashCanonicalRequest('');
+//     final datetime = SigV4.generateDatetime();
+//     final credentialScope =
+//         SigV4.buildCredentialScope(datetime, _region, _service);
+
+//     final canonicalQuery = SigV4.buildCanonicalQueryString(queryParams);
+//     final canonicalRequest = '''$method
+// ${'/$unencodedPath'.split('/').map(Uri.encodeComponent).join('/')}
+// $canonicalQuery
+// host:$_host
+// x-amz-content-sha256:$payload
+// x-amz-date:$datetime
+// x-amz-security-token:${_sessionToken ?? ""}
+
+// host;x-amz-content-sha256;x-amz-date;x-amz-security-token
+// $payload''';
+
+//     final stringToSign = SigV4.buildStringToSign(datetime, credentialScope,
+//         SigV4.hashCanonicalRequest(canonicalRequest));
+//     final signingKey =
+//         SigV4.calculateSigningKey(_secretKey, datetime, _region, _service);
+//     final signature = SigV4.calculateSignature(signingKey, stringToSign);
+
+//     final authorization = [
+//       'AWS4-HMAC-SHA256 Credential=$_accessKey/$credentialScope',
+//       'SignedHeaders=host;x-amz-content-sha256;x-amz-date;x-amz-security-token',
+//       'Signature=$signature',
+//     ].join(',');
+
+//     return SignedRequestParams(uri, {
+//       'Authorization': authorization,
+//       'x-amz-content-sha256': payload,
+//       'x-amz-date': datetime,
+//     });
+//   }
+
   ///Returns a [SignedRequestParams] object containing the uri and the HTTP headers
   ///needed to do a signed GET request to AWS S3. Does not actually execute a request.
   ///You can use this method to integrate this client with an HTTP client of your choice.
-  SignedRequestParams buildSignedParams(
-      {required String key,
-      Map<String, String>? queryParams,
-      String method = 'GET'}) {
+  SignedRequestParams buildSignedParams({
+    required String key,
+    Map<String, String>? queryParams,
+    String method = 'GET',
+  }) {
     final unencodedPath = "$_bucketId/$key";
     final uri = Uri.https(_host, unencodedPath, queryParams);
     final payload = SigV4.hashCanonicalRequest('');
@@ -86,34 +132,61 @@ class AwsS3Client {
     final credentialScope =
         SigV4.buildCredentialScope(datetime, _region, _service);
 
+    // Canonical query string
     final canonicalQuery = SigV4.buildCanonicalQueryString(queryParams);
-    final canonicalRequest = '''$method
-${'/$unencodedPath'.split('/').map(Uri.encodeComponent).join('/')}
-$canonicalQuery
+
+    // Canonical headers
+    final canonicalHeaders = '''
 host:$_host
 x-amz-content-sha256:$payload
 x-amz-date:$datetime
-x-amz-security-token:${_sessionToken ?? ""}
+${_sessionToken != null ? 'x-amz-security-token:$_sessionToken\n' : ''}''';
 
-host;x-amz-content-sha256;x-amz-date;x-amz-security-token
+    // Signed headers
+    final signedHeaders = [
+      'host',
+      'x-amz-content-sha256',
+      'x-amz-date',
+      if (_sessionToken != null) 'x-amz-security-token',
+    ].join(';');
+
+    // Canonical request
+    final canonicalRequest = '''$method
+${'/$unencodedPath'.split('/').map(Uri.encodeComponent).join('/')}
+$canonicalQuery
+$canonicalHeaders
+$signedHeaders
 $payload''';
 
-    final stringToSign = SigV4.buildStringToSign(datetime, credentialScope,
-        SigV4.hashCanonicalRequest(canonicalRequest));
-    final signingKey =
-        SigV4.calculateSigningKey(_secretKey, datetime, _region, _service);
+    // String to sign
+    final stringToSign = SigV4.buildStringToSign(
+      datetime,
+      credentialScope,
+      SigV4.hashCanonicalRequest(canonicalRequest),
+    );
+
+    // Signing key and signature
+    final signingKey = SigV4.calculateSigningKey(
+      _secretKey,
+      datetime,
+      _region,
+      _service,
+    );
     final signature = SigV4.calculateSignature(signingKey, stringToSign);
 
+    // Authorization header
     final authorization = [
       'AWS4-HMAC-SHA256 Credential=$_accessKey/$credentialScope',
-      'SignedHeaders=host;x-amz-content-sha256;x-amz-date;x-amz-security-token',
+      'SignedHeaders=$signedHeaders',
       'Signature=$signature',
     ].join(',');
 
+    // Return signed parameters
     return SignedRequestParams(uri, {
       'Authorization': authorization,
       'x-amz-content-sha256': payload,
       'x-amz-date': datetime,
+      if (_sessionToken != null) 'x-amz-security-token': _sessionToken,
     });
   }
 

@@ -9,15 +9,15 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
   table: DwAuthRequest.t,
   saveConfig: DwSaveConfig<DwAuthRequest>(
     allowSave: (Session session, DwSaveContext<DwAuthRequest> ctx) async {
-      // Update is not allowed
-      if (ctx.currentModel.id != null) {
-        // TODO: implement centralized logging and alerting
-        session.log(
-          'Attempt to update DwAuthRequest with id=${ctx.currentModel.id} rejected',
-          level: LogLevel.warning,
-        );
-        throw Exception('DwAuthRequest objects cannot be updated.');
-      }
+      // // Update is not allowed
+      // if (ctx.currentModel.id != null) {
+      //   // TODO: implement centralized logging and alerting
+      //   session.log(
+      //     'Attempt to update DwAuthRequest with id=${ctx.currentModel.id} rejected',
+      //     level: LogLevel.warning,
+      //   );
+      //   throw Exception('DwAuthRequest objects cannot be updated.');
+      // }
 
       return true;
     },
