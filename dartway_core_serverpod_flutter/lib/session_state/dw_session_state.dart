@@ -105,7 +105,6 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
       if (wrappedModel.model is UserProfileClass &&
           wrappedModel.modelId == state.signedInUserId) {
         state = state.copyWith(
-          signedInUserId: wrappedModel.modelId,
           signedInUserProfile: wrappedModel.model as UserProfileClass,
         );
         unawaited(
