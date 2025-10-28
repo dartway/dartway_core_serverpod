@@ -24,12 +24,13 @@ import 'cloud_files/dw_cloud_file.dart' as _i12;
 import 'dw_app_notification.dart' as _i13;
 import 'dw_backend_filter_type.dart' as _i14;
 import 'dw_updates_transport.dart' as _i15;
-import '/src/domain/api/dw_model_wrapper.dart' as _i16;
+import 'dw_webhook_log.dart' as _i16;
+import '/src/domain/api/dw_model_wrapper.dart' as _i17;
 import 'package:dartway_core_serverpod_server/src/domain/api/dw_model_wrapper.dart'
-    as _i17;
-import '/src/domain/api/dw_api_response.dart' as _i18;
-import '/src/domain/api/dw_auth_data.dart' as _i19;
-import '/src/domain/api/dw_backend_filter.dart' as _i20;
+    as _i18;
+import '/src/domain/api/dw_api_response.dart' as _i19;
+import '/src/domain/api/dw_auth_data.dart' as _i20;
+import '/src/domain/api/dw_backend_filter.dart' as _i21;
 export 'auth/auth_request/dw_auth_fail_reason.dart';
 export 'auth/auth_request/dw_auth_provider.dart';
 export 'auth/auth_request/dw_auth_request.dart';
@@ -43,6 +44,7 @@ export 'cloud_files/dw_cloud_file.dart';
 export 'dw_app_notification.dart';
 export 'dw_backend_filter_type.dart';
 export 'dw_updates_transport.dart';
+export 'dw_webhook_log.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -490,6 +492,104 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'dw_web_server_log',
+      dartName: 'DwWebServerLog',
+      schema: 'public',
+      module: 'dartway_core_serverpod',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'dw_web_server_log_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'method',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'url',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'headers',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'body',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'statusCode',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'error',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'durationMs',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'handler',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ip',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'dw_web_server_log_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        )
+      ],
+      managed: true,
+    ),
   ];
 
   @override
@@ -537,6 +637,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i15.DwUpdatesTransport) {
       return _i15.DwUpdatesTransport.fromJson(data) as T;
     }
+    if (t == _i16.DwWebServerLog) {
+      return _i16.DwWebServerLog.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i3.DwAuthFailReason?>()) {
       return (data != null ? _i3.DwAuthFailReason.fromJson(data) : null) as T;
     }
@@ -580,45 +683,48 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null ? _i15.DwUpdatesTransport.fromJson(data) : null)
           as T;
     }
+    if (t == _i1.getType<_i16.DwWebServerLog?>()) {
+      return (data != null ? _i16.DwWebServerLog.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<Map<String, String>?>()) {
       return (data != null
           ? (data as Map).map((k, v) =>
               MapEntry(deserialize<String>(k), deserialize<String>(v)))
           : null) as T;
     }
-    if (t == List<_i16.DwModelWrapper>) {
-      return (data as List)
-          .map((e) => deserialize<_i16.DwModelWrapper>(e))
-          .toList() as T;
-    }
-    if (t == _i16.DwModelWrapper) {
-      return _i16.DwModelWrapper.fromJson(data) as T;
-    }
     if (t == List<_i17.DwModelWrapper>) {
       return (data as List)
           .map((e) => deserialize<_i17.DwModelWrapper>(e))
           .toList() as T;
     }
-    if (t == _i18.DwApiResponse) {
-      return _i18.DwApiResponse.fromJson(data) as T;
+    if (t == _i17.DwModelWrapper) {
+      return _i17.DwModelWrapper.fromJson(data) as T;
     }
-    if (t == _i19.DwAuthData) {
-      return _i19.DwAuthData.fromJson(data) as T;
+    if (t == List<_i18.DwModelWrapper>) {
+      return (data as List)
+          .map((e) => deserialize<_i18.DwModelWrapper>(e))
+          .toList() as T;
     }
-    if (t == _i20.DwBackendFilter) {
-      return _i20.DwBackendFilter.fromJson(data) as T;
+    if (t == _i19.DwApiResponse) {
+      return _i19.DwApiResponse.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i16.DwModelWrapper?>()) {
-      return (data != null ? _i16.DwModelWrapper.fromJson(data) : null) as T;
+    if (t == _i20.DwAuthData) {
+      return _i20.DwAuthData.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i18.DwApiResponse?>()) {
-      return (data != null ? _i18.DwApiResponse.fromJson(data) : null) as T;
+    if (t == _i21.DwBackendFilter) {
+      return _i21.DwBackendFilter.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i19.DwAuthData?>()) {
-      return (data != null ? _i19.DwAuthData.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.DwModelWrapper?>()) {
+      return (data != null ? _i17.DwModelWrapper.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i20.DwBackendFilter?>()) {
-      return (data != null ? _i20.DwBackendFilter.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.DwApiResponse?>()) {
+      return (data != null ? _i19.DwApiResponse.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i20.DwAuthData?>()) {
+      return (data != null ? _i20.DwAuthData.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i21.DwBackendFilter?>()) {
+      return (data != null ? _i21.DwBackendFilter.fromJson(data) : null) as T;
     }
     try {
       return _i2.Protocol().deserialize<T>(data, t);
@@ -630,16 +736,16 @@ class Protocol extends _i1.SerializationManagerServer {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i16.DwModelWrapper) {
+    if (data is _i17.DwModelWrapper) {
       return 'DwModelWrapper';
     }
-    if (data is _i18.DwApiResponse) {
+    if (data is _i19.DwApiResponse) {
       return 'DwApiResponse';
     }
-    if (data is _i19.DwAuthData) {
+    if (data is _i20.DwAuthData) {
       return 'DwAuthData';
     }
-    if (data is _i20.DwBackendFilter) {
+    if (data is _i21.DwBackendFilter) {
       return 'DwBackendFilter';
     }
     if (data is _i3.DwAuthFailReason) {
@@ -681,6 +787,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i15.DwUpdatesTransport) {
       return 'DwUpdatesTransport';
     }
+    if (data is _i16.DwWebServerLog) {
+      return 'DwWebServerLog';
+    }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod.$className';
@@ -695,16 +804,16 @@ class Protocol extends _i1.SerializationManagerServer {
       return super.deserializeByClassName(data);
     }
     if (dataClassName == 'DwModelWrapper') {
-      return deserialize<_i16.DwModelWrapper>(data['data']);
+      return deserialize<_i17.DwModelWrapper>(data['data']);
     }
     if (dataClassName == 'DwApiResponse') {
-      return deserialize<_i18.DwApiResponse>(data['data']);
+      return deserialize<_i19.DwApiResponse>(data['data']);
     }
     if (dataClassName == 'DwAuthData') {
-      return deserialize<_i19.DwAuthData>(data['data']);
+      return deserialize<_i20.DwAuthData>(data['data']);
     }
     if (dataClassName == 'DwBackendFilter') {
-      return deserialize<_i20.DwBackendFilter>(data['data']);
+      return deserialize<_i21.DwBackendFilter>(data['data']);
     }
     if (dataClassName == 'DwAuthFailReason') {
       return deserialize<_i3.DwAuthFailReason>(data['data']);
@@ -745,6 +854,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'DwUpdatesTransport') {
       return deserialize<_i15.DwUpdatesTransport>(data['data']);
     }
+    if (dataClassName == 'DwWebServerLog') {
+      return deserialize<_i16.DwWebServerLog>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
@@ -773,6 +885,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i12.DwCloudFile.t;
       case _i13.DwAppNotification:
         return _i13.DwAppNotification.t;
+      case _i16.DwWebServerLog:
+        return _i16.DwWebServerLog.t;
     }
     return null;
   }

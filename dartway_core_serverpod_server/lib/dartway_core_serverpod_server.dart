@@ -17,3 +17,5 @@ export 'src/domain/crud_config/configuration_classes/dw_save_context.dart';
 export 'src/domain/crud_config/dw_crud_config.dart';
 export 'src/generated/endpoints.dart';
 export 'src/generated/protocol.dart';
+export 'src/utils/web_logs/dw_route_logging_mixin.dart';
+export 'src/utils/web_logs/dw_web_server_logger.dart';
