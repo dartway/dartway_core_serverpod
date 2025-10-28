@@ -3,6 +3,8 @@ import 'package:dartway_core_serverpod_server/src/crud/dw_auth_verification_conf
 import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
 
+import '../business/auth/dw_auth.dart';
+import '../business/cloud_storage/dw_cloud_storage.dart';
 import '../crud/dw_auth_key_config.dart';
 import '../crud/dw_auth_request_config.dart';
 
@@ -15,6 +17,7 @@ class DwCore<UserProfileClass extends TableRow> {
 
   /// Auth module (optional)
   late final DwAuth<UserProfileClass>? auth;
+  late final DwCloudStorage? cloudStorage;
 
   static DwCore? _instance;
 
@@ -36,6 +39,7 @@ class DwCore<UserProfileClass extends TableRow> {
     //   required Map<String, String> registrationExtraData,
     // }) userProfileConstructor,
     DwAuthConfig? authConfig,
+    DwCloudStorageConfig? cloudStorageConfig,
   }) {
     if (_instance != null) {
       throw Exception('DwCore already initialized');
@@ -48,6 +52,9 @@ class DwCore<UserProfileClass extends TableRow> {
       // userProfileConstructor: userProfileConstructor,
       auth: authConfig != null
           ? DwAuth.init<UserProfileClass>(config: authConfig)
+          : null,
+      cloudStorage: cloudStorageConfig != null
+          ? DwCloudStorage.init(config: cloudStorageConfig)
           : null,
     );
 
@@ -65,6 +72,7 @@ class DwCore<UserProfileClass extends TableRow> {
     //   required Map<String, String> registrationExtraData,
     // }) userProfileConstructor,
     required this.auth,
+    required this.cloudStorage,
   }) : _userProfileInclude = userProfileInclude {
     _userInfoIdColumn = userProfileTable.columns.firstWhereOrThrow(
       (column) =>

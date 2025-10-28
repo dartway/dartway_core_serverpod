@@ -22,7 +22,7 @@ class DwFileUploadHandler {
     imageSource: imageSource,
   ).then((media) => media?.publicUrl);
 
-  static Future<DwMedia?> pickAndUploadImage({
+  static Future<DwCloudFile?> pickAndUploadImage({
     ImageSource imageSource = ImageSource.gallery,
   }) async {
     final file = await ImagePicker().pickImage(source: imageSource);
@@ -43,7 +43,7 @@ class DwFileUploadHandler {
     path: path,
   ).then((media) => media.publicUrl);
 
-  static Future<DwMedia> uploadXFileToServer({
+  static Future<DwCloudFile> uploadXFileToServer({
     required XFile xFile,
     String? path,
   }) async {
@@ -71,7 +71,7 @@ class DwFileUploadHandler {
     path: path,
   ).then((media) => media.publicUrl);
 
-  static Future<DwMedia> uploadBytesToServer({
+  static Future<DwCloudFile> uploadBytesToServer({
     required Uint8List bytes,
     required String path,
   }) async {

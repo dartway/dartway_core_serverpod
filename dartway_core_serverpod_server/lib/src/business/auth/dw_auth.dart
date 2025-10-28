@@ -6,28 +6,12 @@ import 'dw_auth_utils.dart';
 class DwAuth<UserProfileClass extends TableRow> {
   final DwAuthConfig config;
 
-  static DwAuth? _instance;
-
-  static DwAuth get instance {
-    if (_instance == null) {
-      throw Exception('DwAuth not initialized. Call DwAuth.init() first.');
-    }
-    return _instance!;
-  }
-
   DwAuth._(this.config);
 
-  /// Инициализация DwAuth отдельно (например, из DwCore.init)
   static DwAuth<UserProfileClass> init<UserProfileClass extends TableRow>({
     required DwAuthConfig config,
   }) {
-    if (_instance != null) {
-      throw Exception('DwAuth already initialized.');
-    }
-
-    final instance = DwAuth<UserProfileClass>._(config);
-    _instance = instance;
-    return instance;
+    return DwAuth<UserProfileClass>._(config);
   }
 
   Future<bool> setUserPassword(

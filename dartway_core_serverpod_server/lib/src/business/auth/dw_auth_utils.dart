@@ -23,7 +23,7 @@ class DwAuthUtils {
   }
 
   static String hashAuthKey(String key) {
-    return hashString(DwAuth.instance.config.authKeySalt, key);
+    return hashString(DwCore.instance.auth!.config.authKeySalt, key);
   }
 
   static String hashPassword(String password) =>
@@ -34,7 +34,7 @@ class DwAuthUtils {
 
   static String hashVerificationCode(String verificationCode) {
     return hashString(
-      DwAuth.instance.config.verificationCodeSalt,
+      DwCore.instance.auth!.config.verificationCodeSalt,
       verificationCode,
     );
   }

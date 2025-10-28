@@ -18,7 +18,7 @@ import 'package:dartway_core_serverpod_client/src/domain/api/dw_model_wrapper.da
 import 'package:dartway_core_serverpod_client/src/domain/api/dw_backend_filter.dart'
     as _i5;
 import 'package:serverpod_serialization/src/serialization.dart' as _i6;
-import 'package:dartway_core_serverpod_client/src/protocol/media/dw_media.dart'
+import 'package:dartway_core_serverpod_client/src/protocol/cloud_files/dw_cloud_file.dart'
     as _i7;
 
 /// {@category Endpoint}
@@ -145,8 +145,8 @@ class EndpointDwUpload extends _i1.EndpointRef {
         {'path': path},
       );
 
-  _i2.Future<_i7.DwMedia?> verifyUpload({required String path}) =>
-      caller.callServerEndpoint<_i7.DwMedia?>(
+  _i2.Future<_i7.DwCloudFile?> verifyUpload({required String path}) =>
+      caller.callServerEndpoint<_i7.DwCloudFile?>(
         'dartway_core_serverpod.dwUpload',
         'verifyUpload',
         {'path': path},

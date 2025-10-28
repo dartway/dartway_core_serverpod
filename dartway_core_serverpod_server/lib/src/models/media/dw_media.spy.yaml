@@ -1,7 +1,0 @@
-class: DwMedia
-table: dw_media
-fields:
-  type: DwMediaType
-  createdAt: DateTime
-  publicUrl: String
-  duration: int?

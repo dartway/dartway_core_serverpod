@@ -102,7 +102,7 @@ extension DwAuthRequestVerification on DwAuthRequest {
         final newPassword =
             extraData![DwCoreConst.authNewPasswordKey] as String;
 
-        await DwAuth.instance.setUserPassword(
+        await DwCore.instance.auth!.setUserPassword(
           session,
           userId: userId!,
           newPassword: newPassword,

@@ -1,0 +1,13 @@
+class: DwCloudFile
+table: dw_cloud_file
+
+fields:
+  createdBy: int? # userId 
+  bucket: String # Название бакета (можно хранить раздельно по проектам или окружениям)
+  path: String # Путь внутри бакета (uploads/user_123/avatar.png)
+  publicUrl: String # Публичная ссылка на файл, если доступна
+  size: int? # Размер файла в байтах
+  mimeType: String? # MIME-тип (image/png, application/pdf и т.п.)
+  
+  createdAt: DateTime # Когда файл был загружен
+  verifiedAt: DateTime? # Когда проверена загрузка (если есть процесс verify)

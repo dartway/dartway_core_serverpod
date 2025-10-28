@@ -1,8 +1,8 @@
 export 'package:serverpod_cloud_storage_s3/serverpod_cloud_storage_s3.dart';
 
-export 'src/auth/dw_auth.dart';
-export 'src/auth/dw_auth_config.dart';
-export 'src/auth/dw_authentification_handler.dart';
+export 'src/business/auth/dw_auth_config.dart';
+export 'src/business/auth/dw_authentification_handler.dart';
+export 'src/business/cloud_storage/dw_cloud_storage_config.dart';
 export 'src/business/dw_session_extension.dart';
 export 'src/core/dw_core.dart';
 export 'src/domain/api/dw_api_response.dart';
@@ -17,4 +17,3 @@ export 'src/domain/crud_config/configuration_classes/dw_save_context.dart';
 export 'src/domain/crud_config/dw_crud_config.dart';
 export 'src/generated/endpoints.dart';
 export 'src/generated/protocol.dart';
-export 'zarchive/dw_auth.dart';

@@ -1,5 +1,0 @@
-enum: DwMediaType
-values:
-  - video
-  - image
-  - audio

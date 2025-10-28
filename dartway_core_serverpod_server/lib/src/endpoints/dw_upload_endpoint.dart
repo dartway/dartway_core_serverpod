@@ -12,33 +12,22 @@ class DwUploadEndpoint extends Endpoint {
     );
   }
 
-  Future<DwMedia?> verifyUpload(
+  Future<DwCloudFile?> verifyUpload(
     Session session, {
     required String path,
   }) async {
-    if (await session.storage.verifyDirectFileUpload(
-      storageId: 'public',
-      path: path,
-    )) {
-      final uri = await session.storage.getPublicUrl(
-        storageId: 'public',
-        path: path,
-      );
+    final info = await DwCore.instance.cloudStorage!.statObject(path);
 
-      print(
-        uri.toString(),
-      );
-      if (uri == null) return null;
+    if (info.size == null || info.size! <= 0) return null;
 
-      return await session.db.insertRow(
-        DwMedia(
-          createdAt: DateTime.now(),
-          publicUrl: uri.toString(),
-          type: DwMediaType.image, //TODO: Change this to the correct type
-        ),
-      );
-    }
+    final file = await session.db.insertRow(
+      DwCore.instance.cloudStorage!.createCloudFile(
+        userId: await session.currentUserProfileId,
+        objectPath: path,
+        size: info.size!,
+      ),
+    );
 
-    return null;
+    return file;
   }
 }
