@@ -7,7 +7,7 @@ _filter<T>(T? model, bool Function(T model) filter) =>
 extension RefModelListStateExtensions on Ref {
   Future<List<T>> watchModelList<T extends SerializableModel>({
     DwBackendFilter? backendFilter,
-    DwModelListStateConfig? customConfig,
+    DwModelListStateConfig<T>? customConfig,
     bool Function(T model)? frontendFilter,
   }) async {
     final items = await watch(
@@ -24,7 +24,7 @@ extension RefModelListStateExtensions on Ref {
   }
 
   loadNextPageForCustomizedModelListMore<T extends SerializableModel>({
-    required DwModelListStateConfig config,
+    required DwModelListStateConfig<T> config,
   }) =>
       read(
         DwRepository.modelListStateProvider<T>()(config).notifier,

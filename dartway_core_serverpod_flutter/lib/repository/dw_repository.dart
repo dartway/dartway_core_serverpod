@@ -110,14 +110,14 @@ class DwRepository {
   static AsyncNotifierProviderFamily<
     DwModelListState<T>,
     List<T>,
-    DwModelListStateConfig
+    DwModelListStateConfig<T>
   >
   modelListStateProvider<T extends SerializableModel>() {
     if (_modelListStateProviders[T] == null) {
       _modelListStateProviders[T] = AsyncNotifierProviderFamily<
         DwModelListState<T>,
         List<T>,
-        DwModelListStateConfig
+        DwModelListStateConfig<T>
       >(DwModelListState<T>.new);
     }
 
@@ -125,7 +125,7 @@ class DwRepository {
         as AsyncNotifierProviderFamily<
           DwModelListState<T>,
           List<T>,
-          DwModelListStateConfig
+          DwModelListStateConfig<T>
         >;
   }
 
@@ -142,14 +142,14 @@ class DwRepository {
   static AsyncNotifierProviderFamily<
     DwSingleModelState<T>,
     T?,
-    DwSingleModelStateConfig
+    DwSingleModelStateConfig<T>
   >
   singleModelProvider<T extends SerializableModel>() {
     if (_singleModelStateProviders[T] == null) {
       _singleModelStateProviders[T] = AsyncNotifierProviderFamily<
         DwSingleModelState<T>,
         T?,
-        DwSingleModelStateConfig
+        DwSingleModelStateConfig<T>
       >(DwSingleModelState<T>.new);
     }
 
@@ -157,7 +157,7 @@ class DwRepository {
         as AsyncNotifierProviderFamily<
           DwSingleModelState<T>,
           T?,
-          DwSingleModelStateConfig
+          DwSingleModelStateConfig<T>
         >;
   }
 }
