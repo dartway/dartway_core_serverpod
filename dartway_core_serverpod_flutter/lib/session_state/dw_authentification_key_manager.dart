@@ -62,24 +62,28 @@ class DwAuthenticationKeyManager extends AuthenticationKeyManager {
 
   Future<(int?, UserProfileClass?)>
   loadLocalUserProfile<UserProfileClass extends SerializableModel>() async {
-    await get();
+    try {
+      await get();
 
-    final version = await _storage.getInt(
-      '${_userProfilePrefsKey}_${runMode}_version',
-    );
-    if (version != _prefsVersion) return (null, null);
+      final version = await _storage.getInt(
+        '${_userProfilePrefsKey}_${runMode}_version',
+      );
+      if (version != _prefsVersion) return (null, null);
 
-    final jsonString = await _storage.getString(
-      '${_userProfilePrefsKey}_$runMode',
-    );
-    if (jsonString == null) return (null, null);
+      final jsonString = await _storage.getString(
+        '${_userProfilePrefsKey}_$runMode',
+      );
+      if (jsonString == null) return (null, null);
 
-    final json = jsonDecode(jsonString);
+      final json = jsonDecode(jsonString);
 
-    return (
-      json[DwCoreConst.userProfileIdColumnName] as int,
-      DwCoreServerpodClient.protocol.deserialize<UserProfileClass>(json),
-    );
+      return (
+        json[DwCoreConst.userProfileIdColumnName] as int,
+        DwCoreServerpodClient.protocol.deserialize<UserProfileClass>(json),
+      );
+    } catch (e) {
+      return (null, null);
+    }
   }
 
   Future<void> storeUserProfile<UserProfileClass extends SerializableModel>(
