@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:heif_converter/heif_converter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -11,10 +12,18 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DwFileUploadHandler {
-  static String Function(XFile file, String extension)
-  defaultUploadNameTemplate =
-      (XFile file, String extension) =>
-          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}-${file.name}$extension';
+  static String Function(XFile file) defaultUploadNameTemplate =
+      (XFile file) =>
+          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}';
+
+  // 🆕 шаблон для PlatformFile (если нет поля name)
+  static String Function(PlatformFile file) defaultPlatformUploadNameTemplate =
+      (PlatformFile file) =>
+          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}';
+
+  // -----------------------------
+  //  EXISTING IMAGE UPLOAD LOGIC
+  // -----------------------------
 
   static Future<String?> pickAndUploadImageUrl({
     ImageSource imageSource = ImageSource.gallery,
@@ -57,11 +66,57 @@ class DwFileUploadHandler {
 
     final uploadPath =
         path == null
-            ? defaultUploadNameTemplate(xFile, fileExtension)
-            : '$path/${defaultUploadNameTemplate(xFile, fileExtension)}';
+            ? defaultUploadNameTemplate(xFile)
+            : '$path/${defaultUploadNameTemplate(xFile)}';
 
     return uploadBytesToServer(bytes: bytesToUpload, path: uploadPath);
   }
+
+  // -----------------------------
+  //  🆕 UNIVERSAL FILE UPLOAD LOGIC
+  // -----------------------------
+
+  static Future<String?> uploadPlatformFileToServerUrl({
+    required PlatformFile platformFile,
+    String? path,
+  }) async => uploadPlatformFileToServer(
+    platformFile: platformFile,
+    path: path,
+  ).then((media) => media.publicUrl);
+
+  static Future<DwCloudFile> uploadPlatformFileToServer({
+    required PlatformFile platformFile,
+    String? path,
+  }) async {
+    final fileExtension = extension(platformFile.name ?? '').toLowerCase();
+
+    // Чтение байтов
+    final Uint8List bytes;
+    if (platformFile.bytes != null) {
+      bytes = platformFile.bytes!;
+    } else if (platformFile.path != null) {
+      bytes = await File(platformFile.path!).readAsBytes();
+    } else {
+      throw Exception(
+        "PlatformFile has no bytes or path: ${platformFile.name}",
+      );
+    }
+
+    // Если это изображение — конвертируем
+    final convertedBytes = await _convertToJpeg(bytes, fileExtension);
+    final bytesToUpload = convertedBytes ?? bytes;
+
+    final uploadPath =
+        path == null
+            ? defaultPlatformUploadNameTemplate(platformFile)
+            : '$path/${defaultPlatformUploadNameTemplate(platformFile)}';
+
+    return uploadBytesToServer(bytes: bytesToUpload, path: uploadPath);
+  }
+
+  // -----------------------------
+  //  CORE UPLOAD LOGIC
+  // -----------------------------
 
   static Future<String?> uploadBytesToServerUrl({
     required Uint8List bytes,
@@ -100,6 +155,10 @@ class DwFileUploadHandler {
 
     return dwMedia;
   }
+
+  // -----------------------------
+  //  FILE CONVERSION
+  // -----------------------------
 
   static Future<Uint8List?> _convertToJpeg(
     Uint8List bytes,
