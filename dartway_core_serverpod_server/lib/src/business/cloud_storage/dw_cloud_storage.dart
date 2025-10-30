@@ -26,14 +26,41 @@ class DwCloudStorage {
     return await _client.bucketExists(bucket);
   }
 
+  // Метод для определения MIME-type по расширению
+  String _getMimeType(String objectPath) {
+    final pathLower = objectPath.toLowerCase();
+    
+    // Явно определяем типы для аудио и видео
+    if (pathLower.endsWith('.mp3') || pathLower.endsWith('.mpeg')) {
+      return 'audio/mpeg';
+    } else if (pathLower.endsWith('.m4a') || pathLower.endsWith('.aac')) {
+      return 'audio/aac';
+    } else if (pathLower.endsWith('.wav')) {
+      return 'audio/wav';
+    } else if (pathLower.endsWith('.mp4') || pathLower.endsWith('.m4v')) {
+      return 'video/mp4';
+    } else if (pathLower.endsWith('.webm')) {
+      return 'video/webm';
+    }
+    
+    // Для остальных файлов используем mime пакет
+    return lookupMimeType(objectPath) ?? 'application/octet-stream';
+  }
+
   Future<Uri> createPresignedUploadUrl({
     required String objectPath,
     Duration expiry = const Duration(minutes: 10),
   }) async {
+    final mimeType = _getMimeType(objectPath);
+    
     final url = await _client.presignedPutObject(
       bucket,
       objectPath,
       expires: expiry.inSeconds,
+      // Добавляем метаданные с правильным Content-Type
+      extraHeaders: {
+        'Content-Type': mimeType,
+      },
     );
     return Uri.parse(url);
   }
@@ -61,7 +88,7 @@ class DwCloudStorage {
       createdBy: userId,
       createdAt: DateTime.now(),
       publicUrl: _getPublicUrl(objectPath),
-      mimeType: lookupMimeType(objectPath),
+      mimeType: _getMimeType(objectPath), // Используем новый метод
       size: size,
       bucket: bucket,
       path: objectPath,
