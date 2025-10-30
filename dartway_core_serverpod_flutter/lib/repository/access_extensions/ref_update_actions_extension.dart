@@ -1,5 +1,4 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
-import 'package:dartway_flutter/dartway_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -67,11 +66,11 @@ extension RefUpdateActionsExtension on Ref {
     // }
   ) {
     debugPrint(response.toJson().toString());
-    if (response.error != null) {
-      dw.notify.error(response.error!);
-    } else if (response.warning != null) {
-      dw.notify.warning(response.warning!);
-    }
+    // if (response.error != null) {
+    //   dw.notify.error(response.error!);
+    // } else if (response.warning != null) {
+    //   dw.notify.warning(response.warning!);
+    // }
 
     if ((response.updatedModels ?? []).isNotEmpty) {
       updateRepository(
@@ -79,7 +78,11 @@ extension RefUpdateActionsExtension on Ref {
         // updateListeners: updateListeners,
       );
     }
-    return response.value;
+    if (response.error != null) {
+      throw Exception(response.error);
+    }
+
+    return response.value! as K;
   }
 
   updateFromStream(DwModelWrapper update) {

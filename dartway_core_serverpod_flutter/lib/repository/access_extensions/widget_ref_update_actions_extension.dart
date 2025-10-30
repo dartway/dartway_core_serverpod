@@ -75,7 +75,7 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
     // }
   }
 
-  K? processApiResponse<K>(
+  K processApiResponse<K>(
     DwApiResponse<K> response,
     // {
     // bool updateListeners = true,
@@ -97,7 +97,12 @@ extension WidgetRefUpdateActionsExtension on WidgetRef {
         // updateListeners: updateListeners,
       );
     }
-    return response.value;
+
+    if (response.error != null) {
+      throw Exception(response.error);
+    }
+
+    return response.value! as K;
   }
 
   updateFromStream(DwModelWrapper update) {
