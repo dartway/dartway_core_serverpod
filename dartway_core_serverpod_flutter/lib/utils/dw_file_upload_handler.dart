@@ -19,7 +19,7 @@ class DwFileUploadHandler {
   // 🆕 шаблон для PlatformFile (если нет поля name)
   static String Function(PlatformFile file) defaultPlatformUploadNameTemplate =
       (PlatformFile file) =>
-          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}';
+          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}${file.extension != null ? '.${file.extension?.toLowerCase()}' : ''}';
 
   // -----------------------------
   //  EXISTING IMAGE UPLOAD LOGIC
