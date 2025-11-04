@@ -1,0 +1,15 @@
+name: DCO Check
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  dco:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: DCO Validation
+        uses: docker://docker.io/lucasfernandesbr/dco-check:latest
+        with:
+          fail_if_missing: true
