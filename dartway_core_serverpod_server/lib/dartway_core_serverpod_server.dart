@@ -1,3 +1,4 @@
+export 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 export 'package:serverpod_cloud_storage_s3/serverpod_cloud_storage_s3.dart';
 
 export 'src/business/auth/dw_auth_config.dart';
@@ -17,5 +18,5 @@ export 'src/domain/crud_config/configuration_classes/dw_save_context.dart';
 export 'src/domain/crud_config/dw_crud_config.dart';
 export 'src/generated/endpoints.dart';
 export 'src/generated/protocol.dart';
-export 'src/utils/web_logs/dw_route_logging_mixin.dart';
 export 'src/utils/web_logs/dw_web_server_logger.dart';
+export 'zarchive/dw_route_logging_mixin.dart';

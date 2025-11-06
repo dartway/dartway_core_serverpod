@@ -15,8 +15,11 @@ class DwCore<UserProfileClass extends TableRow> {
   late final ColumnString _userIdentifierColumn;
   late final Include? _userProfileInclude;
 
+  late final DwAlerts alerts;
+
   /// Auth module (optional)
   late final DwAuth<UserProfileClass>? auth;
+
   late final DwCloudStorage? cloudStorage;
 
   static DwCore? _instance;
@@ -38,6 +41,7 @@ class DwCore<UserProfileClass extends TableRow> {
     //   required String userIdentifier,
     //   required Map<String, String> registrationExtraData,
     // }) userProfileConstructor,
+    required DwAlerts dwAlerts,
     DwAuthConfig? authConfig,
     DwCloudStorageConfig? cloudStorageConfig,
   }) {
@@ -50,11 +54,12 @@ class DwCore<UserProfileClass extends TableRow> {
       crudConfigurations: crudConfigurations,
       userProfileInclude: userProfileInclude,
       // userProfileConstructor: userProfileConstructor,
+      alerts: dwAlerts,
       auth: authConfig != null
-          ? DwAuth.init<UserProfileClass>(config: authConfig)
+          ? DwAuth<UserProfileClass>(config: authConfig)
           : null,
       cloudStorage: cloudStorageConfig != null
-          ? DwCloudStorage.init(config: cloudStorageConfig)
+          ? DwCloudStorage(config: cloudStorageConfig)
           : null,
     );
 
@@ -71,6 +76,7 @@ class DwCore<UserProfileClass extends TableRow> {
     //   required String userIdentifier,
     //   required Map<String, String> registrationExtraData,
     // }) userProfileConstructor,
+    required this.alerts,
     required this.auth,
     required this.cloudStorage,
   }) : _userProfileInclude = userProfileInclude {

@@ -14,13 +14,14 @@ class DwCore<
 > {
   DwCore._({
     required this.client,
+    required this.dwAlerts,
     required this.sessionProvider,
     required this.endpointCaller,
     required this.getUserId,
   });
 
   final ServerpodClientClass client;
-
+  final DwAlerts dwAlerts;
   final StateNotifierProvider<
     DwSessionStateNotifier<UserProfileClass>,
     DwSessionStateModel<UserProfileClass>
@@ -50,16 +51,12 @@ class DwCore<
     required WidgetRef ref,
     required Function() initRepositoryFunction,
     required int? Function(UserProfileClass? user) getUserId,
-    DwTelegramAlertsConfig? telegramAlertsConfig,
+    required DwAlerts dwAlerts,
   }) async {
     // --- ищем dartway endpoint ---
     final dartwayCaller = client.moduleLookup.values.firstWhereOrNull(
       (e) => e is dartway.Caller,
     );
-
-    if (telegramAlertsConfig != null) {
-      await DwTelegramAlerts.init(config: telegramAlertsConfig);
-    }
 
     if (dartwayCaller == null) {
       throw Exception(
@@ -106,6 +103,7 @@ class DwCore<
       sessionProvider: sessionProvider,
       endpointCaller: dartwayCaller as dartway.Caller,
       getUserId: getUserId,
+      dwAlerts: DwAlerts.instance,
     );
     _instance = core;
 

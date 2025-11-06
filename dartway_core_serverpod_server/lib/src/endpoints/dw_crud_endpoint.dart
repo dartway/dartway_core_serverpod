@@ -5,6 +5,23 @@ import 'package:serverpod/serverpod.dart';
 class DwCrudEndpoint extends Endpoint {
   final _deepEquality = const DeepCollectionEquality();
 
+  DwApiResponse<T> returnError<T>(
+    String errorMessage, {
+    Object? exception,
+    StackTrace? stackTrace,
+  }) {
+    DwCore.instance.alerts.reportError(
+      errorMessage,
+      exception: exception,
+      stackTrace: StackTrace.current,
+    );
+    return DwApiResponse(
+      isOk: false,
+      value: null,
+      error: errorMessage,
+    );
+  }
+
   Future<DwApiResponse<DwModelWrapper>> getOne(
     Session session, {
     required String className,
@@ -35,8 +52,11 @@ class DwCrudEndpoint extends Endpoint {
 
       return await config.call(session, caller.table, filter);
     } catch (ex) {
-      print(ex);
-      print(StackTrace.current);
+      DwCore.instance.alerts.reportError(
+        ex.toString(),
+        stackTrace: StackTrace.current,
+      );
+
       return DwApiResponse(
         isOk: false,
         value: null,
@@ -114,14 +134,11 @@ class DwCrudEndpoint extends Endpoint {
         return DwApiResponse.notConfigured(source: 'saveModel $className');
       }
       return await caller.save(session, model);
-    } catch (e) {
-      print(e);
-      print(StackTrace.current);
-      return DwApiResponse(
-        isOk: false,
-        value: null,
-        error:
-            'Unexpected error during saveModel ${wrappedModel.dwMappingClassname}: $e',
+    } catch (ex, st) {
+      return returnError(
+        'Unexpected error during saveModel ${wrappedModel.dwMappingClassname}',
+        exception: ex,
+        stackTrace: st,
       );
     }
   }
@@ -132,44 +149,56 @@ class DwCrudEndpoint extends Endpoint {
     required String channelName,
     String? apiGroup,
   }) async* {
-    final model = wrappedModel.object;
-
-    if (model is! TableRow) {
-      throw UnsupportedError(
-        'Received item of unsupported type: ${model.runtimeType}. Only TableRow could be saved to database',
-      );
-    }
-
-    final className = wrappedModel.dwMappingClassname;
-    final caller =
-        DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
-
-    if (caller == null) {
-      throw Exception('notConfigured(source: saveModelStream $className');
-    }
-
-    final stream = session.messages.createStream<SerializableModel>(
-      channelName,
-    );
-
-    () async {
-      try {
-        final res = await caller.save(session, model);
-
-        await session.messages.postMessage(
-          channelName,
-          DwUpdatesTransport(wrappedModelUpdates: [
-            if (res.value != null) res.value!,
-            if (res.updatedModels != null) ...res.updatedModels!
-          ]),
+    try {
+      final model = wrappedModel.object;
+      if (model is! TableRow) {
+        throw UnsupportedError(
+          'Received item of unsupported type: ${model.runtimeType}. Only TableRow could be saved to database',
         );
-      } catch (e, st) {
-        session.log('startVerification error: $e\n$st');
       }
-    }(); // fire-and-forget
 
-    await for (var message in stream) {
-      yield message;
+      final className = wrappedModel.dwMappingClassname;
+      final caller =
+          DwCore.instance.getCrudConfig(className, api: apiGroup)?.saveConfig;
+
+      if (caller == null) {
+        throw Exception('notConfigured(source: saveModelStream $className');
+      }
+
+      final stream = session.messages.createStream<SerializableModel>(
+        channelName,
+      );
+
+      () async {
+        try {
+          final res = await caller.save(session, model);
+
+          await session.messages.postMessage(
+            channelName,
+            DwUpdatesTransport(wrappedModelUpdates: [
+              if (res.value != null) res.value!,
+              if (res.updatedModels != null) ...res.updatedModels!
+            ]),
+          );
+        } catch (ex, st) {
+          return returnError(
+            'Unexpected error during saveModelStream for ${model.id == null ? 'new' : 'existing'} ${wrappedModel.dwMappingClassname} ${model.id != null ? 'with id ${model.id} ' : ''}',
+            exception: ex,
+            stackTrace: st,
+          );
+        }
+      }(); // fire-and-forget
+
+      await for (var message in stream) {
+        yield message;
+      }
+    } catch (ex, st) {
+      final id = wrappedModel.modelId;
+      returnError(
+        'Unexpected error during saveModelStream for ${id == null ? 'new' : 'existing'} ${wrappedModel.dwMappingClassname} ${id != null ? 'with id $id ' : ''}',
+        exception: ex,
+        stackTrace: st,
+      );
     }
   }
 
@@ -179,13 +208,21 @@ class DwCrudEndpoint extends Endpoint {
     required int modelId,
     String? apiGroup,
   }) async {
-    final caller =
-        DwCore.instance.getCrudConfig(className, api: apiGroup)?.deleteConfig;
+    try {
+      final caller =
+          DwCore.instance.getCrudConfig(className, api: apiGroup)?.deleteConfig;
 
-    if (caller == null) {
-      return DwApiResponse.notConfigured(source: 'delete $className');
+      if (caller == null) {
+        return DwApiResponse.notConfigured(source: 'delete $className');
+      }
+
+      return await caller.delete(session, modelId);
+    } catch (ex, st) {
+      return returnError(
+        'Unexpected error during delete $className with id $modelId',
+        exception: ex,
+        stackTrace: st,
+      );
     }
-
-    return await caller.delete(session, modelId);
   }
 }

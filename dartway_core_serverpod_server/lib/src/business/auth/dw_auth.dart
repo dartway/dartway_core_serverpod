@@ -6,13 +6,9 @@ import 'dw_auth_utils.dart';
 class DwAuth<UserProfileClass extends TableRow> {
   final DwAuthConfig config;
 
-  DwAuth._(this.config);
-
-  static DwAuth<UserProfileClass> init<UserProfileClass extends TableRow>({
-    required DwAuthConfig config,
-  }) {
-    return DwAuth<UserProfileClass>._(config);
-  }
+  DwAuth({
+    required this.config,
+  });
 
   Future<bool> setUserPassword(
     Session session, {

@@ -16,14 +16,17 @@ class DwModelWrapper implements SerializableModel, ProtocolSerialization {
   DwModelWrapper({
     required this.object,
   })  : className = _protocol.getClassNameForObject(object) ?? 'unknown',
+        modelId = object is TableRow ? object.id : null,
         isDeleted = false;
 
   DwModelWrapper.deleted({
     required this.object,
   })  : className = _protocol.getClassNameForObject(object) ?? 'unknown',
+        modelId = object is TableRow ? object.id : null,
         isDeleted = true;
 
   final String className;
+  final int? modelId;
   final SerializableModel object;
   final bool isDeleted;
 

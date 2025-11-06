@@ -4,26 +4,42 @@ import 'package:minio/minio.dart';
 import 'package:minio/models.dart';
 
 class DwCloudStorage {
-  final Minio _client;
-  final String bucket;
+  late final Minio _client;
   final DwCloudStorageConfig config;
 
-  DwCloudStorage._(this._client, this.bucket, this.config);
-
-  static DwCloudStorage init({required DwCloudStorageConfig config}) {
-    final client = Minio(
+  DwCloudStorage({required this.config}) {
+    _client = Minio(
       endPoint: config.endPoint,
       // port: config.port,
       useSSL: true,
       accessKey: config.accessKey,
       secretKey: config.secretKey,
     );
-
-    return DwCloudStorage._(client, config.bucket, config);
   }
 
   Future<bool> bucketExists() async {
-    return await _client.bucketExists(bucket);
+    return await _client.bucketExists(config.bucket);
+  }
+
+  // Identify MIME-type by file extension
+  String _getMimeType(String objectPath) {
+    final pathLower = objectPath.toLowerCase();
+
+    // Explicitly define types for audio and video
+    if (pathLower.endsWith('.mp3') || pathLower.endsWith('.mpeg')) {
+      return 'audio/mpeg';
+    } else if (pathLower.endsWith('.m4a') || pathLower.endsWith('.aac')) {
+      return 'audio/aac';
+    } else if (pathLower.endsWith('.wav')) {
+      return 'audio/wav';
+    } else if (pathLower.endsWith('.mp4') || pathLower.endsWith('.m4v')) {
+      return 'video/mp4';
+    } else if (pathLower.endsWith('.webm')) {
+      return 'video/webm';
+    }
+
+    // For other files, use mime package
+    return lookupMimeType(objectPath) ?? 'application/octet-stream';
   }
 
   Future<Uri> createPresignedUploadUrl({
@@ -31,7 +47,7 @@ class DwCloudStorage {
     Duration expiry = const Duration(minutes: 10),
   }) async {
     final url = await _client.presignedPutObject(
-      bucket,
+      config.bucket,
       objectPath,
       expires: expiry.inSeconds,
     );
@@ -40,7 +56,7 @@ class DwCloudStorage {
 
   Future<StatObjectResult> statObject(String objectPath) async {
     try {
-      return await _client.statObject(bucket, objectPath);
+      return await _client.statObject(config.bucket, objectPath);
     } catch (e) {
       throw Exception('Failed to stat object: $e');
     }
@@ -48,7 +64,9 @@ class DwCloudStorage {
 
   String _getPublicUrl(String objectPath) {
     return Uri(
-            scheme: 'https', host: config.endPoint, path: '$bucket/$objectPath')
+            scheme: 'https',
+            host: config.endPoint,
+            path: '${config.bucket}/$objectPath')
         .toString();
   }
 
@@ -63,7 +81,7 @@ class DwCloudStorage {
       publicUrl: _getPublicUrl(objectPath),
       mimeType: lookupMimeType(objectPath),
       size: size,
-      bucket: bucket,
+      bucket: config.bucket,
       path: objectPath,
     );
   }
