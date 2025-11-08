@@ -53,7 +53,7 @@ class DwModelListState<Model extends SerializableModel>
           className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,
           limit: arg.pageSize,
-          offset: arg.pageSize != null ? _nextPage++ : null,
+          offset: arg.pageSize != null ? (_nextPage++ * arg.pageSize!) : null,
         )
         .then(
           (response) => ref.processApiResponse<List<DwModelWrapper>>(
