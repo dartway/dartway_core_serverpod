@@ -1,15 +1,14 @@
 name: DCO Check
-
-on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+on: [pull_request]
 
 jobs:
   dco:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: DCO Validation
-        uses: docker://docker.io/lucasfernandesbr/dco-check:latest
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fail_if_missing: true
+          fetch-depth: 0  # нужно, чтобы git log видел коммиты
+
+      - name: DCO Check
+        uses: tim-actions/dco@v1
