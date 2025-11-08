@@ -88,7 +88,7 @@ class DwFileUploadHandler {
     required PlatformFile platformFile,
     String? path,
   }) async {
-    final fileExtension = extension(platformFile.name ?? '').toLowerCase();
+    // final fileExtension = extension(platformFile.name ?? '').toLowerCase();
 
     // Чтение байтов
     final Uint8List bytes;
@@ -103,8 +103,8 @@ class DwFileUploadHandler {
     }
 
     // Если это изображение — конвертируем
-    final convertedBytes = await _convertToJpeg(bytes, fileExtension);
-    final bytesToUpload = convertedBytes ?? bytes;
+    // final convertedBytes = await _convertToJpeg(bytes, fileExtension);
+    final bytesToUpload = bytes;
 
     final uploadPath =
         path == null
@@ -141,7 +141,8 @@ class DwFileUploadHandler {
     log(uploadDescription);
 
     var uploader = FileUploader(uploadDescription);
-    await uploader.uploadByteData(byteData);
+
+    final res = await uploader.uploadByteData(byteData);
 
     var dwMedia = await DwCore.instance.endpointCaller.dwUpload.verifyUpload(
       path: path,

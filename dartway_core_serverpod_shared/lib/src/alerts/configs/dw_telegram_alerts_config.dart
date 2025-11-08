@@ -12,10 +12,10 @@ class DwTelegramAlertsConfig {
   });
 
   static DwTelegramAlertsConfig? fromEnv({required Map<String, String> env}) {
-    if (env[DwCoreConst.dwTelegramAlertsChatIdKey] == null ||
-        env[DwCoreConst.dwTelegramAlertsChatIdKey]!.isEmpty ||
-        env[DwCoreConst.dwTelegramAlertsTokenKey] == null ||
-        env[DwCoreConst.dwTelegramAlertsTokenKey]!.isEmpty) {
+    if (env[DwConfigurationKeys.dwTelegramAlertsChatIdKey] == null ||
+        env[DwConfigurationKeys.dwTelegramAlertsChatIdKey]!.isEmpty ||
+        env[DwConfigurationKeys.dwTelegramAlertsTokenKey] == null ||
+        env[DwConfigurationKeys.dwTelegramAlertsTokenKey]!.isEmpty) {
       // TODO: заменить на log function
       print(
         'DwTelegramAlertsConfig.fromEnv: env doesn\'t contain all required keys',
@@ -24,10 +24,10 @@ class DwTelegramAlertsConfig {
     }
 
     return DwTelegramAlertsConfig(
-      alertsChatId: env[DwCoreConst.dwTelegramAlertsChatIdKey]!,
-      alertsToken: env[DwCoreConst.dwTelegramAlertsTokenKey]!,
+      alertsChatId: env[DwConfigurationKeys.dwTelegramAlertsChatIdKey]!,
+      alertsToken: env[DwConfigurationKeys.dwTelegramAlertsTokenKey]!,
       alertsMessageThreadId:
-          env[DwCoreConst.dwTelegramAlertsMessageThreadIdKey],
+          env[DwConfigurationKeys.dwTelegramAlertsMessageThreadIdKey],
     );
   }
 }

@@ -1,5 +1,4 @@
 export 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
-export 'package:serverpod_cloud_storage_s3/serverpod_cloud_storage_s3.dart';
 
 export 'src/business/auth/dw_auth_config.dart';
 export 'src/business/auth/dw_authentification_handler.dart';

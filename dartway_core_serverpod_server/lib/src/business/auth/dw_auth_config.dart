@@ -25,12 +25,14 @@ class DwAuthConfig {
   final Map<String, String> passwords;
 
   String get authKeySalt =>
-      passwords[DwCoreConst.dwAuthKeySaltKey] ??
-      (throw Exception('${DwCoreConst.dwAuthKeySaltKey} missing in passwords'));
+      passwords[DwConfigurationKeys.dwAuthKeySaltKey] ??
+      (throw Exception(
+          '${DwConfigurationKeys.dwAuthKeySaltKey} missing in passwords'));
 
   String get verificationCodeSalt =>
-      passwords['dwVerificationCodeSalt'] ??
-      (throw Exception('dwVerificationCodeSalt missing in passwords'));
+      passwords[DwConfigurationKeys.dwVerificationCodeSaltKey] ??
+      (throw Exception(
+          '${DwConfigurationKeys.dwVerificationCodeSaltKey} missing in passwords'));
 
   const DwAuthConfig({
     required this.passwords,

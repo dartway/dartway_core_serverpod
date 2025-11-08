@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -6,11 +8,30 @@ class DwUploadEndpoint extends Endpoint {
     Session session, {
     required String path,
   }) async {
-    return await session.storage.createDirectFileUploadDescription(
+    final t = await DwCore.instance.cloudStorage!
+        .createMultipartUploadDescription(objectPath: path);
+
+    final t11 = jsonDecode(t);
+
+    final t2 = await session.storage.createDirectFileUploadDescription(
       storageId: 'public',
       path: path,
     );
+
+    final t3 = jsonDecode(t2.toString());
+
+    throw Exception(t3);
+
+    return t;
   }
+
+  // Future<String?> getMultipartUploadDescription(
+  //   Session session, {
+  //   required String path,
+  // }) async {
+  //   return await DwCore.instance.cloudStorage!
+  //       .createMultipartUploadDescription(path: path);
+  // }
 
   Future<DwCloudFile?> verifyUpload(
     Session session, {
