@@ -34,12 +34,12 @@ class DwTelegramService {
       );
 
       if (res.statusCode != 200) {
-        (reportErrorFunction ?? DwAlerts.instance.sendAlert)(
+        (reportErrorFunction ?? DwAlerts.instance.sendMessage)(
           "⚠️ DwTelegramService: Error response ${res.statusCode}: ${res.body}",
         );
       }
     } catch (e) {
-      (reportErrorFunction ?? DwAlerts.instance.sendAlert)(
+      (reportErrorFunction ?? DwAlerts.instance.sendError)(
         "⚠️ DwTelegramService: Exception while sending message: $e",
       );
     }

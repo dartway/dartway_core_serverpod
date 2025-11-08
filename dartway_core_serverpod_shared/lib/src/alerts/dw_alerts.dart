@@ -3,7 +3,7 @@ import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart
 class DwAlerts {
   final DwTelegramAlertsConfig? _telegramConfig;
   final Function(String message)? _logFunction;
-  final bool _logAlertMessages;
+  final bool _logMessages;
   final bool _logErrors;
 
   static DwAlerts? _instance;
@@ -17,14 +17,14 @@ class DwAlerts {
 
   static DwAlerts init({
     DwTelegramAlertsConfig? telegramConfig,
-    Function(String message)? logFunction = print,
-    bool logAlertMessages = false,
+    Function(String message) logFunction = print,
+    bool logMessages = false,
     bool logErrors = true,
   }) {
     _instance = DwAlerts._(
       telegramConfig: telegramConfig,
       logFunction: logFunction,
-      logAlertMessages: logAlertMessages,
+      logMessages: logMessages,
       logErrors: logErrors,
     );
 
@@ -34,11 +34,11 @@ class DwAlerts {
   DwAlerts._({
     DwTelegramAlertsConfig? telegramConfig,
     Function(String message)? logFunction,
-    required bool logAlertMessages,
+    required bool logMessages,
     required bool logErrors,
   }) : _telegramConfig = telegramConfig,
        _logFunction = logFunction,
-       _logAlertMessages = logAlertMessages,
+       _logMessages = logMessages,
        _logErrors = logErrors;
 
   // DwAlerts.debug({
@@ -56,12 +56,12 @@ class DwAlerts {
   //     _logAlertMessages = false,
   //     _logErrors = false;
 
-  void sendAlert(String message) {
-    _sendMessage(message, logMessage: _logAlertMessages);
+  void sendMessage(String message) {
+    _sendAlert(message, logMessage: _logMessages);
   }
 
   void sendError(String message) {
-    _sendMessage(message, logMessage: _logErrors);
+    _sendAlert(message, logMessage: _logErrors);
   }
 
   void reportError(
@@ -78,10 +78,10 @@ class DwAlerts {
         '📜 *StackTrace:*\n'
         '$stack';
 
-    _sendMessage(fullMessage, logMessage: _logErrors);
+    _sendAlert(fullMessage, logMessage: _logErrors);
   }
 
-  _sendMessage(
+  _sendAlert(
     String message, {
     required bool logMessage,
     bool suppressErrors = false,
@@ -90,6 +90,7 @@ class DwAlerts {
       DwTelegramService.sendMessage(
         message: message,
         chatId: _telegramConfig.alertsChatId,
+        messageThreadId: _telegramConfig.alertsMessageThreadId,
         token: _telegramConfig.alertsToken,
         reportErrorFunction: suppressErrors ? (_) {} : _sendAlertingError,
       );
@@ -107,7 +108,7 @@ class DwAlerts {
   }
 
   _sendAlertingError(String message) {
-    _sendMessage(message, logMessage: _logErrors, suppressErrors: true);
+    _sendAlert(message, logMessage: _logErrors, suppressErrors: true);
 
     // try {
     //   if (_logErrors) {
