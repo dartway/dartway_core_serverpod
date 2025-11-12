@@ -1,15 +1,9 @@
-name: DCO
+name: DCO Check
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+on: [pull_request]
 
 jobs:
-  dco:
-    name: DCO Check
+  check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: tim-actions/dco@v2
-        with:
-          fail: true
+      - uses: tisonkun/actions-dco@v1.1
