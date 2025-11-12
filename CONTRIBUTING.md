@@ -1,13 +1,15 @@
 # Contributing to DartWay
 
-Thank you for your interest in contributing to **DartWay**!
+Thank you for your interest in contributing to **DartWay**!  
 We appreciate all improvements — from small fixes to major features.
+
+---
 
 ## 🧩 How to contribute
 
-1. **Fork** the repository and create a feature branch.
-2. Make your changes and ensure that tests and formatting pass.
-3. Commit with a **Signed-off-by** line (see below).
+1. **Fork** the repository and create a feature branch.  
+2. Make your changes and ensure that tests and formatting pass.  
+3. Commit with a **Signed-off-by** line (see below).  
 4. Open a Pull Request with a clear description of what you’ve done.
 
 ---
@@ -46,19 +48,50 @@ All commits in pull requests **must include** this sign-off line.
 
 ---
 
+### ❗ If the DCO check fails
+
+If the GitHub Action reports something like:
+
+```
+The sign-off is missing
+```
+
+It means one or more commits in your branch are missing the `Signed-off-by` line.  
+Here’s how to fix it:
+
+1. Re-sign the last *N* commits (replace `3` with the number shown in the error):
+   ```bash
+   git rebase HEAD~3 --signoff
+   ```
+2. Push the updated commits:
+   ```bash
+   git push --force-with-lease origin <your-branch-name>
+   ```
+3. The DCO check will rerun automatically and should pass once commits are properly signed.
+
+💡 **Tip:** You can create a shortcut for signed commits:
+```bash
+git config --global alias.c "commit -s -m"
+```
+Now just run:
+```bash
+git c "Add feature X"
+```
+
+---
+
 ## 🔒 Licensing and third-party code
 
-* All contributions are licensed under the same **Apache License 2.0** as the project.
+* All contributions are licensed under the same **Apache License 2.0** as the project.  
 * If you include third-party code, you must:
-
-  * Confirm it’s compatible with Apache-2.0.
-  * Include the original copyright notice and license.
+  * Confirm it’s compatible with Apache-2.0.  
+  * Include the original copyright notice and license.  
   * Mention the source in your PR description.
 
 ---
 
 ## 🧠 Need help?
 
-If you have any questions or want to discuss ideas before implementing them, feel free to open a GitHub Discussion or contact the maintainers.
+If you have any questions or want to discuss ideas before implementing them, feel free to open a **GitHub Discussion** or contact the maintainers.
 
 Thanks for helping make DartWay better!
