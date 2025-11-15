@@ -1,14 +1,9 @@
 name: DCO Check
+
 on: [pull_request]
 
 jobs:
-  dco:
+  check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # нужно, чтобы git log видел коммиты
-
-      - name: DCO Check
-        uses: tim-actions/dco@v1
+      - uses: tisonkun/actions-dco@v1.1
