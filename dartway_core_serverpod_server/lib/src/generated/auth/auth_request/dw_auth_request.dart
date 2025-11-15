@@ -13,8 +13,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../auth/auth_request/dw_auth_request_status.dart' as _i2;
 import '../../auth/auth_request/dw_auth_request_type.dart' as _i3;
 import '../../auth/auth_request/dw_auth_provider.dart' as _i4;
-import '../../auth/dw_auth_verification_type.dart' as _i5;
-import '../../auth/auth_request/dw_auth_fail_reason.dart' as _i6;
+import '../../auth/auth_verification/dw_auth_verification_type.dart' as _i5;
+import '../../auth/dw_auth_fail_reason.dart' as _i6;
 
 abstract class DwAuthRequest
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -27,6 +27,7 @@ abstract class DwAuthRequest
     required this.authProvider,
     this.verificationType,
     this.password,
+    this.newPassword,
     this.accessToken,
     this.verificationHash,
     _i2.DwAuthRequestStatus? status,
@@ -44,6 +45,7 @@ abstract class DwAuthRequest
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     String? verificationHash,
     _i2.DwAuthRequestStatus? status,
@@ -67,6 +69,7 @@ abstract class DwAuthRequest
           : _i5.DwAuthVerificationType.fromJson(
               (jsonSerialization['verificationType'] as int)),
       password: jsonSerialization['password'] as String?,
+      newPassword: jsonSerialization['newPassword'] as String?,
       accessToken: jsonSerialization['accessToken'] as String?,
       verificationHash: jsonSerialization['verificationHash'] as String?,
       status: _i2.DwAuthRequestStatus.fromJson(
@@ -104,6 +107,8 @@ abstract class DwAuthRequest
 
   String? password;
 
+  String? newPassword;
+
   String? accessToken;
 
   String? verificationHash;
@@ -129,6 +134,7 @@ abstract class DwAuthRequest
     _i4.DwAuthProvider? authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     String? verificationHash,
     _i2.DwAuthRequestStatus? status,
@@ -147,6 +153,7 @@ abstract class DwAuthRequest
       if (verificationType != null)
         'verificationType': verificationType?.toJson(),
       if (password != null) 'password': password,
+      if (newPassword != null) 'newPassword': newPassword,
       if (accessToken != null) 'accessToken': accessToken,
       if (verificationHash != null) 'verificationHash': verificationHash,
       'status': status.toJson(),
@@ -167,6 +174,7 @@ abstract class DwAuthRequest
       if (verificationType != null)
         'verificationType': verificationType?.toJson(),
       if (password != null) 'password': password,
+      if (newPassword != null) 'newPassword': newPassword,
       if (accessToken != null) 'accessToken': accessToken,
       'status': status.toJson(),
       if (failReason != null) 'failReason': failReason?.toJson(),
@@ -216,6 +224,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     String? verificationHash,
     _i2.DwAuthRequestStatus? status,
@@ -230,6 +239,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           authProvider: authProvider,
           verificationType: verificationType,
           password: password,
+          newPassword: newPassword,
           accessToken: accessToken,
           verificationHash: verificationHash,
           status: status,
@@ -250,6 +260,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     _i4.DwAuthProvider? authProvider,
     Object? verificationType = _Undefined,
     Object? password = _Undefined,
+    Object? newPassword = _Undefined,
     Object? accessToken = _Undefined,
     Object? verificationHash = _Undefined,
     _i2.DwAuthRequestStatus? status,
@@ -267,6 +278,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           ? verificationType
           : this.verificationType,
       password: password is String? ? password : this.password,
+      newPassword: newPassword is String? ? newPassword : this.newPassword,
       accessToken: accessToken is String? ? accessToken : this.accessToken,
       verificationHash: verificationHash is String?
           ? verificationHash

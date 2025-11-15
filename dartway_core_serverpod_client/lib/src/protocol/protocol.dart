@@ -17,14 +17,14 @@ import '/src/domain/api/dw_api_response.dart' as _i18;
 import '/src/domain/api/dw_auth_data.dart' as _i19;
 import '/src/domain/api/dw_backend_filter.dart' as _i20;
 import '/src/domain/api/dw_model_wrapper.dart' as _i16;
-import 'auth/auth_request/dw_auth_fail_reason.dart' as _i2;
-import 'auth/auth_request/dw_auth_provider.dart' as _i3;
-import 'auth/auth_request/dw_auth_request.dart' as _i4;
-import 'auth/auth_request/dw_auth_request_status.dart' as _i5;
-import 'auth/auth_request/dw_auth_request_type.dart' as _i6;
-import 'auth/dw_auth_key.dart' as _i7;
-import 'auth/dw_auth_verification.dart' as _i8;
-import 'auth/dw_auth_verification_type.dart' as _i9;
+import 'auth/auth_request/dw_auth_provider.dart' as _i2;
+import 'auth/auth_request/dw_auth_request.dart' as _i3;
+import 'auth/auth_request/dw_auth_request_status.dart' as _i4;
+import 'auth/auth_request/dw_auth_request_type.dart' as _i5;
+import 'auth/auth_verification/dw_auth_verification.dart' as _i6;
+import 'auth/auth_verification/dw_auth_verification_type.dart' as _i7;
+import 'auth/dw_auth_fail_reason.dart' as _i8;
+import 'auth/dw_auth_key.dart' as _i9;
 import 'auth/dw_user_password.dart' as _i10;
 import 'cloud_files/dw_cloud_file.dart' as _i11;
 import 'dw_app_notification.dart' as _i12;
@@ -32,14 +32,14 @@ import 'dw_backend_filter_type.dart' as _i13;
 import 'dw_updates_transport.dart' as _i14;
 import 'dw_webhook_log.dart' as _i15;
 
-export 'auth/auth_request/dw_auth_fail_reason.dart';
 export 'auth/auth_request/dw_auth_provider.dart';
 export 'auth/auth_request/dw_auth_request.dart';
 export 'auth/auth_request/dw_auth_request_status.dart';
 export 'auth/auth_request/dw_auth_request_type.dart';
+export 'auth/auth_verification/dw_auth_verification.dart';
+export 'auth/auth_verification/dw_auth_verification_type.dart';
+export 'auth/dw_auth_fail_reason.dart';
 export 'auth/dw_auth_key.dart';
-export 'auth/dw_auth_verification.dart';
-export 'auth/dw_auth_verification_type.dart';
 export 'auth/dw_user_password.dart';
 export 'client.dart';
 export 'cloud_files/dw_cloud_file.dart';
@@ -66,29 +66,29 @@ class Protocol extends _i1.SerializationManager {
           _i18.DwApiResponse.manualDeserialization<T>(data);
       if (manualDeserialization != null) return manualDeserialization;
     }
-    if (t == _i2.DwAuthFailReason) {
-      return _i2.DwAuthFailReason.fromJson(data) as T;
+    if (t == _i2.DwAuthProvider) {
+      return _i2.DwAuthProvider.fromJson(data) as T;
     }
-    if (t == _i3.DwAuthProvider) {
-      return _i3.DwAuthProvider.fromJson(data) as T;
+    if (t == _i3.DwAuthRequest) {
+      return _i3.DwAuthRequest.fromJson(data) as T;
     }
-    if (t == _i4.DwAuthRequest) {
-      return _i4.DwAuthRequest.fromJson(data) as T;
+    if (t == _i4.DwAuthRequestStatus) {
+      return _i4.DwAuthRequestStatus.fromJson(data) as T;
     }
-    if (t == _i5.DwAuthRequestStatus) {
-      return _i5.DwAuthRequestStatus.fromJson(data) as T;
+    if (t == _i5.DwAuthRequestType) {
+      return _i5.DwAuthRequestType.fromJson(data) as T;
     }
-    if (t == _i6.DwAuthRequestType) {
-      return _i6.DwAuthRequestType.fromJson(data) as T;
+    if (t == _i6.DwAuthVerification) {
+      return _i6.DwAuthVerification.fromJson(data) as T;
     }
-    if (t == _i7.DwAuthKey) {
-      return _i7.DwAuthKey.fromJson(data) as T;
+    if (t == _i7.DwAuthVerificationType) {
+      return _i7.DwAuthVerificationType.fromJson(data) as T;
     }
-    if (t == _i8.DwAuthVerification) {
-      return _i8.DwAuthVerification.fromJson(data) as T;
+    if (t == _i8.DwAuthFailReason) {
+      return _i8.DwAuthFailReason.fromJson(data) as T;
     }
-    if (t == _i9.DwAuthVerificationType) {
-      return _i9.DwAuthVerificationType.fromJson(data) as T;
+    if (t == _i9.DwAuthKey) {
+      return _i9.DwAuthKey.fromJson(data) as T;
     }
     if (t == _i10.DwUserPassword) {
       return _i10.DwUserPassword.fromJson(data) as T;
@@ -108,31 +108,31 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i15.DwWebServerLog) {
       return _i15.DwWebServerLog.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i2.DwAuthFailReason?>()) {
-      return (data != null ? _i2.DwAuthFailReason.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i2.DwAuthProvider?>()) {
+      return (data != null ? _i2.DwAuthProvider.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i3.DwAuthProvider?>()) {
-      return (data != null ? _i3.DwAuthProvider.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i3.DwAuthRequest?>()) {
+      return (data != null ? _i3.DwAuthRequest.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i4.DwAuthRequest?>()) {
-      return (data != null ? _i4.DwAuthRequest.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i5.DwAuthRequestStatus?>()) {
-      return (data != null ? _i5.DwAuthRequestStatus.fromJson(data) : null)
+    if (t == _i1.getType<_i4.DwAuthRequestStatus?>()) {
+      return (data != null ? _i4.DwAuthRequestStatus.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i6.DwAuthRequestType?>()) {
-      return (data != null ? _i6.DwAuthRequestType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i5.DwAuthRequestType?>()) {
+      return (data != null ? _i5.DwAuthRequestType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.DwAuthKey?>()) {
-      return (data != null ? _i7.DwAuthKey.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.DwAuthVerification?>()) {
+      return (data != null ? _i6.DwAuthVerification.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.DwAuthVerification?>()) {
-      return (data != null ? _i8.DwAuthVerification.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i9.DwAuthVerificationType?>()) {
-      return (data != null ? _i9.DwAuthVerificationType.fromJson(data) : null)
+    if (t == _i1.getType<_i7.DwAuthVerificationType?>()) {
+      return (data != null ? _i7.DwAuthVerificationType.fromJson(data) : null)
           as T;
+    }
+    if (t == _i1.getType<_i8.DwAuthFailReason?>()) {
+      return (data != null ? _i8.DwAuthFailReason.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i9.DwAuthKey?>()) {
+      return (data != null ? _i9.DwAuthKey.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i10.DwUserPassword?>()) {
       return (data != null ? _i10.DwUserPassword.fromJson(data) : null) as T;
@@ -213,29 +213,29 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i20.DwBackendFilter) {
       return 'DwBackendFilter';
     }
-    if (data is _i2.DwAuthFailReason) {
-      return 'DwAuthFailReason';
-    }
-    if (data is _i3.DwAuthProvider) {
+    if (data is _i2.DwAuthProvider) {
       return 'DwAuthProvider';
     }
-    if (data is _i4.DwAuthRequest) {
+    if (data is _i3.DwAuthRequest) {
       return 'DwAuthRequest';
     }
-    if (data is _i5.DwAuthRequestStatus) {
+    if (data is _i4.DwAuthRequestStatus) {
       return 'DwAuthRequestStatus';
     }
-    if (data is _i6.DwAuthRequestType) {
+    if (data is _i5.DwAuthRequestType) {
       return 'DwAuthRequestType';
     }
-    if (data is _i7.DwAuthKey) {
-      return 'DwAuthKey';
-    }
-    if (data is _i8.DwAuthVerification) {
+    if (data is _i6.DwAuthVerification) {
       return 'DwAuthVerification';
     }
-    if (data is _i9.DwAuthVerificationType) {
+    if (data is _i7.DwAuthVerificationType) {
       return 'DwAuthVerificationType';
+    }
+    if (data is _i8.DwAuthFailReason) {
+      return 'DwAuthFailReason';
+    }
+    if (data is _i9.DwAuthKey) {
+      return 'DwAuthKey';
     }
     if (data is _i10.DwUserPassword) {
       return 'DwUserPassword';
@@ -276,29 +276,29 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'DwBackendFilter') {
       return deserialize<_i20.DwBackendFilter>(data['data']);
     }
-    if (dataClassName == 'DwAuthFailReason') {
-      return deserialize<_i2.DwAuthFailReason>(data['data']);
-    }
     if (dataClassName == 'DwAuthProvider') {
-      return deserialize<_i3.DwAuthProvider>(data['data']);
+      return deserialize<_i2.DwAuthProvider>(data['data']);
     }
     if (dataClassName == 'DwAuthRequest') {
-      return deserialize<_i4.DwAuthRequest>(data['data']);
+      return deserialize<_i3.DwAuthRequest>(data['data']);
     }
     if (dataClassName == 'DwAuthRequestStatus') {
-      return deserialize<_i5.DwAuthRequestStatus>(data['data']);
+      return deserialize<_i4.DwAuthRequestStatus>(data['data']);
     }
     if (dataClassName == 'DwAuthRequestType') {
-      return deserialize<_i6.DwAuthRequestType>(data['data']);
-    }
-    if (dataClassName == 'DwAuthKey') {
-      return deserialize<_i7.DwAuthKey>(data['data']);
+      return deserialize<_i5.DwAuthRequestType>(data['data']);
     }
     if (dataClassName == 'DwAuthVerification') {
-      return deserialize<_i8.DwAuthVerification>(data['data']);
+      return deserialize<_i6.DwAuthVerification>(data['data']);
     }
     if (dataClassName == 'DwAuthVerificationType') {
-      return deserialize<_i9.DwAuthVerificationType>(data['data']);
+      return deserialize<_i7.DwAuthVerificationType>(data['data']);
+    }
+    if (dataClassName == 'DwAuthFailReason') {
+      return deserialize<_i8.DwAuthFailReason>(data['data']);
+    }
+    if (dataClassName == 'DwAuthKey') {
+      return deserialize<_i9.DwAuthKey>(data['data']);
     }
     if (dataClassName == 'DwUserPassword') {
       return deserialize<_i10.DwUserPassword>(data['data']);

@@ -13,7 +13,7 @@ class DwAuthData implements SerializableModel, ProtocolSerialization {
   final String className;
   final String key;
   final int keyId;
-  final SerializableModel userProfile;
+  final TableRow userProfile;
 
   String get dwMappingClassname => className.split('.').last;
 
@@ -48,7 +48,7 @@ class DwAuthData implements SerializableModel, ProtocolSerialization {
   }
 
   DwAuthData copyWith({
-    SerializableModel? userProfile,
+    TableRow? userProfile,
     String? key,
     int? keyId,
   }) {

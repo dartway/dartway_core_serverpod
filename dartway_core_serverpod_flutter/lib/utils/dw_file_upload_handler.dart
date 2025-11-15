@@ -13,8 +13,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DwFileUploadHandler {
   static String Function(XFile file) defaultUploadNameTemplate =
-      (XFile file) =>
-          '${DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now())}';
+      (XFile file) => DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now());
 
   // 🆕 шаблон для PlatformFile (если нет поля name)
   static String Function(PlatformFile file) defaultPlatformUploadNameTemplate =
@@ -142,7 +141,7 @@ class DwFileUploadHandler {
 
     var uploader = FileUploader(uploadDescription);
 
-    final res = await uploader.uploadByteData(byteData);
+    await uploader.uploadByteData(byteData);
 
     var dwMedia = await DwCore.instance.endpointCaller.dwUpload.verifyUpload(
       path: path,

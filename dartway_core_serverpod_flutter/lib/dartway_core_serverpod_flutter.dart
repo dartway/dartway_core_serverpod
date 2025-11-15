@@ -1,5 +1,3 @@
-library dartway_core_serverpod_flutter;
-
 export 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
 export 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 

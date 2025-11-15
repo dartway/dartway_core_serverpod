@@ -1,8 +1,7 @@
 import 'dart:async';
+
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:serverpod/serverpod.dart';
-
-import 'dw_save_context.dart';
 
 /// Конфигурация процесса сохранения модели.
 /// Позволяет полностью контролировать логику сохранения.
@@ -112,8 +111,9 @@ class DwSaveConfig<T extends TableRow> {
               );
 
         // afterSave — дополнительные действия в БД
-        if (afterSaveTransaction != null)
+        if (afterSaveTransaction != null) {
           await afterSaveTransaction!(session, saveContext);
+        }
       });
     } on DatabaseException catch (e) {
       // TODO: Добавить логирование ошибки и алертинг

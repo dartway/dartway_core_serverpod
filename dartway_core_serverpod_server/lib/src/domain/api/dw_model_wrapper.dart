@@ -27,6 +27,7 @@ class DwModelWrapper implements SerializableModel, ProtocolSerialization {
 
   final String className;
   final int? modelId;
+  // TODO: use TableRow instead of SerializableModel
   final SerializableModel object;
   final bool isDeleted;
 

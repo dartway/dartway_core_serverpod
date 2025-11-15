@@ -4,6 +4,4 @@ class DwCoreConst {
 
   static const userProfileIdColumnName = 'id';
   static const userIdentifierColumnName = 'userIdentifier';
-
-  static const authNewPasswordKey = 'dwAuthNewPassword';
 }

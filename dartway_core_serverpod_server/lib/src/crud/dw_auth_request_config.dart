@@ -21,14 +21,13 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
 
       return true;
     },
+    // TODO: !!! ensure password is not visible in logs or database
     beforeSaveTransaction: (
       Session session,
       DwSaveContext<DwAuthRequest> saveContext,
     ) async {
       final userProfile =
           await saveContext.currentModel.findRelatedUserProfile(session);
-
-      saveContext.extras['userProfile'] = userProfile;
 
       await saveContext.currentModel
           .tryVerify(session, userProfile: userProfile);
@@ -47,22 +46,20 @@ final dwAuthRequestConfig = DwCrudConfig<DwAuthRequest>(
           saveContext.currentModel.verificationHash =
               DwAuthUtils.hashVerificationCode(verificationCode);
         }
+      } else if (saveContext.currentModel.status ==
+          DwAuthRequestStatus.verified) {
+        saveContext.afterUpdates.addAll(
+          await saveContext.currentModel.onVerified(
+            session,
+            userProfile: userProfile,
+          ),
+        );
       }
     },
     afterSaveTransaction: (
       Session session,
       DwSaveContext<DwAuthRequest> saveContext,
-    ) async {
-      if (saveContext.currentModel.status == DwAuthRequestStatus.verified) {
-        saveContext.afterUpdates.addAll(
-          await saveContext.currentModel.onVerified(
-            session,
-            userProfile:
-                saveContext.extras['userProfile'] as SerializableModel?,
-          ),
-        );
-      }
-    },
+    ) async {},
     afterSaveSideEffects: (session, saveContext) async {
       if (saveContext.extras[verificationCodeKey] != null) {
         await DwCore.instance.auth!.config.sendVerificationCodeMethod?.call(

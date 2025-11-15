@@ -1,6 +1,5 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
 import 'package:dartway_core_serverpod_server/src/crud/dw_auth_verification_config.dart';
-import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
 
 import '../business/auth/dw_auth.dart';
@@ -8,13 +7,34 @@ import '../business/cloud_storage/dw_cloud_storage.dart';
 import '../crud/dw_auth_key_config.dart';
 import '../crud/dw_auth_request_config.dart';
 
+// TODO: add documentation
+/// The core class for the DartWay framework.
+///
+/// This class is responsible for initializing the framework and providing access to the core functionality.
+///
+/// It contains the main components of the framework:
+/// - [userProfileTable]: The table for the user profile.
+/// - [crudConfigurations]: The configurations for the CRUD operations.
+/// - [userProfileInclude]: The include for the user profile. It's used to include related models in the user profile.
+/// - [userProfileConstructor]: The constructor for the user profile. It's used to create a new user profile on registration.
+/// - [alerts]: The alerts for the framework.
+/// - [auth]: The auth module for the framework.
+/// - [cloudStorage]: The cloud storage module for the framework.
+///
+/// It also contains the main methods for the framework:
+/// - [init]: Initializes the framework.
+/// - [getUserProfile]: Gets the user profile.
+/// - [getUserProfileByIdentifier]: Gets the user profile by identifier.
 class DwCore<UserProfileClass extends TableRow> {
   final Table userProfileTable;
   final Map<String, Map<String, DwCrudConfig>> _crudConfiguration = {};
   late final ColumnInt _userInfoIdColumn;
   late final ColumnString _userIdentifierColumn;
   late final Include? _userProfileInclude;
-
+  late final Future<UserProfileClass> Function(
+    Session session, {
+    required DwAuthRequest registrationRequest,
+  }) _userProfileConstructor;
   late final DwAlerts alerts;
 
   /// Auth module (optional)
@@ -36,11 +56,10 @@ class DwCore<UserProfileClass extends TableRow> {
     required Table userProfileTable,
     required List<DwCrudConfig> crudConfigurations,
     Include? userProfileInclude,
-    // required Future<UserProfileClass> Function({
-    //   required int userInfoId,
-    //   required String userIdentifier,
-    //   required Map<String, String> registrationExtraData,
-    // }) userProfileConstructor,
+    required Future<UserProfileClass> Function(
+      Session session, {
+      required DwAuthRequest registrationRequest,
+    }) userProfileConstructor,
     required DwAlerts dwAlerts,
     DwAuthConfig? authConfig,
     DwCloudStorageConfig? cloudStorageConfig,
@@ -53,7 +72,7 @@ class DwCore<UserProfileClass extends TableRow> {
       userProfileTable: userProfileTable,
       crudConfigurations: crudConfigurations,
       userProfileInclude: userProfileInclude,
-      // userProfileConstructor: userProfileConstructor,
+      userProfileConstructor: userProfileConstructor,
       alerts: dwAlerts,
       auth: authConfig != null
           ? DwAuth<UserProfileClass>(config: authConfig)
@@ -71,15 +90,15 @@ class DwCore<UserProfileClass extends TableRow> {
     required this.userProfileTable,
     required List<DwCrudConfig> crudConfigurations,
     required Include? userProfileInclude,
-    // required Future<UserProfileClass> Function({
-    //   required int userInfoId,
-    //   required String userIdentifier,
-    //   required Map<String, String> registrationExtraData,
-    // }) userProfileConstructor,
+    required Future<UserProfileClass> Function(
+      Session session, {
+      required DwAuthRequest registrationRequest,
+    }) userProfileConstructor,
     required this.alerts,
     required this.auth,
     required this.cloudStorage,
-  }) : _userProfileInclude = userProfileInclude {
+  })  : _userProfileInclude = userProfileInclude,
+        _userProfileConstructor = userProfileConstructor {
     _userInfoIdColumn = userProfileTable.columns.firstWhereOrThrow(
       (column) =>
           column is ColumnInt &&
@@ -161,5 +180,19 @@ class DwCore<UserProfileClass extends TableRow> {
     final userId = (await session.authenticated)?.userId;
     if (userId == null) return null;
     return getUserProfile(session, userId);
+  }
+
+  Future<int> createUserProfile(
+    Session session, {
+    required DwAuthRequest registrationRequest,
+  }) async {
+    final profile = await session.db.insertRow(
+      await _userProfileConstructor(
+        session,
+        registrationRequest: registrationRequest,
+      ),
+    );
+
+    return profile.id!;
   }
 }

@@ -38,8 +38,6 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
       signedInUserId: signedInUserId,
     );
 
-    // TODO: add refresh session after initialization
-
     if (state.signedInUserId != null) {
       unawaited(
         ref.readModel<UserProfileClass>(

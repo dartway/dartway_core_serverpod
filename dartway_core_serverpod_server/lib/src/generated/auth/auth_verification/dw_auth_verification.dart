@@ -12,7 +12,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../auth/auth_request/dw_auth_request.dart' as _i2;
+import '../../auth/auth_request/dw_auth_request.dart' as _i2;
+import '../../auth/dw_auth_fail_reason.dart' as _i3;
 
 abstract class DwAuthVerification
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -22,6 +23,7 @@ abstract class DwAuthVerification
     this.dwAuthRequest,
     DateTime? createdAt,
     this.verificationCode,
+    this.failReason,
     this.accessToken,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -31,6 +33,7 @@ abstract class DwAuthVerification
     _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
     String? verificationCode,
+    _i3.DwAuthFailReason? failReason,
     String? accessToken,
   }) = _DwAuthVerificationImpl;
 
@@ -45,6 +48,10 @@ abstract class DwAuthVerification
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       verificationCode: jsonSerialization['verificationCode'] as String?,
+      failReason: jsonSerialization['failReason'] == null
+          ? null
+          : _i3.DwAuthFailReason.fromJson(
+              (jsonSerialization['failReason'] as String)),
       accessToken: jsonSerialization['accessToken'] as String?,
     );
   }
@@ -64,6 +71,8 @@ abstract class DwAuthVerification
 
   String? verificationCode;
 
+  _i3.DwAuthFailReason? failReason;
+
   String? accessToken;
 
   @override
@@ -78,6 +87,7 @@ abstract class DwAuthVerification
     _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
     String? verificationCode,
+    _i3.DwAuthFailReason? failReason,
     String? accessToken,
   });
   @override
@@ -88,6 +98,7 @@ abstract class DwAuthVerification
       if (dwAuthRequest != null) 'dwAuthRequest': dwAuthRequest?.toJson(),
       'createdAt': createdAt.toJson(),
       if (verificationCode != null) 'verificationCode': verificationCode,
+      if (failReason != null) 'failReason': failReason?.toJson(),
       if (accessToken != null) 'accessToken': accessToken,
     };
   }
@@ -101,6 +112,7 @@ abstract class DwAuthVerification
         'dwAuthRequest': dwAuthRequest?.toJsonForProtocol(),
       'createdAt': createdAt.toJson(),
       if (verificationCode != null) 'verificationCode': verificationCode,
+      if (failReason != null) 'failReason': failReason?.toJson(),
       if (accessToken != null) 'accessToken': accessToken,
     };
   }
@@ -145,6 +157,7 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
     _i2.DwAuthRequest? dwAuthRequest,
     DateTime? createdAt,
     String? verificationCode,
+    _i3.DwAuthFailReason? failReason,
     String? accessToken,
   }) : super._(
           id: id,
@@ -152,6 +165,7 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
           dwAuthRequest: dwAuthRequest,
           createdAt: createdAt,
           verificationCode: verificationCode,
+          failReason: failReason,
           accessToken: accessToken,
         );
 
@@ -165,6 +179,7 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
     Object? dwAuthRequest = _Undefined,
     DateTime? createdAt,
     Object? verificationCode = _Undefined,
+    Object? failReason = _Undefined,
     Object? accessToken = _Undefined,
   }) {
     return DwAuthVerification(
@@ -177,6 +192,8 @@ class _DwAuthVerificationImpl extends DwAuthVerification {
       verificationCode: verificationCode is String?
           ? verificationCode
           : this.verificationCode,
+      failReason:
+          failReason is _i3.DwAuthFailReason? ? failReason : this.failReason,
       accessToken: accessToken is String? ? accessToken : this.accessToken,
     );
   }
@@ -194,6 +211,11 @@ class DwAuthVerificationTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
+    failReason = _i1.ColumnEnum(
+      'failReason',
+      this,
+      _i1.EnumSerialization.byName,
+    );
     accessToken = _i1.ColumnString(
       'accessToken',
       this,
@@ -205,6 +227,8 @@ class DwAuthVerificationTable extends _i1.Table<int?> {
   _i2.DwAuthRequestTable? _dwAuthRequest;
 
   late final _i1.ColumnDateTime createdAt;
+
+  late final _i1.ColumnEnum<_i3.DwAuthFailReason> failReason;
 
   late final _i1.ColumnString accessToken;
 
@@ -226,6 +250,7 @@ class DwAuthVerificationTable extends _i1.Table<int?> {
         id,
         dwAuthRequestId,
         createdAt,
+        failReason,
         accessToken,
       ];
 

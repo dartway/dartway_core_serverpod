@@ -1,11 +1,11 @@
 import 'package:dartway_core_serverpod_server/dartway_core_serverpod_server.dart';
-import 'package:dartway_core_serverpod_shared/dartway_core_serverpod_shared.dart';
 import 'package:serverpod/serverpod.dart';
 
 import 'dw_auth_utils.dart';
 
 extension DwAuthRequestVerification on DwAuthRequest {
   void setFailed(Session session, DwAuthFailReason reason) {
+    // TODO: setup alerting
     session.log('Auth failed: $reason', level: LogLevel.warning);
 
     status = DwAuthRequestStatus.failed;
@@ -13,7 +13,7 @@ extension DwAuthRequestVerification on DwAuthRequest {
     return;
   }
 
-  Future<SerializableModel?> findRelatedUserProfile(Session session) async {
+  Future<TableRow?> findRelatedUserProfile(Session session) async {
     final userProfile = await DwCore.instance.getUserProfileByIdentifier(
       session,
       userIdentifier,
@@ -23,14 +23,18 @@ extension DwAuthRequestVerification on DwAuthRequest {
     return userProfile;
   }
 
-  /// Проверяет пароль / hash и возвращает статус
+  /// Checks password / hash and returns status
   Future<void> tryVerify(
     Session session, {
     required SerializableModel? userProfile,
   }) async {
     // TODO: add alternative logic for registration requests
-    if (userProfile == null) {
+    if (requestType != DwAuthRequestType.register && userProfile == null) {
       return setFailed(session, DwAuthFailReason.userNotFound);
+    }
+
+    if (requestType == DwAuthRequestType.register && userProfile != null) {
+      return setFailed(session, DwAuthFailReason.userAlreadyExists);
     }
 
     if (password != null) {
@@ -83,7 +87,7 @@ extension DwAuthRequestVerification on DwAuthRequest {
 
   Future<List<DwModelWrapper>> onVerified(
     Session session, {
-    required SerializableModel? userProfile,
+    required TableRow? userProfile,
   }) async {
     switch (requestType) {
       case DwAuthRequestType.login:
@@ -99,8 +103,9 @@ extension DwAuthRequestVerification on DwAuthRequest {
           )
         ];
       case DwAuthRequestType.changePassword:
-        final newPassword =
-            extraData![DwCoreConst.authNewPasswordKey] as String;
+        if (newPassword == null) {
+          throw Exception('New password is not provided');
+        }
 
         await DwCore.instance.auth!.setUserPassword(
           session,
@@ -109,6 +114,36 @@ extension DwAuthRequestVerification on DwAuthRequest {
         );
 
         return [];
+      case DwAuthRequestType.register:
+        userId = await DwCore.instance.createUserProfile(
+          session,
+          registrationRequest: this,
+        );
+
+        userProfile = await DwCore.instance.getUserProfile(session, userId!);
+
+        if (newPassword != null) {
+          await DwCore.instance.auth!.setUserPassword(
+            session,
+            userId: userId!,
+            newPassword: newPassword,
+          );
+        }
+
+        final authKey = await DwCore.instance.auth!.signInUser(
+          session,
+          userId!,
+        );
+
+        return [
+          DwModelWrapper(
+            object: DwAuthData(
+              key: authKey.key!,
+              keyId: authKey.id!,
+              userProfile: userProfile!,
+            ),
+          )
+        ];
       default:
         throw UnimplementedError('Unknown request type: $requestType');
     }

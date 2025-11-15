@@ -13,8 +13,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../auth/auth_request/dw_auth_request_status.dart' as _i2;
 import '../../auth/auth_request/dw_auth_request_type.dart' as _i3;
 import '../../auth/auth_request/dw_auth_provider.dart' as _i4;
-import '../../auth/dw_auth_verification_type.dart' as _i5;
-import '../../auth/auth_request/dw_auth_fail_reason.dart' as _i6;
+import '../../auth/auth_verification/dw_auth_verification_type.dart' as _i5;
+import '../../auth/dw_auth_fail_reason.dart' as _i6;
 
 abstract class DwAuthRequest implements _i1.SerializableModel {
   DwAuthRequest._({
@@ -26,6 +26,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     required this.authProvider,
     this.verificationType,
     this.password,
+    this.newPassword,
     this.accessToken,
     _i2.DwAuthRequestStatus? status,
     this.failReason,
@@ -42,6 +43,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     _i2.DwAuthRequestStatus? status,
     _i6.DwAuthFailReason? failReason,
@@ -64,6 +66,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
           : _i5.DwAuthVerificationType.fromJson(
               (jsonSerialization['verificationType'] as int)),
       password: jsonSerialization['password'] as String?,
+      newPassword: jsonSerialization['newPassword'] as String?,
       accessToken: jsonSerialization['accessToken'] as String?,
       status: _i2.DwAuthRequestStatus.fromJson(
           (jsonSerialization['status'] as String)),
@@ -98,6 +101,8 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
 
   String? password;
 
+  String? newPassword;
+
   String? accessToken;
 
   _i2.DwAuthRequestStatus status;
@@ -118,6 +123,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
     _i4.DwAuthProvider? authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     _i2.DwAuthRequestStatus? status,
     _i6.DwAuthFailReason? failReason,
@@ -135,6 +141,7 @@ abstract class DwAuthRequest implements _i1.SerializableModel {
       if (verificationType != null)
         'verificationType': verificationType?.toJson(),
       if (password != null) 'password': password,
+      if (newPassword != null) 'newPassword': newPassword,
       if (accessToken != null) 'accessToken': accessToken,
       'status': status.toJson(),
       if (failReason != null) 'failReason': failReason?.toJson(),
@@ -160,6 +167,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     required _i4.DwAuthProvider authProvider,
     _i5.DwAuthVerificationType? verificationType,
     String? password,
+    String? newPassword,
     String? accessToken,
     _i2.DwAuthRequestStatus? status,
     _i6.DwAuthFailReason? failReason,
@@ -173,6 +181,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           authProvider: authProvider,
           verificationType: verificationType,
           password: password,
+          newPassword: newPassword,
           accessToken: accessToken,
           status: status,
           failReason: failReason,
@@ -192,6 +201,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
     _i4.DwAuthProvider? authProvider,
     Object? verificationType = _Undefined,
     Object? password = _Undefined,
+    Object? newPassword = _Undefined,
     Object? accessToken = _Undefined,
     _i2.DwAuthRequestStatus? status,
     Object? failReason = _Undefined,
@@ -208,6 +218,7 @@ class _DwAuthRequestImpl extends DwAuthRequest {
           ? verificationType
           : this.verificationType,
       password: password is String? ? password : this.password,
+      newPassword: newPassword is String? ? newPassword : this.newPassword,
       accessToken: accessToken is String? ? accessToken : this.accessToken,
       status: status ?? this.status,
       failReason:

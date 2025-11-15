@@ -12,13 +12,17 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 enum DwAuthFailReason implements _i1.SerializableModel {
+  userAlreadyExists,
   userNotFound,
   passwordNotSet,
   invalidPassword,
-  invalidAccessToken;
+  invalidAccessToken,
+  invalidVerificationCode;
 
   static DwAuthFailReason fromJson(String name) {
     switch (name) {
+      case 'userAlreadyExists':
+        return DwAuthFailReason.userAlreadyExists;
       case 'userNotFound':
         return DwAuthFailReason.userNotFound;
       case 'passwordNotSet':
@@ -27,6 +31,8 @@ enum DwAuthFailReason implements _i1.SerializableModel {
         return DwAuthFailReason.invalidPassword;
       case 'invalidAccessToken':
         return DwAuthFailReason.invalidAccessToken;
+      case 'invalidVerificationCode':
+        return DwAuthFailReason.invalidVerificationCode;
       default:
         throw ArgumentError(
             'Value "$name" cannot be converted to "DwAuthFailReason"');
