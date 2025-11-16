@@ -52,10 +52,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dw_session_state_model.freezed.dart';
 
-/// 🧠 Модель состояния сессии пользователя.
+/// 🧠 UserProfile State Model.
 ///
-/// Хранит информацию о текущем пользователе и его ID.
-/// Используется в DwSessionStateNotifier.
+/// Stores information about the current user and their ID.
+/// Used in DwSessionStateNotifier.
 @freezed
 class DwSessionStateModel<UserProfileClass extends SerializableModel>
     with _$DwSessionStateModel<UserProfileClass> {

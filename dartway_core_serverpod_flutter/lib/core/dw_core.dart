@@ -5,8 +5,8 @@ import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.da
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../session_state/dw_session_state.dart';
-import '../session_state/dw_session_state_model.dart';
+import '../session/logic/dw_session_state.dart';
+import '../session/logic/dw_session_state_model.dart';
 
 class DwCore<
   ServerpodClientClass extends ServerpodClientShared,
