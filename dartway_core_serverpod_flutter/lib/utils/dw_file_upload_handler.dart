@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:heif_converter/heif_converter.dart';
 import 'package:image/image.dart' as img;
@@ -131,7 +132,7 @@ class DwFileUploadHandler {
   }) async {
     final byteData = ByteData.view(bytes.buffer);
 
-    var uploadDescription = await DwCore.instance.endpointCaller.dwUpload
+    var uploadDescription = await dw.endpointCaller.dwUpload
         .getUploadDescription(path: path);
 
     if (uploadDescription == null) {
@@ -143,9 +144,7 @@ class DwFileUploadHandler {
 
     await uploader.uploadByteData(byteData);
 
-    var dwMedia = await DwCore.instance.endpointCaller.dwUpload.verifyUpload(
-      path: path,
-    );
+    var dwMedia = await dw.endpointCaller.dwUpload.verifyUpload(path: path);
 
     if (dwMedia == null) {
       throw Exception("Failed to verify uploaded file with path: $path");

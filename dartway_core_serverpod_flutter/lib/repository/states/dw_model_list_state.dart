@@ -1,4 +1,5 @@
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -48,7 +49,7 @@ class DwModelListState<Model extends SerializableModel>
   _processData(List<DwModelWrapper> data) => data.map((e) => e.model as Model);
 
   Future<List<DwModelWrapper>> _loadData() async {
-    final result = await DwCore.instance.endpointCaller.dwCrud
+    final result = await dw.endpointCaller.dwCrud
         .getAll(
           className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,

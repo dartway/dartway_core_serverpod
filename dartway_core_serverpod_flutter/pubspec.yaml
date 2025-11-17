@@ -61,6 +61,8 @@ dependency_overrides:
     path: ../dartway_core_serverpod_client
   dartway_core_serverpod_shared:
     path: ../dartway_core_serverpod_shared
+  # dartway_flutter:
+  #   path: ../../dartway_flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

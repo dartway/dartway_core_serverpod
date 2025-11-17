@@ -1,10 +1,9 @@
 import 'package:dartway_core_serverpod_client/dartway_core_serverpod_client.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:dartway_core_serverpod_flutter/repository/access_extensions/ref_update_actions_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../core/dw_core.dart';
 
 part 'dw_socket_state.freezed.dart';
 part 'dw_socket_state.g.dart';
@@ -22,8 +21,8 @@ class DwSocketState extends _$DwSocketState {
 
   @override
   DwSocketStateModel build() {
-    if (DwCore.instance.sessionProvider != null) {
-      ref.listen(DwCore.instance.sessionProvider!, (previousState, nextState) {
+    if (dw.sessionProvider != null) {
+      ref.listen(dw.sessionProvider!, (previousState, nextState) {
         if (nextState.signedInUserId != previousState?.signedInUserId) {
           _connectionHandler?.client.closeStreamingConnection();
         }
@@ -79,11 +78,11 @@ class DwSocketState extends _$DwSocketState {
   }
 
   Future<void> _listenToUpdates() async {
-    DwCore.instance.endpointCaller.dwRealTime.resetStream();
+    dw.endpointCaller.dwRealTime.resetStream();
 
     // final t = nitToolsCaller!.nitCrud.stream.listen(onData)
 
-    await for (var update in DwCore.instance.endpointCaller.dwRealTime.stream) {
+    await for (var update in dw.endpointCaller.dwRealTime.stream) {
       if (update is DwModelWrapper) {
         _proccessUpdate(update);
       } else if (update is DwUpdatesTransport) {

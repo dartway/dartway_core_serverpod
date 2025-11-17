@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +25,7 @@ class DwSingleModelState<Model extends SerializableModel>
     final res =
         config.initialModel != null
             ? null
-            : await DwCore.instance.endpointCaller.dwCrud
+            : await dw.endpointCaller.dwCrud
                 .getOne(
                   className: DwRepository.typeName<Model>(),
                   filter: config.backendFilter,
@@ -56,7 +57,7 @@ class DwSingleModelState<Model extends SerializableModel>
     }
 
     // always fetch from backend when forced or no cached value
-    final res = await DwCore.instance.endpointCaller.dwCrud
+    final res = await dw.endpointCaller.dwCrud
         .getOne(
           className: DwRepository.typeName<Model>(),
           filter: arg.backendFilter,

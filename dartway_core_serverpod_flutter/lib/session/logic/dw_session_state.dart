@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -129,7 +130,7 @@ class DwSessionStateNotifier<UserProfileClass extends SerializableModel>
 
   Future<void> signOut() async {
     if (state.signedInUserId != null && state.signedInUserProfile != null) {
-      final response = await DwCore.instance.endpointCaller.dwCrud.delete(
+      final response = await dw.endpointCaller.dwCrud.delete(
         className: 'DwAuthKey',
         modelId: keyManager.authKeyId!,
         apiGroup: DwCoreConst.dartwayInternalApi,

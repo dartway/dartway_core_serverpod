@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_core_serverpod_flutter/private/dw_singleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,7 +50,7 @@ class _DwSignedInUserScopeState<UserProfileClass extends SerializableModel>
   @override
   void initState() {
     super.initState();
-    final userId = ref.read(DwCore.instance.sessionProvider!).signedInUserId;
+    final userId = ref.read(dw.sessionProvider!).signedInUserId;
     _loadProfile(userId);
     _attachAsyncListeners(userId);
   }
@@ -116,14 +117,14 @@ class _DwSignedInUserScopeState<UserProfileClass extends SerializableModel>
     Future.microtask(() {
       if (!mounted) return;
       ref.read(widget.userProfileProvider.notifier).state =
-          ref.read(DwCore.instance.sessionProvider!).signedInUserProfile
+          ref.read(dw.sessionProvider!).signedInUserProfile
               as UserProfileClass?;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(DwCore.instance.sessionProvider!, (prev, next) {
+    ref.listen(dw.sessionProvider!, (prev, next) {
       final prevId = prev?.signedInUserId;
       final nextId = next.signedInUserId;
       if (prevId != nextId) {
