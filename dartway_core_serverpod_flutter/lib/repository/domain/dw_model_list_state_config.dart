@@ -1,6 +1,35 @@
-import 'package:dartway_flutter/dartway_flutter.dart';
 import 'package:dartway_core_serverpod_flutter/dartway_core_serverpod_flutter.dart';
+import 'package:dartway_flutter/dartway_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class DwRelationUpdatesConfig<
+  Model extends SerializableModel,
+  RelationModel extends SerializableModel
+> {
+  final Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
+  copyWithRelatedModels;
+  final String relationKey;
+
+  const DwRelationUpdatesConfig({
+    required this.copyWithRelatedModels,
+    required this.relationKey,
+  });
+
+  addUpdatesListener(
+    void Function(
+      List<DwModelWrapper> wrappedModelUpdates,
+      String relationKey,
+      Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
+      copyWithRelatedModels,
+    )
+    relationUpdatesListener,
+  ) {
+    DwRepository.addUpdatesListener<RelationModel>(
+      (updates) =>
+          relationUpdatesListener(updates, relationKey, copyWithRelatedModels),
+    );
+  }
+}
 
 class DwModelListStateConfig<Model extends SerializableModel>
     implements DwInfiniteListViewConfig<Model> {
@@ -8,12 +37,15 @@ class DwModelListStateConfig<Model extends SerializableModel>
   final int? pageSize;
   final String? apiGroupOverride;
   final Function(List<DwModelWrapper>)? customUpdatesListener;
+  final List<DwRelationUpdatesConfig<Model, SerializableModel>>?
+  relationUpdatesConfigs;
 
   const DwModelListStateConfig({
     this.backendFilter,
     this.pageSize,
     this.apiGroupOverride,
     this.customUpdatesListener,
+    this.relationUpdatesConfigs,
   });
 
   @override

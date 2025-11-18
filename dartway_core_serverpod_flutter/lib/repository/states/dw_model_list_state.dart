@@ -11,11 +11,14 @@ class DwModelListState<Model extends SerializableModel>
 
   @override
   Future<List<Model>> build(DwModelListStateConfig config) async {
-    ref.onDispose(
-      () => DwRepository.removeUpdatesListener<Model>(
+    ref.onDispose(() {
+      DwRepository.removeUpdatesListener<Model>(
         config.customUpdatesListener ?? _updatesListener,
-      ),
-    );
+      );
+      for (var relationConfig in config.relationUpdatesConfigs ?? []) {
+        relationConfig.removeUpdatesListener();
+      }
+    });
 
     _nextPage = 0;
 
@@ -32,6 +35,13 @@ class DwModelListState<Model extends SerializableModel>
     DwRepository.addUpdatesListener<Model>(
       config.customUpdatesListener ?? _updatesListener,
     );
+
+    if (config.relationUpdatesConfigs != null) {
+      for (var relationConfig in config.relationUpdatesConfigs!) {
+        (relationConfig as DwRelationUpdatesConfig<Model, SerializableModel>)
+            .addUpdatesListener(_relationUpdatesListener);
+      }
+    }
 
     return _processData(data).toList();
   }
@@ -80,6 +90,28 @@ class DwModelListState<Model extends SerializableModel>
             .map((e) => e.model as Model),
         ...value.where((e) => !ids.contains((e as dynamic).id)),
       ]);
+    });
+  }
+
+  void _relationUpdatesListener(
+    List<DwModelWrapper> wrappedModelUpdates,
+    String relationKey,
+    Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
+    copyWithRelatedModels,
+  ) async {
+    return await future.then((value) async {
+      state = AsyncValue.data(
+        value.map((model) {
+          final relatedModels =
+              wrappedModelUpdates
+                  .where(
+                    (e) => e.foreignKeys[relationKey] == (model as dynamic).id,
+                  )
+                  .toList();
+
+          return copyWithRelatedModels(model, relatedModels);
+        }).toList(),
+      );
     });
   }
 }
