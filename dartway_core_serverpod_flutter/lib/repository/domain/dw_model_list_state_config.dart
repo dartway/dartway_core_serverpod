@@ -9,10 +9,12 @@ class DwRelationUpdatesConfig<
   final Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
   copyWithRelatedModels;
   final String relationKey;
+  final Set<int> Function(Model model)? parentIdsGetter;
 
   const DwRelationUpdatesConfig({
     required this.copyWithRelatedModels,
     required this.relationKey,
+    this.parentIdsGetter,
   });
 
   addUpdatesListener(
@@ -21,12 +23,17 @@ class DwRelationUpdatesConfig<
       String relationKey,
       Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
       copyWithRelatedModels,
+      Set<int>? Function(Model model)? parentIdsGetter,
     )
     relationUpdatesListener,
   ) {
     DwRepository.addUpdatesListener<RelationModel>(
-      (updates) =>
-          relationUpdatesListener(updates, relationKey, copyWithRelatedModels),
+      (updates) => relationUpdatesListener(
+        updates,
+        relationKey,
+        copyWithRelatedModels,
+        parentIdsGetter,
+      ),
     );
   }
 }

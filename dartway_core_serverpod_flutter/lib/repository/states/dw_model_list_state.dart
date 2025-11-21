@@ -95,19 +95,28 @@ class DwModelListState<Model extends SerializableModel>
 
   void _relationUpdatesListener(
     List<DwModelWrapper> wrappedModelUpdates,
-    String relationKey,
+    String foreignKey,
     Model Function(Model parentModel, List<DwModelWrapper> relatedModels)
     copyWithRelatedModels,
+    Set<int>? Function(Model model)? parentIdsGetter,
   ) async {
     return await future.then((value) async {
       state = AsyncValue.data(
         value.map((model) {
+          final parentIds =
+              parentIdsGetter != null
+                  ? parentIdsGetter.call(model)
+                  : <int>{(model as dynamic).id};
+
           final relatedModels =
               wrappedModelUpdates
                   .where(
-                    (e) => e.foreignKeys[relationKey] == (model as dynamic).id,
+                    (e) =>
+                        (parentIds ?? {}).contains(e.foreignKeys[foreignKey]),
                   )
                   .toList();
+
+          if (relatedModels.isEmpty) return model;
 
           return copyWithRelatedModels(model, relatedModels);
         }).toList(),
