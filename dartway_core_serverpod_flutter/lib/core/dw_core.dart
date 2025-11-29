@@ -89,6 +89,7 @@ class DwCore<
       ),
     );
 
+    // TODO: check if this is needed and actally works
     final defaultModels = <Type, SerializableModel>{
       UserProfileClass: DwRepository.getDefault<UserProfileClass>(),
     };

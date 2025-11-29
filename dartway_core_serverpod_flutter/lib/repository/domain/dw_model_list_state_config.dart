@@ -17,6 +17,8 @@ class DwRelationUpdatesConfig<
     this.parentIdsGetter,
   });
 
+  Type get relationModelType => RelationModel;
+
   addUpdatesListener(
     void Function(
       List<DwModelWrapper> wrappedModelUpdates,
@@ -74,7 +76,8 @@ class DwModelListStateConfig<Model extends SerializableModel>
             backendFilter == other.backendFilter &&
             pageSize == other.pageSize &&
             apiGroupOverride == other.apiGroupOverride &&
-            customUpdatesListener == other.customUpdatesListener;
+            customUpdatesListener == other.customUpdatesListener &&
+            relationUpdatesConfigs == other.relationUpdatesConfigs;
   }
 
   @override
@@ -82,7 +85,8 @@ class DwModelListStateConfig<Model extends SerializableModel>
       backendFilter.hashCode ^
       pageSize.hashCode ^
       apiGroupOverride.hashCode ^
-      customUpdatesListener.hashCode;
+      customUpdatesListener.hashCode ^
+      relationUpdatesConfigs.hashCode;
 
   DwModelListStateConfig<Model> copyWith({
     DwBackendFilter? backendFilter,
@@ -96,6 +100,8 @@ class DwModelListStateConfig<Model extends SerializableModel>
       apiGroupOverride: apiGroupOverride ?? this.apiGroupOverride,
       customUpdatesListener:
           customUpdatesListener ?? this.customUpdatesListener,
+      relationUpdatesConfigs:
+          relationUpdatesConfigs ?? this.relationUpdatesConfigs,
     );
   }
 
@@ -105,7 +111,8 @@ class DwModelListStateConfig<Model extends SerializableModel>
         'backendFilter: $backendFilter, '
         'pageSize: $pageSize, '
         'apiGroupOverride: $apiGroupOverride, '
-        'customUpdatesListener: $customUpdatesListener'
+        'customUpdatesListener: $customUpdatesListener, '
+        'relationUpdatesConfigs: $relationUpdatesConfigs'
         ')';
   }
 }

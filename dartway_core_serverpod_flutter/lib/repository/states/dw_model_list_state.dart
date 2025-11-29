@@ -38,11 +38,13 @@ class DwModelListState<Model extends SerializableModel>
 
     if (config.relationUpdatesConfigs != null) {
       for (var relationConfig in config.relationUpdatesConfigs!) {
+        debugPrint(
+          'Adding relation updates listener for ${relationConfig.relationModelType}',
+        );
         (relationConfig as DwRelationUpdatesConfig<Model, SerializableModel>)
             .addUpdatesListener(_relationUpdatesListener);
       }
     }
-
     return _processData(data).toList();
   }
 
