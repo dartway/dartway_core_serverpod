@@ -85,14 +85,23 @@ class DwModelListState<Model extends SerializableModel>
   void _updatesListener(List<DwModelWrapper> wrappedModelUpdates) async {
     final ids = wrappedModelUpdates.map((e) => e.modelId).toSet();
 
-    return await future.then((value) async {
-      state = AsyncValue.data([
+    state = state.whenData((value) {
+      return [
         ...wrappedModelUpdates
             .where((e) => !e.isDeleted)
             .map((e) => e.model as Model),
         ...value.where((e) => !ids.contains((e as dynamic).id)),
-      ]);
+      ];
     });
+
+    // return await future.then((value) async {
+    //   state = AsyncValue.data([
+    //     ...wrappedModelUpdates
+    //         .where((e) => !e.isDeleted)
+    //         .map((e) => e.model as Model),
+    //     ...value.where((e) => !ids.contains((e as dynamic).id)),
+    //   ]);
+    // });
   }
 
   void _relationUpdatesListener(
@@ -102,27 +111,44 @@ class DwModelListState<Model extends SerializableModel>
     copyWithRelatedModels,
     Set<int>? Function(Model model)? parentIdsGetter,
   ) async {
-    return await future.then((value) async {
-      state = AsyncValue.data(
-        value.map((model) {
-          final parentIds =
-              parentIdsGetter != null
-                  ? parentIdsGetter.call(model)
-                  : <int>{(model as dynamic).id};
+    state = state.whenData((value) {
+      return value.map((model) {
+        final parentIds =
+            parentIdsGetter != null
+                ? parentIdsGetter.call(model)
+                : <int>{(model as dynamic).id};
 
-          final relatedModels =
-              wrappedModelUpdates
-                  .where(
-                    (e) =>
-                        (parentIds ?? {}).contains(e.foreignKeys[foreignKey]),
-                  )
-                  .toList();
+        final relatedModels = wrappedModelUpdates.where(
+          (e) => (parentIds ?? {}).contains(e.foreignKeys[foreignKey]),
+        );
 
-          if (relatedModels.isEmpty) return model;
+        if (relatedModels.isEmpty) return model;
 
-          return copyWithRelatedModels(model, relatedModels);
-        }).toList(),
-      );
+        return copyWithRelatedModels(model, relatedModels.toList());
+      }).toList();
     });
+
+    // return await future.then((value) async {
+    //   state = AsyncValue.data(
+    //     value.map((model) {
+    //       final parentIds =
+    //           parentIdsGetter != null
+    //               ? parentIdsGetter.call(model)
+    //               : <int>{(model as dynamic).id};
+
+    //       final relatedModels =
+    //           wrappedModelUpdates
+    //               .where(
+    //                 (e) =>
+    //                     (parentIds ?? {}).contains(e.foreignKeys[foreignKey]),
+    //               )
+    //               .toList();
+
+    //       if (relatedModels.isEmpty) return model;
+
+    //       return copyWithRelatedModels(model, relatedModels);
+    //     }).toList(),
+    //   );
+    // });
   }
 }
